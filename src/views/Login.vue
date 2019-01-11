@@ -15,7 +15,7 @@
           <br>
           <button class="login_email" style="width: 100px; margin-top: 10px; font-size: 0.65em; text-algin: center; height: auto; padding: 5px" type="button" name="button" @click="resetPassword()">Reset Password</button>
         </form>
-        <div id="login_button" @click="login()">Login</div>
+        <div class="login_button" @click="login()">Login</div>
       </div>
     </div>
   </div>
@@ -110,7 +110,6 @@ export default {
 .container_login {
    position: relative;
    top: 320px;
-   height: inherit;
    width: 100%;
    opacity: 0;
    animation: fadeIn .8s;
@@ -137,55 +136,42 @@ export default {
    width: 35%;
    color: darkgray;
  }
-.login_email::placeholder,
-.login_password::placeholder {
-  font-size: 14px;
-  font-family: Montserrat;
-  color: lightgray;
-  letter-spacing: .2px;
-}
-#login_button {
-  position: relative;
-  color: white;
-  left: 50%;
-  top: 80px;
-  transform: translateX(-50%);
-  display: inline-block;
-  padding: 5px 10px 5px 10px;
-  font-size: 1em;
-  border: 2px solid white;
-  border-radius: 20px 20px;
-}
-#login_button:hover {
-  cursor: pointer;
-  background: white;
-  color: #ffdeb9;
-  font-weight: 400;
-  transition: .4s ease-in-out;
-}
-#login_button:active {
-  transition: 0s;
-  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
-}
-input[type=text].login_email:focus,
-input[type=password].login_email:focus,
 input[type=email].login_email:focus,
-input[type=text].login_password:focus,
-input[type=password].login_password:focus,
-input[type=email].login_password:focus {
+input[type=password].login_password:focus {
   background-color: #F8F8F8;
   outline: none;
   letter-spacing: .2px;
   font-size: 14px;
+}
+.login_button {
+  position: relative;
+  display: inline-block;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 50px;
+  color: white;
+  font-size: 1em;
+  border: 2px solid white;
+  border-radius: 20px 20px;
+  padding: 5px 10px 5px 10px;
+}
+.login_button:hover {
+  cursor: pointer;
+  color: #ffdeb9;
+  font-weight: 400;
+  background: white;
+  transition: .4s ease-in-out;
+}
+.login_button:active {
+  transition: 0s;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
 }
 ::placeholder {
   font-size: 14px;
   font-family: Montserrat;
   color: lightgray;
   letter-spacing: .2px;
-}
-:invalid {
-  color: darkgray;
 }
 ::-webkit-scrollbar {
   height: 0px;
