@@ -109,9 +109,10 @@ export default {
 .enter_button {
   position: relative;
   display: inline-block;
-  top: -50px;
+  top: 0px;
   left: 50%;
   transform: translateX(-50%);
+  margin-bottom: 50px;
   color: white;
   font-size: 1em;
   border: 2px solid white;
@@ -148,7 +149,7 @@ export default {
     position: relative;
     left: 50%;
     transform: translateX(-50%);
-    margin-bottom: 150px;
+    margin-bottom: 110px;
     width: 30%;
     color: white;
     text-align: center;
@@ -180,7 +181,7 @@ export default {
     position: relative;
     text-align: center;
     font-size: 25px;
-    margin-bottom: 150px;
+    margin-bottom: 110px;
     width: 30%;
     left: 50%;
     transform: translateX(-50%);
