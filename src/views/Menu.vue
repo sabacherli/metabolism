@@ -274,7 +274,10 @@ export default {
   height: auto;
   margin-top: -10px;
   margin-bottom: 35px;
-  border: .6px solid black;
+  border: 0px;
+  border-bottom-style: solid;
+  border-bottom-color: black;
+  border-bottom-width: 1px;
 }
 .edit_icon {
   position: absolute;
@@ -343,7 +346,10 @@ label {
     height: auto;
     margin-top: -10px;
     margin-bottom: 35px;
-    border: .6px solid black;
+    border: 0px;
+    border-bottom-style: solid;
+    border-bottom-color: black;
+    border-bottom-width: 1px;
   }
 }
 </style>

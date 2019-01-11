@@ -404,7 +404,10 @@ label {
   height: auto;
   margin-top: -10px;
   margin-bottom: 35px;
-  border: .3px solid black;
+  border: 0px;
+  border-bottom-style: solid;
+  border-bottom-color: black;
+  border-bottom-width: 1px;
 }
 .year_date {
   font-weight: 500;
