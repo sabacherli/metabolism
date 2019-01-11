@@ -1,5 +1,5 @@
-import firebase from 'firebase/app';
-import 'firebase/firestore';
+import firebase from 'firebase/app'
+import 'firebase/firestore'
 
 const config = {
   apiKey: 'AIzaSyBnC2lrj8PdB1j1QX3Q_EIdqN7rXy5PBtY',
@@ -7,14 +7,14 @@ const config = {
   databaseURL: 'https://metabolism-salo.firebaseio.com',
   projectId: 'metabolism-salo',
   storageBucket: 'metabolism-salo.appspot.com',
-  messagingSenderId: '2456773126',
-};
+  messagingSenderId: '2456773126'
+}
 
-const firebaseApp = firebase.initializeApp(config);
+const firebaseApp = firebase.initializeApp(config)
 const settings = {
-  /* your settings... */ timestampsInSnapshots: true,
-};
-firebase.firestore().settings(settings);
+  /* your settings... */ timestampsInSnapshots: true
+}
+firebase.firestore().settings(settings)
 
 // Enables offline data, which is required for PWA's.
 firebase.firestore().enablePersistence()
@@ -28,7 +28,7 @@ firebase.firestore().enablePersistence()
       // features required to enable persistence
       // ...
     }
-  });
+  })
 // Subsequent queries will use persistence, if it was enabled successfully
 
-export default firebaseApp.firestore();
+export default firebaseApp.firestore()

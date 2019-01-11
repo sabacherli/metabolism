@@ -6,35 +6,35 @@
 </template>
 
 <script type="text/javascript">
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import store from './store';
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import store from './store'
 
 export default {
-  created() {
+  created () {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         // User is signed in.
         if (user.emailVerified) {
-          store.dispatch('setUser', user);
+          store.dispatch('setUser', user)
         }
       } else {
         // User is signed out.
         firebase.auth().signOut()
           .then((success) => {
-            store.dispatch('setDefault');
+            store.dispatch('setDefault')
           })
           .catch((error) => {
-            alert(error.message);
-            console.log(error.code);
-          });
+            alert(error.message)
+            console.log(error.code)
+          })
       }
-    });
+    })
     window.onbeforeunload = function () {
-      store.commit('saveData');
-    };
-  },
-};
+      store.commit('saveData')
+    }
+  }
+}
 </script>
 
 <style>

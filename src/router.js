@@ -1,8 +1,8 @@
-import Vue from 'vue';
-import Router from 'vue-router';
-import Benefits from './views/Benefits.vue';
+import Vue from 'vue'
+import Router from 'vue-router'
+import Benefits from './views/Benefits.vue'
 
-Vue.use(Router);
+Vue.use(Router)
 
 const router = new Router({
   mode: 'history',
@@ -16,10 +16,10 @@ const router = new Router({
         metaTags: [
           {
             name: 'Meal Planner & Shopping List',
-            content: 'Automatically create shopping lists and plan meals for a healthy lifestyle, for you and the family.',
-          },
-        ],
-      },
+            content: 'Automatically create shopping lists and plan meals for a healthy lifestyle, for you and the family.'
+          }
+        ]
+      }
     },
     {
       path: '/benefits',
@@ -30,10 +30,10 @@ const router = new Router({
         metaTags: [
           {
             name: 'Meal Planner & Shopping List',
-            content: 'Automatically create shopping lists and plan meals for a healthy lifestyle, for you and the family.',
-          },
-        ],
-      },
+            content: 'Automatically create shopping lists and plan meals for a healthy lifestyle, for you and the family.'
+          }
+        ]
+      }
     },
     {
       path: '/calendar',
@@ -43,17 +43,17 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       components: {
         default: () => import(/* webpackChunkName: "calendar" */ './views/Calendar.vue'),
-        banner: () => import(/* webpackChunkName: "banner" */ './components/Banner.vue'),
+        banner: () => import(/* webpackChunkName: "banner" */ './components/Banner.vue')
       },
       meta: {
         title: 'Metabolism',
         metaTags: [
           {
             name: 'Meal Planner & Shopping List',
-            content: 'Automatically create shopping lists and plan meals for a healthy lifestyle, for you and the family.',
-          },
-        ],
-      },
+            content: 'Automatically create shopping lists and plan meals for a healthy lifestyle, for you and the family.'
+          }
+        ]
+      }
     },
     {
       path: '/menu',
@@ -63,17 +63,17 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       components: {
         default: () => import(/* webpackChunkName: "menu" */ './views/Menu.vue'),
-        banner: () => import(/* webpackChunkName: "banner" */ './components/Banner.vue'),
+        banner: () => import(/* webpackChunkName: "banner" */ './components/Banner.vue')
       },
       meta: {
         title: 'Metabolism',
         metaTags: [
           {
             name: 'Meal Planner & Shopping List',
-            content: 'Automatically create shopping lists and plan meals for a healthy lifestyle, for you and the family.',
-          },
-        ],
-      },
+            content: 'Automatically create shopping lists and plan meals for a healthy lifestyle, for you and the family.'
+          }
+        ]
+      }
     },
     {
       path: '/edit',
@@ -83,17 +83,17 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       components: {
         default: () => import(/* webpackChunkName: "edit" */ './views/Edit.vue'),
-        banner: () => import(/* webpackChunkName: "banner" */ './components/Banner.vue'),
+        banner: () => import(/* webpackChunkName: "banner" */ './components/Banner.vue')
       },
       meta: {
         title: 'Metabolism',
         metaTags: [
           {
             name: 'Meal Planner & Shopping List',
-            content: 'Automatically create shopping lists and plan meals for a healthy lifestyle, for you and the family.',
-          },
-        ],
-      },
+            content: 'Automatically create shopping lists and plan meals for a healthy lifestyle, for you and the family.'
+          }
+        ]
+      }
     },
     {
       path: '/shoppinglist',
@@ -103,17 +103,17 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       components: {
         default: () => import(/* webpackChunkName: "shoppinglist" */ './views/Shoppinglist.vue'),
-        banner: () => import(/* webpackChunkName: "banner" */ './components/Banner.vue'),
+        banner: () => import(/* webpackChunkName: "banner" */ './components/Banner.vue')
       },
       meta: {
         title: 'Metabolism',
         metaTags: [
           {
             name: 'Meal Planner & Shopping List',
-            content: 'Automatically create shopping lists and plan meals for a healthy lifestyle, for you and the family.',
-          },
-        ],
-      },
+            content: 'Automatically create shopping lists and plan meals for a healthy lifestyle, for you and the family.'
+          }
+        ]
+      }
     },
     {
       path: '/profile',
@@ -123,17 +123,17 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       components: {
         default: () => import(/* webpackChunkName: "profile" */ './views/Profile.vue'),
-        banner: () => import(/* webpackChunkName: "banner" */ './components/Banner.vue'),
+        banner: () => import(/* webpackChunkName: "banner" */ './components/Banner.vue')
       },
       meta: {
         title: 'Metabolism',
         metaTags: [
           {
             name: 'Meal Planner & Shopping List',
-            content: 'Automatically create shopping lists and plan meals for a healthy lifestyle, for you and the family.',
-          },
-        ],
-      },
+            content: 'Automatically create shopping lists and plan meals for a healthy lifestyle, for you and the family.'
+          }
+        ]
+      }
     },
     {
       path: '/login',
@@ -143,17 +143,17 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       components: {
         default: () => import(/* webpackChunkName: "login" */ './views/Login.vue'),
-        banner: () => import(/* webpackChunkName: "dropdown" */ './components/Dropdown.vue'),
+        banner: () => import(/* webpackChunkName: "dropdown" */ './components/Dropdown.vue')
       },
       meta: {
         title: 'Metabolism',
         metaTags: [
           {
             name: 'Meal Planner & Shopping List',
-            content: 'Automatically create shopping lists and plan meals for a healthy lifestyle, for you and the family.',
-          },
-        ],
-      },
+            content: 'Automatically create shopping lists and plan meals for a healthy lifestyle, for you and the family.'
+          }
+        ]
+      }
     },
     {
       path: '/register',
@@ -163,24 +163,24 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       components: {
         default: () => import(/* webpackChunkName: "register" */ './views/Register.vue'),
-        banner: () => import(/* webpackChunkName: "dropdown" */ './components/Dropdown.vue'),
+        banner: () => import(/* webpackChunkName: "dropdown" */ './components/Dropdown.vue')
       },
       meta: {
         title: 'Metabolism',
         metaTags: [
           {
             name: 'Meal Planner & Shopping List',
-            content: 'Automatically create shopping lists and plan meals for a healthy lifestyle, for you and the family.',
-          },
-        ],
-      },
-    },
-  ],
-});
+            content: 'Automatically create shopping lists and plan meals for a healthy lifestyle, for you and the family.'
+          }
+        ]
+      }
+    }
+  ]
+})
 
 router.beforeEach((to, from, next) => {
-  document.title = to.meta.title;
-  next();
-});
+  document.title = to.meta.title
+  next()
+})
 
-export default router;
+export default router

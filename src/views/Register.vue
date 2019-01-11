@@ -36,15 +36,17 @@ import db from '@/database.js'
 
 export default {
   name: 'Register',
-  created () {
-    this.$store.commit('populateMonthList', this.currentYear)
-    this.$store.commit('setPage', 'register')
-  },
   data () {
     return {
       email: '',
       password: ''
     }
+  },
+  created () {
+    this.$store.commit('populateMonthList', this.currentYear)
+  },
+  beforeMount () {
+    this.$store.commit('setPage', 'register')
   },
   computed: {
     ...mapState([

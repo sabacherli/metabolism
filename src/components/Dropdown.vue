@@ -50,38 +50,92 @@ export default {
       'thisWeek'
     ]),
     goBenefits () {
+      this.$store.commit('setPage', 'benefits')
       this.$router.push('benefits')
+      this.$forceUpdate()
     },
     goCalendar () {
+      this.$store.commit('setPage', 'calendar')
       this.$router.push('calendar')
       this.$store.commit('getCalendar')
+      this.$forceUpdate()
     },
     goMenu () {
+      this.$store.commit('setPage', 'menu')
       this.$router.push('menu')
       this.$store.commit('resetPointer')
+      this.$forceUpdate()
     },
     goShoppinglist () {
+      this.$store.commit('setPage', 'shoppinglist')
       this.$router.push('shoppinglist')
+      this.$forceUpdate()
     },
     goProfile () {
+      this.$store.commit('setPage', 'profile')
       this.$router.push('profile')
+      this.$forceUpdate()
     },
     goLogin () {
+      this.$store.commit('setPage', 'login')
       this.$router.push('login')
+      this.$forceUpdate()
     },
     goRegister () {
+      this.$store.commit('setPage', 'register')
       this.$router.push('register')
+      this.$forceUpdate()
     },
     logout () {
       firebase.auth().signOut()
         .then(success => {
           this.$store.dispatch('setDefault')
+          this.$store.commit('setPage', 'login')
           this.$router.push('login')
+          this.$forceUpdate()
         })
         .catch(error => {
           alert(error.message)
           console.log(error.code)
         })
+    }
+  },
+  mounted () {
+    if (this.currentPage === 'benefits') {
+      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
+      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
+      document.getElementById('benefits').classList.remove('dropdown_item')
+      document.getElementById('benefits').classList.add('dropdown_item_selected')
+    } else if (this.currentPage === 'calendar') {
+      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
+      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
+      document.getElementById('calendar').classList.remove('dropdown_item')
+      document.getElementById('calendar').classList.add('dropdown_item_selected')
+    } else if (this.currentPage === 'menu') {
+      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
+      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
+      document.getElementById('menu').classList.remove('dropdown_item')
+      document.getElementById('menu').classList.add('dropdown_item_selected')
+    } else if (this.currentPage === 'shoppinglist') {
+      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
+      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
+      document.getElementById('shoppinglist').classList.remove('dropdown_item')
+      document.getElementById('shoppinglist').classList.add('dropdown_item_selected')
+    } else if (this.currentPage === 'profile') {
+      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
+      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
+      document.getElementById('profile').classList.remove('dropdown_item')
+      document.getElementById('profile').classList.add('dropdown_item_selected')
+    } else if (this.currentPage === 'register') {
+      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
+      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
+      document.getElementById('register').classList.remove('dropdown_item')
+      document.getElementById('register').classList.add('dropdown_item_selected')
+    } else if (this.currentPage === 'login') {
+      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
+      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
+      document.getElementById('login').classList.remove('dropdown_item')
+      document.getElementById('login').classList.add('dropdown_item_selected')
     }
   },
   updated () {
