@@ -239,6 +239,9 @@ export default {
   margin-top: 14px;
   margin-bottom: 14px;
   width: 12%;
-  border: .6px solid black;
+  border: 0px;
+  border-bottom-style: solid;
+  border-bottom-color: black;
+  border-bottom-width: 1px;
 }
 </style>
