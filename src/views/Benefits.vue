@@ -75,7 +75,7 @@ export default {
 }
 .container_benefits {
   position: absolute;
-  top: 450px;
+  top: 550px;
   width: 80%;
   padding-left: 10%;
 }
@@ -150,7 +150,7 @@ export default {
     left: 50%;
     transform: translateX(-50%);
     margin-bottom: 110px;
-    width: 30%;
+    width: 60%;
     color: white;
     text-align: center;
     font-size: 25px;
@@ -182,7 +182,7 @@ export default {
     text-align: center;
     font-size: 25px;
     margin-bottom: 110px;
-    width: 30%;
+    width: 50%;
     left: 50%;
     transform: translateX(-50%);
   }
@@ -210,6 +210,9 @@ export default {
   }
   .brand_small {
     display: none;
+  }
+  .container_benefits {
+    top: 450px;
   }
   .benefits {
     color: white;
