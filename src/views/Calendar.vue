@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="container container_animation">
-    <div class="calendar_navigation" @click="previousWeek()">Previous Week</div>
+    <div class="calendar_navigation_button" @click="previousWeek()"><span class="calendar_navigation_text">Previous Week</span></div>
     <div class="animated" v-if="userData.months.includes(currentYearMonth)">
       <template v-for="day in userCalendar">
         <!-- eslint-disable-next-line -->
@@ -112,7 +112,7 @@
         </div>
       </div>
     </div>
-    <div class="calendar_navigation" style="margin-bottom: 70px" @click="nextWeek()">Next Week</div>
+    <div class="calendar_navigation_button" style="margin-bottom: 70px" @click="nextWeek()"><span class="calendar_navigation_text">Next Week</span></div>
   </div>
 </template>
 
@@ -223,9 +223,11 @@ export default {
   margin-bottom: 50px;
 }
 .container_meal:hover {
-  color: lightpink;
-  transition: .4s ease-in-out;
   cursor: pointer;
+  background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: .4s ease-in-out;
 }
 .container_meal:active .meal {
   text-shadow: 1px 1px rgb(240, 240, 240);
@@ -238,7 +240,7 @@ export default {
   margin-top: -10px;
   /* transition: .4s; */
 }
-.calendar_navigation {
+.calendar_navigation_button {
   position: relative;
   top: 20px;
   margin-top: 20px;
@@ -248,30 +250,22 @@ export default {
   border: 1.2px solid black;
   border-radius: 20px 20px;
 }
-.calendar_navigation:hover {
-  background-color: rgb(240, 240, 240);
-  transition: .4s;
-  cursor: pointer;
+.calendar_navigation_button:hover .calendar_navigation_text {
+  background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: .4s ease-in-out;
 }
-.calendar_navigation:active {
+.calendar_navigation_button:hover {
+  cursor: pointer;
+  background: black;
+  transition: .4s ease-in-out;
+}
+.calendar_navigation_button:active {
   transition: 0s;
   border: 1.2px solid rgb(102, 102, 102);
   text-shadow: 1px 1px white;
   color: rgb(102, 102, 102);
-}
-@media (min-width: 1000px) {
-.container {
-  top: 240px;
-}
-.day {
-  display: inline-block;
-  width: calc(100%/9);
-  vertical-align: top;
-}
-.calendar_navigation {
-  position: relative;
-  text-align: center;
-}
 }
 .block_date {
   display: block;
@@ -414,5 +408,19 @@ label {
 }
 .year_date {
   font-weight: 500;
+}
+@media (min-width: 1000px) {
+  .container {
+    top: 240px;
+  }
+  .day {
+    display: inline-block;
+    width: calc(100%/9);
+    vertical-align: top;
+  }
+  .calendar_navigation_button {
+    position: relative;
+    text-align: center;
+  }
 }
 </style>

@@ -1,8 +1,13 @@
 <template>
   <div id="cover_page">
-    <div id="cover_page_background" @click="scrollCalendar()">
-      <div id="cover_page_brand_name"><a id="product_link">METABOLISM</a></div>
-      <div id="container_benefits">
+    <div class="background" @click="scrollCalendar()">
+      <div class="brand_large">
+        <a>METABOLISM</a>
+      </div>
+      <div class="brand_small">
+        <img src="../assets/logo.png" alt="Logo">
+      </div>
+      <div class="container_benefits">
         <div id="benefit1" class="benefits">
           <p class="benefits_icon">1</p>
           Meal Planner
@@ -19,7 +24,7 @@
           <div class="benefits_explanation">Share the meal plan with all members of the household</div>
           <!-- Fix styling, credit not visible. Crediting isn't required though. -->
         </div>
-        <div id="enter_button" @click="scrollCalendar()">
+        <div class="enter_button" @click="scrollCalendar()">
           Discover the app
         </div>
       </div>
@@ -46,52 +51,33 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
+#cover_page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
 .slideOutUp {
   animation: slideOutUp .8s;
   animation-fill-mode: forwards;
 }
-#cover_page {
-  width: 100%;
-  height: 100%;
+.background {
   position: fixed;
+  display: block;
+  overflow: scroll;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom right, lightpink, #ffdfa0);
+  animation: slideInDown 1.2s;
 }
-#app {
-  -webkit-font-smoothing: subpixel-antialiased;
-  background: #fff;
-  color: #222;
-  font-family: Montserrat;
-  font-size: 14px;
-}
-html {}
-body {
-  -webkit-font-smoothing: subpixel-antialiased;
-  background: #fff;
-  color: #222;
-  font-family: Montserrat;
-  font-size: 14px;
-}
-[v-cloak] {
-  display: none;
-}
-.brand_name {
-  color: white;
-  letter-spacing: .2em;
-  font-family: Montserrat;
-  font-size: 50px;
-  font-weight: 600;
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  border-style: solid;
-  border-width: 5px;
-  border-color: white;
-  padding: 10px;
-}
-.brand_name:hover {
-  cursor: pointer;
+.container_benefits {
+  position: absolute;
+  top: 450px;
+  width: 80%;
+  padding-left: 10%;
 }
 #benefit1 {
   animation: fadeIn .8s;
@@ -108,90 +94,66 @@ body {
   animation-delay: 3.6s;
   animation-fill-mode: forwards;
 }
-::-webkit-scrollbar {
-  width: 3px;
-  height: 3px;
-}
-::-webkit-scrollbar-thumb:horizontal {
-  background: black;
-}
-#enter_button {
+.benefits_icon {
   position: relative;
+  margin: auto;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  width: 30px;
+  text-align: center;
   color: white;
-  left: 50%;
-  top: 100px;
-  transform: translateX(-50%);
+  font-size: 20px;
+  border: 2px solid white;
+  padding: 5px;
+}
+.enter_button {
+  position: relative;
   display: inline-block;
-  padding: 5px 10px 5px 10px;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
   font-size: 1em;
   border: 2px solid white;
   border-radius: 20px 20px;
+  padding: 5px 10px 5px 10px;
 }
-#enter_button:hover {
+.enter_button:hover {
   cursor: pointer;
-  background: white;
   color: #ffdeb9;
   font-weight: 400;
+  background: white;
   transition: .4s ease-in-out;
 }
-#enter_button:active {
-  transition: 0s;
+.enter_button:active {
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+  transition: 0s;
+}
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
 }
 @media (max-width: 650px) {
-  #cover_page_background {
-    background: linear-gradient(to bottom right, lightpink, #ffdfa0);
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    display: block;
-    top: 0;
-    left: 0;
-    animation: slideInDown .8s;
+  .brand_large {
+    display: none;
   }
-  #cover_page_brand_name {
-    text-align: center;
-    font-size: 3.5em;
-    font-weight: 800;
-    letter-spacing: .08em;
-    color: white;
-    width: 100%;
+  .brand_small {
     position: relative;
-    top: 40%;
-    transform: translateY(-120%);
-    overflow: scroll;
-  }
-  #container_benefits {
-    position: absolute;
-    top: 60%;
-    height: inherit;
-    width: 80%;
-    padding-left: 10%;
+    top: 150px;
+    text-align: center;
+    opacity: 0;
+    animation: slideInLeft .8s 1.2s forwards;
   }
   .benefits {
-    color: white;
-    opacity: 0;
     position: relative;
-    text-align: center;
-    font-size: 25px;
-    margin-bottom: 150px;
-    width: 30%;
     left: 50%;
     transform: translateX(-50%);
-  }
-  .benefits_icon {
+    margin-bottom: 150px;
+    width: 30%;
     color: white;
-    margin: auto;
-    font-size: 20px;
-    padding: 5px;
-    width: 30px;
-    margin-bottom: 30px;
-    margin-top: 10px;
-    position: relative;
     text-align: center;
-    border-style: solid;
-    border-color: white;
-    border-width: 2px;
+    font-size: 25px;
+    opacity: 0;
   }
   .benefits_explanation {
     text-align: center;
@@ -202,43 +164,15 @@ body {
   }
 }
 @media (max-width: 850px) and (min-width: 650px) {
-  #cover_page_background {
-    background: linear-gradient(to bottom right, lightpink, #ffdfa0);
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    display: block;
-    top: 0;
-    left: 0;
-    animation: slideInDown .8s;
+  .brand_large {
+    display: none;
   }
-  #cover_page_brand_name {
-    text-align: center;
-    font-size: 5em;
-    font-weight: 800;
-    letter-spacing: .1em;
-    color: white;
-    width: 100%;
+  .brand_small {
     position: relative;
-    top: 40%;
-    transform: translateY(-120%);
-    overflow: scroll;
-    animation: shadow .4s;
-    animation-delay: 2.6s;
-    animation-fill-mode: forwards;
-  }
-  #container_benefits {
-    position: absolute;
-    top: 60%;
-    height: inherit;
-    width: 80%;
-    padding-left: 10%;
-  }
-  #container_login {
-    position: absolute;
-    top: 55%;
-    height: inherit;
-    width: 100%;
+    top: 150px;
+    text-align: center;
+    opacity: 0;
+    animation: slideInLeft .8s 1.2s forwards;
   }
   .benefits {
     color: white;
@@ -250,20 +184,6 @@ body {
     width: 30%;
     left: 50%;
     transform: translateX(-50%);
-  }
-  .benefits_icon {
-    color: white;
-    margin: auto;
-    font-size: 20px;
-    padding: 5px;
-    width: 30px;
-    margin-bottom: 30px;
-    margin-top: 10px;
-    position: relative;
-    text-align: center;
-    border-style: solid;
-    border-color: white;
-    border-width: 2px;
   }
   .benefits_explanation {
     text-align: center;
@@ -278,17 +198,7 @@ body {
     width: 0px;
     height: 0px;
   }
-  #cover_page_background {
-    background: linear-gradient(to bottom right, lightpink, #ffdfa0);
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    display: block;
-    top: 0;
-    left: 0;
-    animation: slideInDown 1.2s;
-  }
-  #cover_page_brand_name {
+  .brand_large {
     text-align: center;
     font-size: 9em;
     font-weight: 800;
@@ -296,19 +206,13 @@ body {
     color: white;
     width: 100%;
     position: relative;
-    top: 25%;
+    top: 200px;
     opacity: 0;
     transform: translateY(-150%);
-    animation: slideInLeft .8s;
-    animation-delay: 1.2s, 1.2s;
-    animation-fill-mode: forwards;
+    animation: slideInLeft .8s 1.2s forwards;
   }
-  #container_benefits {
-    position: absolute;
-    width: 80%;
-    padding-left: 10%;
-    height: 45%;
-    bottom: 0;
+  .brand_small {
+    display: none;
   }
   .benefits {
     color: white;
@@ -320,25 +224,16 @@ body {
     overflow: visible;
     vertical-align: top;
   }
-  .benefits_icon {
-    margin: auto;
-    font-size: 20px;
-    padding: 5px;
-    width: 30px;
-    margin-bottom: 40px;
-    margin-top: 30px;
-    position: relative;
-    text-align: center;
-    border-style: solid;
-    border-color: white;
-    border-width: 2px;
-  }
   .benefits_explanation {
     text-align: center;
     font-size: 14px;
     margin-top: 20px;
     margin-left: 20%;
     margin-right: 20%;
+  }
+  .enter_button {
+    top: 100px;
+    margin-bottom: 20px;
   }
 }
 </style>

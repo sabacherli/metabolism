@@ -133,8 +133,8 @@ export default {
   left: 0;
   margin-top: 40px;
   margin-left: 40px;
-  width: 1.875em;
   height: 1.875em;
+  width: 1.875em;
   transition: .8s ease-in-out;
 }
 .dropdown:hover .dropdown_icon {
@@ -148,11 +148,11 @@ export default {
   position: fixed;
   z-index: 1;
   left: -250px;
-  width: 250px;
   height: 100%;
+  width: 250px;
   background: white;
-  opacity: 1;
   text-align: center;
+  opacity: 1;
   padding-top: 120px;
   transition: .8s ease-in-out;
 }
@@ -172,10 +172,10 @@ export default {
   transition: .4s ease-in-out;
 }
 .dropdown_item_selected {
+  font-size: 1.143em;
   background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  font-size: 1.143em;
   transition: .4s ease-in-out;
 }
 .dropdown_item_break {

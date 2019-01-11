@@ -62,27 +62,35 @@ export default {
 .brand_large:hover {
   cursor: pointer;
 }
+.brand_small:hover {
+  cursor: pointer;
+}
 @media (max-width: 650px) {
   .brand_large {
     display: none;
   }
   .brand_small {
-    top: 0px;
+    position: inherit;
     left: 50%;
     transform: translateX(-50%);
+    height: auto;
+    width: auto;
     color: white;
     font-size: 3.571em;
     font-weight: 600;
     letter-spacing: .1em;
     border: 5px solid white;
-    padding: 10px 20px 10px 20px;
+    padding: 20px 10px 20px 10px;
   }
 }
 @media (min-width: 650px) {
   .brand_large {
+    position: inherit;
     top: 15px;
     left: 50%;
     transform: translateX(-50%);
+    height: auto;
+    width: auto;
     color: white;
     font-size: 3.571em;
     font-weight: 600;

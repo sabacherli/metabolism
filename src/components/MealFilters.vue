@@ -31,22 +31,11 @@ export default {
 </script>
 
 <style lang="css" scoped>
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-.filters {
-  animation: fadeIn 1.2s;
-}
 .filters {
   position: absolute;
   bottom: 0;
-  width: 100%;
   height: 25px;
+  width: 100%;
   text-align: center;
 }
 .filter {
@@ -54,8 +43,8 @@ export default {
   display: inline-block;
   bottom: 15px;
   margin: auto 15px auto 15px;
-  color: white;
   text-align: center;
+  color: white;
 }
 .filter:hover {
   cursor: pointer;
@@ -63,8 +52,8 @@ export default {
 .filter_selected {
   position: relative;
   bottom: 15px;
-  height: 2px;
   margin: auto;
+  height: 2px;
   background-color: white;
   animation: expand .4s;
   animation-fill-mode: forwards;
