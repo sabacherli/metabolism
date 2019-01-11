@@ -1,0 +1,349 @@
+<template lang="html">
+  <div class="container">
+    <!-- Remove meal from calendar if one has been chosen. -->
+    <div class="day" v-if="checkSelection(userCalendar, pointer)">
+      <div class="box" @click="returnToCalendar(pointer); removeMeal()">
+        <p class="date">x</p>
+      </div>
+      <p class="dayname" @click="returnToCalendar(pointer); removeMeal()">Remove Meal</p>
+      <div class="ingredients_break">
+
+      </div>
+    </div>
+    <!-- Display filtered list of meals. -->
+    <template v-for="meal in filtered(userData)">
+      <!-- eslint-disable-next-line -->
+      <div class="day">
+        <div class="box" v-if="userID !== 'default'" @click="setEditor(meal); goEdit()">
+          <p class="date"> {{ meal.id }} </p>
+          <img class="edit_icon" src="../assets/icon-edit.png" alt="Edit">
+        </div>
+        <div class="box" v-if="userID == 'default'">
+          <p class="date"> {{ meal.id }} </p>
+        </div>
+        <p class="dayname" @click="returnToCalendar(pointer); selectMeal(meal)"> {{ meal.name }} </p>
+        <div class="ingredients_break">
+
+        </div>
+        <template v-for="ingredient in meal.ingredients">
+          <!-- eslint-disable-next-line -->
+          <div class="">
+            <p class="meal"> {{ ingredient.ingredient }} </p>
+            <p class="meal_location"> {{ ingredient.amount }} {{ ingredient.unit }} </p>
+          </div>
+        </template>
+      </div>
+    </template>
+    <div class="day" v-if="userID !== 'default' && pointer.doc === ''">
+      <div class="box" @click="addMeal()">
+        <p class="add">+</p>
+      </div>
+      <p class="dayname" v-if="mealName"> {{ mealName }} </p>
+      <p class="dayname" v-else>Add Meal</p>
+      <div class="ingredients_break">
+
+      </div>
+      <template v-for="ingredient in meal.ingredients">
+        <!-- eslint-disable-next-line -->
+        <div class="">
+          <p class="meal"> {{ ingredient.ingredient }} </p>
+          <p class="meal_location"> {{ ingredient.amount }} {{ ingredient.unit }} </p>
+        </div>
+      </template>
+      <div class="">
+        <p class="meal"> {{ newIngredient }} </p>
+        <p class="meal_location"> {{ newAmount }} <span v-if="newUnit"> {{ newUnit }} </span> </p>
+      </div>
+      <div class="" v-if="newIngredient">
+
+      </div>
+      <div class="" v-if="!meal.name">
+        <label for="">Meal Name</label>
+        <input class="amount" type="text" name="" value="" @keyup.enter="addMealName(); focusIngredient()" v-model="mealName" required>
+        <br>
+      </div>
+      <div class="" v-if="meal.name">
+        <label for="">Ingredient</label>
+        <input id="newIngredient" class="amount" type="text" name="" value="" @keyup.enter="focusAmount()" v-model="newIngredient">
+        <br>
+        <label for="">Amount</label>
+        <input id="newAmount" class="amount" type="text" name="" value="" @keyup.enter="focusUnit()" v-model="newAmount">
+        <br>
+        <label for="">Unit</label>
+        <input id="newUnit" class="amount" type="text" name="" value="" @keyup.enter="addIngredientToMeal()" v-model="newUnit">
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapState, mapMutations } from 'vuex'
+
+export default {
+  name: 'Menu',
+  created () {
+    this.$store.commit('setPage', 'menu')
+  },
+  computed: {
+    ...mapState([
+      'userCalendar',
+      'userData',
+      'userID',
+      'pointer',
+      'meal',
+      'mealName',
+      'newIngredient',
+      'newAmount',
+      'newUnit'
+    ]),
+    mealName: {
+      get () {
+        return this.$store.state.mealName
+      },
+      set (value) {
+        this.$store.commit('syncMealName', value)
+      }
+    },
+    newIngredient: {
+      get () {
+        return this.$store.state.newIngredient
+      },
+      set (value) {
+        this.$store.commit('syncIngredient', value)
+      }
+    },
+    newAmount: {
+      get () {
+        return this.$store.state.newAmount
+      },
+      set (value) {
+        this.$store.commit('syncAmount', value)
+      }
+    },
+    newUnit: {
+      get () {
+        return this.$store.state.newUnit
+      },
+      set (value) {
+        this.$store.commit('syncUnit', value)
+      }
+    }
+  },
+  methods: {
+    ...mapMutations([
+      'selectMeal',
+      'addMealName',
+      'addMeal',
+      'addIngredientToMeal',
+      'setEditor',
+      'removeMeal'
+    ]),
+    returnToCalendar (pointer) {
+      if (pointer.doc !== '') {
+        this.$router.push('/calendar')
+      }
+    },
+    filtered (userData) {
+      var filteredMeals = []
+      var activeTags = []
+      for (let t = 0; t < userData.tagList.length; t++) {
+        if (userData.tagList[t].isActive) {
+          activeTags.push(userData.tagList[t].text)
+        }
+      }
+      for (let f = 0; f < userData.foods.length; f++) {
+        for (let t = 0; t < userData.foods[f].tags.length; t++) {
+          if ((activeTags.includes(userData.foods[f].tags[t])) && (!filteredMeals.includes(userData.foods[f]))) {
+            filteredMeals.push(userData.foods[f])
+          }
+        }
+      }
+      return filteredMeals
+    },
+    checkSelection (userCalendar, pointer) {
+      if (pointer.position === 'breakfast') {
+        return userCalendar[pointer.doc].breakfast !== 'Breakfast'
+      }
+      if (pointer.position === 'lunch') {
+        return userCalendar[pointer.doc].lunch !== 'Lunch'
+      }
+      if (pointer.position === 'dinner') {
+        return userCalendar[pointer.doc].dinner !== 'Dinner'
+      }
+    },
+    focusIngredient () {
+      document.getElementById('newIngredient').focus()
+    },
+    focusAmount () {
+      document.getElementById('newAmount').focus()
+    },
+    focusUnit () {
+      document.getElementById('newUnit').focus()
+    },
+    goEdit () {
+      this.$router.push('edit')
+    }
+  }
+}
+</script>
+
+<style lang="css" scoped>
+@keyframes slideInUp {
+  from {
+    top: 400px;
+    opacity: 0;
+  }
+  to {
+    top: 210px;
+    opacity: 1;
+  }
+}
+.add {
+  position: absolute;
+  font-size: 20px;
+  top: 50%;
+  margin-top: -19px;
+  left: 50%;
+  margin-left: -7px;
+  font-size: 30px;
+  transition: .8s ease-in-out;
+}
+.box:hover .add {
+  cursor: pointer;
+  transform: rotate(270deg);
+}
+.box {
+  position: relative;
+  width: 30px;
+  height: 25px;
+  margin: auto;
+  margin-bottom: 30px;
+  padding: 5px;
+  border: 2px solid black;
+}
+.box:hover .date {
+  opacity: 0;
+}
+.box:hover .edit_icon {
+  opacity: 1;
+  cursor: pointer;
+  transition: .8s ease-in-out;
+}
+.container {
+  position: relative;
+  top: 210px;
+  height: 570px;
+  width: 85%;
+  margin: auto;
+  overflow: scroll;
+  text-align: center;
+  margin-bottom: 20px;
+  white-space: nowrap;
+  overflow-y: scroll;
+  animation: slideInUp .8s;
+  animation-delay: .4s;
+  animation-fill-mode: forwards;
+  opacity: 0;
+}
+.day {
+  margin-top: 70px;
+}
+.date {
+  position: absolute;
+  font-size: 20px;
+  top: -5%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+.dayname {
+  font-size: 20px;
+  margin-top: 30px;
+  margin-bottom: 50px;
+}
+.meal_location {
+  font-size: 10px;
+  margin-top: -10px;
+  /* transition: .4s; */
+}
+.ingredients_break {
+  position: relative;
+  top: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: auto;
+  margin-top: -10px;
+  margin-bottom: 35px;
+  border: .6px solid black;
+}
+.edit_icon {
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  top: 50%;
+  left: 50%;
+  opacity: 0;
+  transform: translateX(-50%) translateY(-50%);
+}
+input[type=text].amount {
+  border: 0px;
+  border-bottom-style: solid;
+  border-bottom-color: black;
+  border-bottom-width: 1px;
+  display: block;
+  width: 120px;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 5px;
+  font-size: 14px;
+  font-family: Montserrat;
+}
+input[type=text]:focus.amount {
+  border: 0px;
+  border-bottom-style: solid;
+  border-bottom-color: black;
+  border-bottom-width: 2px;
+  display: block;
+  width: 120px;
+  position: relative;
+  outline: none;
+}
+label {
+  position: relative;
+  color: black;
+  display: block;
+  text-align: left;
+  top: 36px;
+  width: 100px;
+  left: 50%;
+  transform: translateX(-60px);
+  margin-right: auto;
+  font-size: 10px;
+}
+@media (min-width: 1000px) {
+  .container {
+    top: 240px;
+    overflow: visible;
+  }
+  .day {
+    display: inline-block;
+    width: calc(100%/7);
+    vertical-align: top;
+    margin-left: 15px;
+    margin-right: 15px;
+    overflow-y: visible;
+  }
+  .ingredients_break {
+    position: relative;
+    top: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: auto;
+    margin-top: -10px;
+    margin-bottom: 35px;
+    border: .6px solid black;
+  }
+}
+</style>
