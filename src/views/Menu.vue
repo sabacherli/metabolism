@@ -19,7 +19,7 @@
           <img class="edit_icon" src="../assets/icon-edit.png" alt="Edit">
         </div>
         <div class="box" v-if="userID == 'default'">
-          <p class="date"> {{ meal.id }} </p>
+          <p class="date_default"> {{ meal.id }} </p>
         </div>
         <p class="dayname" @click="returnToCalendar(pointer); selectMeal(meal)"> {{ meal.name }} </p>
         <div class="ingredients_break">
@@ -239,6 +239,13 @@ export default {
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
 }
+.date_default {
+  position: absolute;
+  font-size: 20px;
+  top: -5%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
 .day {
   margin-top: 70px;
 }
@@ -328,6 +335,9 @@ label {
   }
 }
 @media (min-width: 1000px) {
+  .box:hover {
+    cursor: pointer;
+  }
   .box:hover .date {
     opacity: 0;
   }
