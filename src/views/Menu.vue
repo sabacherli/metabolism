@@ -198,20 +198,6 @@ export default {
     opacity: 1;
   }
 }
-.add {
-  position: absolute;
-  font-size: 20px;
-  top: 50%;
-  margin-top: -19px;
-  left: 50%;
-  margin-left: -7px;
-  font-size: 30px;
-  transition: .8s ease-in-out;
-}
-.box:hover .add {
-  cursor: pointer;
-  transform: rotate(270deg);
-}
 .box {
   position: relative;
   width: 30px;
@@ -221,14 +207,15 @@ export default {
   padding: 5px;
   border: 2px solid black;
 }
-.box:hover .date {
-  opacity: 0;
-}
-.box:hover .edit_icon {
-  opacity: 1;
-  cursor: pointer;
-  transition: .8s ease-in-out;
-}
+  .edit_icon {
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+    transform: translateX(-50%) translateY(-50%);
+  }
 .container {
   position: relative;
   top: 210px;
@@ -245,15 +232,15 @@ export default {
   animation-fill-mode: forwards;
   opacity: 0;
 }
-.day {
-  margin-top: 70px;
-}
 .date {
   position: absolute;
   font-size: 20px;
   top: -5%;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
+}
+.day {
+  margin-top: 70px;
 }
 .dayname {
   font-size: 20px;
@@ -279,14 +266,19 @@ export default {
   border-bottom-color: black;
   border-bottom-width: 1px;
 }
-.edit_icon {
+.add {
   position: absolute;
-  height: 20px;
-  width: 20px;
+  font-size: 20px;
   top: 50%;
+  margin-top: -19px;
   left: 50%;
-  opacity: 0;
-  transform: translateX(-50%) translateY(-50%);
+  margin-left: -7px;
+  font-size: 30px;
+  transition: .8s ease-in-out;
+}
+.box:hover .add {
+  cursor: pointer;
+  transform: rotate(270deg);
 }
 input[type=text].amount {
   border: 0px;
@@ -324,7 +316,26 @@ label {
   margin-right: auto;
   font-size: 10px;
 }
+@media (max-width: 1000px) {
+  .edit_icon {
+    opacity: 1;
+  }
+  .box:hover {
+    cursor: pointer;
+  }
+  .date {
+    display: none;
+  }
+}
 @media (min-width: 1000px) {
+  .box:hover .date {
+    opacity: 0;
+  }
+  .box:hover .edit_icon {
+    opacity: 1;
+    cursor: pointer;
+    transition: .8s ease-in-out;
+  }
   .container {
     top: 240px;
     overflow: visible;

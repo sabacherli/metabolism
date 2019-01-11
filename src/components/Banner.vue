@@ -42,9 +42,9 @@ export default {
   },
   methods: {
     goCalendar () {
+      this.$store.commit('setPage', 'calendar')
       this.$router.push('calendar')
       this.$store.commit('getCalendar')
-      this.$store.commit('setPage', 'calendar')
     }
   }
 }

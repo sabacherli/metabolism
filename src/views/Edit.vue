@@ -66,9 +66,10 @@
         <input class="amount" type="text" name="" value="" @keyup.enter="focusIngredient(), addIngredient()" v-model="newUnit" required>
       </div>
     </div>
-    <div class="btn_return" @click="returnToMenu()">
-      <img  src="../assets/icons8-save-close-48.png" alt="Save">
+    <div class="save_button" style="margin-bottom: 70px" @click="returnToMenu()">
+      <span class="save_text">Save & Return</span>
     </div>
+    <!-- <img  src="../assets/icons8-save-close-48.png" alt="Save"> -->
   </div>
 </template>
 
@@ -171,18 +172,34 @@ export default {
 .number:hover .add_recipe {
   transform: rotate(270deg);
 }
-.btn_return {
+.save_button {
   position: fixed;
-  bottom: 70px;
+  bottom: -20px;
   left: 50px;
-  height: 20px;
-  width: 20px;
-  border-radius: 100%;
-  box-shadow: 14px 14px 8px 16.5px lightgrey;
+  font-size: .714em;
+  background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+  border-radius: 20px 20px;
+  padding: 10px;
 }
-.btn_return:hover {
+.save_text {
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+}
+.save_button:hover .save_text {
+  background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: .4s ease-in-out;
+}
+.save_button:hover {
   cursor: pointer;
-  box-shadow: 14px 14px 8px 16.5px darkgray;
+  background: black;
+  transition: .4s ease-in-out;
+}
+.save_button:active {
+  transition: 0s;
+  shadow: rgb(102, 102, 102);
 }
 @media (max-width: 850px) and (min-height: 400px) {
   .container_recipies {

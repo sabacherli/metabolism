@@ -109,7 +109,7 @@ export default {
 }
 .container_login {
    position: relative;
-   top: 320px;
+   top: 270px;
    width: 100%;
    opacity: 0;
    animation: fadeIn .8s;
@@ -119,22 +119,21 @@ export default {
 .login_email,
 .login_password {
    position: relative;
-   text-align: center;
-   font-size: 14px;
-   font-family: Montserrat;
-   color: lightgray;
-   letter-spacing: .2px;
+   display: inline-block;
+   top: 15%;
    left: 50%;
    transform: translateX(-50%);
-   display: inline-block;
+   height: 30px;
+   width: 35%;
+   text-align: center;
+   color: lightgray;
+   font-family: Montserrat;
+   font-size: 14px;
+   letter-spacing: .2px;
+   background: white;
    border-style: none;
    border-radius: 25px;
    border-width: 2px;
-   background: white;
-   top: 15%;
-   height: 30px;
-   width: 35%;
-   color: darkgray;
  }
 input[type=email].login_email:focus,
 input[type=password].login_password:focus {
@@ -188,6 +187,10 @@ input[type=password].login_password:focus {
     opacity: 0;
     animation: slideInLeft .8s 1.2s forwards;
   }
+  .login_email,
+  .login_password {
+     width: 60%;
+   }
 }
 @media (min-width: 850px) {
   .brand_large {

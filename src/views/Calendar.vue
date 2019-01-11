@@ -13,15 +13,15 @@
           <div class="ingredients_break">
 
           </div>
-          <div class="container_meal">
+          <div class="">
             <p class="meal"> {{ day.breakfast }} </p>
             <p class="meal_location"> {{ day.breakfastLocation }} </p>
           </div>
-          <div class="container_meal">
+          <div class="">
             <p class="meal"> {{ day.lunch }} </p>
             <p class="meal_location"> {{ day.lunchLocation }} </p>
           </div>
-          <div class="container_meal">
+          <div class="">
             <p class="meal"> {{ day.dinner }} </p>
             <p class="meal_location"> {{ day.dinnerLocation }} </p>
           </div>
