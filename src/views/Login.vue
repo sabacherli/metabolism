@@ -1,10 +1,13 @@
 <template lang="html">
   <div id="cover_page">
-    <div id="cover_page_background">
-      <div id="brand_name">
-        METABOLISM
+    <div class="background">
+      <div class="brand_large">
+        <a>METABOLISM</a>
       </div>
-      <div id="container_login">
+      <div class="brand_small">
+        <img src="../assets/logo.png" alt="Logo">
+      </div>
+      <div class="container_login">
         <form class="" action="index.html" method="post">
           <input class="login_email" type="email" name="email" value="" v-model="email" placeholder="Email" autocomplete="email" required>
           <br>
@@ -85,7 +88,7 @@ export default {
 }
 </script>
 
-<style lang="css">
+<style lang="css" scoped>
 #cover_page {
   width: 100%;
   height: 100%;
@@ -93,32 +96,18 @@ export default {
   top: 0;
   left: 0;
 }
-#cover_page_background {
-  background: linear-gradient(to bottom right, lightpink, #ffdfa0);
-  width: 100%;
-  height: 100%;
+.background {
   position: fixed;
   display: block;
+  overflow: scroll;
   top: 0;
   left: 0;
-  animation: slideInUp 1.2s;
-}
-#brand_name {
-  text-align: center;
-  font-size: 9em;
-  font-weight: 800;
-  letter-spacing: .05em;
-  color: white;
   width: 100%;
-  position: relative;
-  top: 25%;
-  opacity: 0;
-  transform: translateY(-150%);
-  animation: slideInLeft .8s;
-  animation-delay: 1.2s, 1.2s;
-  animation-fill-mode: forwards;
+  height: 100%;
+  background: linear-gradient(to bottom right, lightpink, #ffdfa0);
+  animation: slideInDown 1.2s;
 }
-#container_login {
+.container_login {
    position: relative;
    top: 320px;
    height: inherit;
@@ -155,26 +144,6 @@ export default {
   color: lightgray;
   letter-spacing: .2px;
 }
-input[type=text].login_email:focus,
-input[type=password].login_email:focus,
-input[type=email].login_email:focus,
-input[type=text].login_password:focus,
-input[type=password].login_password:focus,
-input[type=email].login_password:focus {
-  background-color: #F8F8F8;
-  outline: none;
-  letter-spacing: .2px;
-  font-size: 14px;
-}
-::placeholder {
-  font-size: 14px;
-  font-family: Montserrat;
-  color: lightgray;
-  letter-spacing: .2px;
-}
-:invalid {
-  color: darkgray;
-}
 #login_button {
   position: relative;
   color: white;
@@ -198,10 +167,58 @@ input[type=email].login_password:focus {
   transition: 0s;
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
 }
-@media (min 1000px) {
-  ::-webkit-scrollbar:vertical {
-   width: 0px;
-   height: 0px;
- }
+input[type=text].login_email:focus,
+input[type=password].login_email:focus,
+input[type=email].login_email:focus,
+input[type=text].login_password:focus,
+input[type=password].login_password:focus,
+input[type=email].login_password:focus {
+  background-color: #F8F8F8;
+  outline: none;
+  letter-spacing: .2px;
+  font-size: 14px;
+}
+::placeholder {
+  font-size: 14px;
+  font-family: Montserrat;
+  color: lightgray;
+  letter-spacing: .2px;
+}
+:invalid {
+  color: darkgray;
+}
+::-webkit-scrollbar {
+  height: 0px;
+  width: 0px;
+}
+@media (max-width: 850px) {
+  .brand_large {
+    display: none;
+  }
+  .brand_small {
+    position: relative;
+    top: 150px;
+    text-align: center;
+    opacity: 0;
+    animation: slideInLeft .8s 1.2s forwards;
+  }
+}
+@media (min-width: 850px) {
+  .brand_large {
+    text-align: center;
+    font-size: 9em;
+    font-weight: 800;
+    letter-spacing: .05em;
+    color: white;
+    width: 100%;
+    position: relative;
+    top: 200px;
+    opacity: 0;
+    transform: translateY(-150%);
+    animation: slideInLeft .8s 1.2s forwards;
+  }
+  .brand_small {
+    display: none;
+  }
 }
 </style>

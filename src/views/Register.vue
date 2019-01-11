@@ -127,7 +127,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="css" scoped>
 #cover_page {
   width: 100%;
   height: 100%;

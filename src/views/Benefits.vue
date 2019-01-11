@@ -50,7 +50,7 @@ export default {
 </script>
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="css" scoped>
 #cover_page {
   position: fixed;
   top: 0;
@@ -194,10 +194,6 @@ export default {
   }
 }
 @media (min-width: 850px) {
-  ::-webkit-scrollbar:vertical {
-    width: 0px;
-    height: 0px;
-  }
   .brand_large {
     text-align: center;
     font-size: 9em;
