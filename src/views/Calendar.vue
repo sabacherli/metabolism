@@ -211,11 +211,14 @@ export default {
 }
 .past {
   position: relative;
-  top: -43px;
+  top: -44px;
   left: 50%;
-  width: 53px;
-  border: 1px solid black;
-  transform: rotate(-40.5deg) translateX(-65%);
+  width: 55px;
+  border: 0px;
+  border-bottom-style: solid;
+  border-bottom-color: black;
+  border-bottom-width: 2px;
+  transform: rotate(-41deg) translateX(-67%);
 }
 .dayname {
   font-size: 20px;
