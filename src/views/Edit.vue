@@ -10,8 +10,10 @@
         <div class="square square_recipies">
 
         </div>
-        <label for="">Recipe Name</label>
-        <input id="mealName" class="amount editPlace" type="text" name="" value="" @keyup.enter="removeFocus()" v-model="filteredmeal.name" required>
+        <div class="" align="left">
+          <label for="">Recipe Name</label>
+          <input id="mealName" class="amount editPlace" type="text" name="" value="" @keyup.enter="removeFocus()" v-model="filteredmeal.name" required>
+        </div>
       </div>
       <!-- eslint-disable-next-line -->
       <template v-for="ingredient in filteredmeal.ingredients">
@@ -22,7 +24,7 @@
           </div>
           <p class="recipe_name"> {{ ingredient.ingredient }} </p>
           <p class="amount"> {{ ingredient.amount }} {{ ingredient.unit }} </p>
-          <div class="">
+          <div class="" align="left">
             <label for="">Ingredient</label>
             <input class="amount" type="text" name="" value="" @keyup.enter="focusAmount" v-model="ingredient.ingredient" required>
             <br>
@@ -55,7 +57,7 @@
       <div class="square square_recipies">
 
       </div>
-      <div class="">
+      <div class="" align="left">
         <label for="">Ingredient</label>
         <input id="newIngredient" class="amount" type="text" name="" value="" @keyup.enter="addMealName" v-model="mealName" required>
         <br>
@@ -182,7 +184,7 @@ export default {
 }
 .save_button:active {
   transition: 0s;
-  shadow: rgb(102, 102, 102);
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
 }
 @media (max-width: 850px) and (min-height: 400px) {
   .container_recipies {
@@ -241,6 +243,39 @@ export default {
     font-size: 10px;
     margin-top: 0px;
     margin-bottom: 10px;
+  }
+  input[type=text].amount,
+  input[type=password].amount {
+    position: relative;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5px;
+    width: 120px;
+    font-size: 14px;
+    font-family: Montserrat;
+    border: 0px;
+    border-bottom: 1px solid black;
+  }
+  input[type=text]:focus.amount,
+  input[type=password]:focus.amount {
+    position: relative;
+    display: block;
+    width: 120px;
+    border: 0px;
+    border-bottom: 2px solid black;
+    outline: none;
+  }
+  label {
+    position: relative;
+    display: block;
+    text-align: left;
+    top: 36px;
+    width: 100%;
+    left: 50%;
+    transform: translateX(-60px);
+    margin-right: auto;
+    font-size: 10px;
   }
 }
 @media (min-width: 850px) {
@@ -305,65 +340,37 @@ export default {
     margin-top: 0px;
     transition: .3s;
   }
-}
-input[type=text].amount {
-  border: 0px;
-  border-bottom-style: solid;
-  border-bottom-color: black;
-  border-bottom-width: 1px;
-  display: block;
-  width: 120px;
-  position: relative;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 5px;
-  font-size: 14px;
-  font-family: Montserrat;
-}
-input[type=password].amount {
-  border: 0px;
-  border-bottom-style: solid;
-  border-bottom-color: black;
-  border-bottom-width: 1px;
-  display: block;
-  width: 120px;
-  position: relative;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 5px;
-  font-size: 14px;
-  font-family: Montserrat;
-}
-input[type=text]:focus.amount {
-  border: 0px;
-  border-bottom-style: solid;
-  border-bottom-color: black;
-  border-bottom-width: 2px;
-  display: block;
-  width: 120px;
-  position: relative;
-  outline: none;
-}
-input[type=password]:focus.amount {
-  border: 0px;
-  border-bottom-style: solid;
-  border-bottom-color: black;
-  border-bottom-width: 2px;
-  display: block;
-  width: 120px;
-  position: relative;
-  outline: none;
-}
-label {
-  position: relative;
-  display: block;
-  text-align: left;
-  top: 36px;
-  width: 100%;
-  left: 50%;
-  transform: translateX(-60px);
-  margin-right: auto;
-  font-size: 10px;
+  input[type=text].amount,
+  input[type=password].amount {
+    position: relative;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    width: 120px;
+    font-size: 14px;
+    font-family: Montserrat;
+    border: 0px;
+    border-bottom: 1px solid black;
+  }
+  input[type=text]:focus.amount,
+  input[type=password]:focus.amount {
+    position: relative;
+    display: inline-block;
+    width: 120px;
+    border: 0px;
+    border-bottom: 2px solid black;
+    outline: none;
+  }
+  label {
+    position: relative;
+    display: inline-block;
+    text-align: left;
+    top: 42px;
+    width: 100%;
+    margin-right: auto;
+    font-size: 10px;
+  }
 }
 @media (hover:hover) {
   .number:hover {
