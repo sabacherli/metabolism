@@ -83,19 +83,19 @@
             <div class="block_date">
               <template v-for="month in listMonthsDefault.slice(0,4)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_border: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in listMonthsDefault.slice(4,8)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_border: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in listMonthsDefault.slice(8,12)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_border: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
               </template>
             </div>
           </div>
@@ -108,19 +108,19 @@
             <div class="block_date">
               <template v-for="month in listMonthsDefault.slice(12,16)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_border: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in listMonthsDefault.slice(16,20)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_border: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in listMonthsDefault.slice(20,24)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_border: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
               </template>
             </div>
             <p class="year_date price">{{ price }} CHF</p>
@@ -146,19 +146,19 @@
             <div class="block_date">
               <template v-for="month in listMonths.slice(0,4)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_border: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in listMonths.slice(4,8)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_border: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in listMonths.slice(8,12)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_border: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
               </template>
             </div>
           </div>
@@ -171,19 +171,19 @@
             <div class="block_date">
               <template v-for="month in listMonths.slice(12,16)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_border: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in listMonths.slice(16,20)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_border: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in listMonths.slice(20,24)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_border: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
               </template>
             </div>
             <p class="year_date price">{{ price }} CHF</p>
@@ -679,10 +679,11 @@ export default {
   padding-left: 7px;
   padding-right: 7px;
 }
-.inline_date_border {
-  background-color: linear-gradient(315deg, #ffdeb9, lightpink 100%);
-  color: white;
-  border-radius: 20px 20px;
+.inline_date_bought {
+    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+    color: white;
+    padding: auto 5px auto 5px;
+    border-radius: 20px 20px;
 }
 .inline_date_selected {
   font-weight: 400;
