@@ -1,8 +1,8 @@
 <template lang="html">
-  <div class="dropdown">
+  <div id="container" class="dropdown">
     <img class="dropdown_icon" src="../assets/icon-menu-dropdown.png" alt="Menu">
     <div class="dropdown_nav">
-      <img class="dropdown_close" src="../assets/icons8-delete-50.png" alt="Close" @click="closeDropdown()">
+      <img id="close" class="dropdown_close" src="../assets/icons8-delete-50.png" alt="Close" @click="closeDropdown()">
       <span id="benefits" class="dropdown_item" v-if="userID === 'default'" v-on:click='goBenefits(); thisWeek()'>BENEFITS</span>
       <div class="dropdown_item_break" v-if="userID === 'default'">
 
@@ -99,6 +99,13 @@ export default {
           alert(error.message)
           console.log(error.code)
         })
+    },
+    closeDropdown () {
+      document.getElementById('container').classList.add('remove_hover')
+      setTimeout(this.removeClass, 800)
+    },
+    removeClass () {
+      document.getElementById('container').classList.remove('remove_hover')
     }
   },
   mounted () {
@@ -181,6 +188,12 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.remove_hover {
+  pointer-events: none;
+}
+.change_close {
+  color: black;
+}
 .dropdown_icon {
   position: fixed;
   z-index: 20;
@@ -206,11 +219,23 @@ export default {
 }
 .dropdown_close {
   position: absolute;
-  z-index: 200;
+  z-index: 30;
   top: 0;
   left: 0;
   margin-top: 40px;
   margin-left: 40px;
+  height: 1.875em;
+  width: 1.875em;
+  opacity: 0;
+  transition: .8s ease-in-out;
+}
+.dropdown_change{
+  position: absolute;
+  z-index: 30;
+  top: 0;
+  left: 0;
+  margin-top: 41px;
+  margin-left: 41px;
   height: 1.875em;
   width: 1.875em;
   opacity: 0;
@@ -240,42 +265,29 @@ export default {
   border-bottom-color: black;
   border-bottom-width: 1px;
 }
-@media (hover:none) {
-  /* Touch devices */
-  .dropdown:active .dropdown_nav {
+@media (hover:hover) {
+  /* Mouse devices */
+  .dropdown:hover .dropdown_nav {
     left: 0;
   }
-  .dropdown:active .dropdown_icon {
+  .dropdown:hover .dropdown_icon {
     transform: rotate(360deg);
+    z-index: 0;
     opacity: 0;
   }
-  .dropdown:active .dropdown_close {
+  .dropdown:hover .dropdown_close {
     transform: rotate(360deg);
     opacity: 1;
   }
-}
-@media (hover:hover) {
-    /* Mouse devices */
-    .dropdown:hover .dropdown_nav {
-      left: 0;
-    }
-    .dropdown:hover .dropdown_icon {
-      transform: rotate(360deg);
-      opacity: 0;
-    }
-    .dropdown:hover .dropdown_close {
-      transform: rotate(360deg);
-      opacity: 1;
-    }
-    .dropdown_close:hover {
-      cursor: pointer;
-    }
-    .dropdown_item:hover {
-      cursor: pointer;
-      background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      transition: .4s ease-in-out;
-    }
+  .dropdown_close:hover {
+    cursor: pointer;
+  }
+  .dropdown_item:hover {
+    cursor: pointer;
+    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: .4s ease-in-out;
+  }
 }
 </style>
