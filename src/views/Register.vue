@@ -242,8 +242,4 @@ input[type=password].register_password:focus {
   color: lightgray;
   letter-spacing: .2px;
 }
-::-webkit-scrollbar {
-  height: 0px;
-  width: 0px;
-}
 </style>

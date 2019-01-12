@@ -219,7 +219,7 @@ export default {
 .container {
   position: relative;
   top: 210px;
-  height: 570px;
+  height: inherit;
   width: 85%;
   margin: auto;
   overflow: scroll;

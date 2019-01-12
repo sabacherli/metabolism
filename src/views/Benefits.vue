@@ -130,10 +130,6 @@ export default {
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
   transition: 0s;
 }
-::-webkit-scrollbar {
-  width: 0px;
-  height: 0px;
-}
 @media (max-width: 650px) {
   .brand_large {
     display: none;

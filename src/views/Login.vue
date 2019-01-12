@@ -172,10 +172,6 @@ input[type=password].login_password:focus {
   color: lightgray;
   letter-spacing: .2px;
 }
-::-webkit-scrollbar {
-  height: 0px;
-  width: 0px;
-}
 @media (max-width: 850px) {
   .brand_large {
     display: none;

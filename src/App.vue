@@ -9,6 +9,7 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import store from './store'
+import 'typeface-montserrat'
 
 export default {
   created () {
@@ -42,9 +43,8 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
   height: auto;
-  font-family: Montserrat;
+  width: 100%;
   font-size: 14px;
   font-family: Montserrat;
   -webkit-font-smoothing: antialiased;
@@ -164,5 +164,22 @@ div {
 .slide-leave-to {
   opacity: 0;
   transform: translateX(-30%);
+}/* Change Autocomplete styles in Chrome*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: darkgrey;
+  -webkit-box-shadow: 0 0 0px 1000px rgba(123, 251, 119, 0.20) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
 }
 </style>
