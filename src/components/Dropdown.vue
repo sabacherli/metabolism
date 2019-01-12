@@ -1,8 +1,8 @@
 <template lang="html">
   <div id="container" class="dropdown">
-    <img class="dropdown_icon" src="../assets/icon-menu-dropdown.png" alt="Menu">
-    <div class="dropdown_nav">
-      <img id="close" class="dropdown_close" src="../assets/icons8-delete-50.png" alt="Close" @click="closeDropdown()">
+    <img class="dropdown_icon" src="../assets/icon-menu-dropdown.png" alt="Menu" @click="touchCome()">
+    <div id="dropdown_nav" class="dropdown_nav">
+      <img id="close" class="dropdown_close" src="../assets/icons8-delete-50.png" alt="Close" @click="touchLeave()">
       <span id="benefits" class="dropdown_item" v-if="userID === 'default'" v-on:click='goBenefits(); thisWeek()'>BENEFITS</span>
       <div class="dropdown_item_break" v-if="userID === 'default'">
 
@@ -100,7 +100,13 @@ export default {
           console.log(error.code)
         })
     },
-    closeDropdown () {
+    touchCome () {
+      document.getElementById('dropdown_nav').classList.remove('dropdown_nav')
+      document.getElementById('dropdown_nav').classList.add('dropdown_nav_touch')
+    },
+    touchLeave () {
+      document.getElementById('dropdown_nav').classList.remove('dropdown_nav_toch')
+      document.getElementById('dropdown_nav').classList.add('dropdown_nav')
       document.getElementById('container').classList.add('remove_hover')
       setTimeout(this.removeClass, 800)
     },
@@ -248,35 +254,17 @@ export default {
   border-bottom-width: 1px;
 }
 @media (hover:none) {
-  .dropdown:hover,
-  .dropdown:active .dropdown_nav {
-    left: 0;
-  }
-  .dropdown:hover,
-  .dropdown:active .dropdown_icon {
-    transform: rotate(360deg);
-    z-index: 0;
-    opacity: 0;
-  }
-  .dropdown:hover,
-  .dropdown:active .dropdown_close {
-    transform: rotate(360deg);
+  .dropdown_nav_touch {
+    position: fixed;
+    z-index: 1;
+    left: 0px;
+    height: 100%;
+    width: 250px;
+    background: white;
+    text-align: center;
     opacity: 1;
-  }
-  .dropdown_close:hover,
-  .dropdown_close:active {
-    cursor: pointer;
-  }
-  .dropdown_item:hover,
-  .dropdown_item:active {
-    cursor: pointer;
-    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    transition: .4s ease-in-out;
-  }
-  .remove_hover {
-    pointer-events: none;
+    padding-top: 120px;
+    transition: .8s ease-in-out;
   }
 }
 @media (hover:hover) {
