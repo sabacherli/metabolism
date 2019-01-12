@@ -188,9 +188,6 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.remove_hover {
-  pointer-events: none;
-}
 .dropdown_icon {
   position: fixed;
   z-index: 20;
@@ -273,6 +270,9 @@ export default {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     transition: .4s ease-in-out;
+  }
+  .remove_hover {
+    pointer-events: none;
   }
 }
 </style>
