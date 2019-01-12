@@ -1,8 +1,8 @@
 <template lang="html">
   <div id="container" class="dropdown">
-    <img id="dropdown_icon" class="dropdown_icon" src="../assets/icon-menu-dropdown.png" alt="Menu" @click="touchCome()">
+    <img id="dropdown_icon" class="dropdown_icon_t dropdown_icon_p" src="../assets/icon-menu-dropdown.png" alt="Menu" @click="touchCome()">
     <div id="dropdown_nav" class="dropdown_nav_p dropdown_nav_t">
-      <img id="dropdown_close" class="dropdown_close" src="../assets/icons8-delete-50.png" alt="Close" @click="touchLeave()">
+      <img id="dropdown_close" class="dropdown_close_t dropdown_close_p" src="../assets/icons8-delete-50.png" alt="Close" @click="touchLeave()">
       <span id="benefits" class="dropdown_item" v-if="userID === 'default'" v-on:click='goBenefits(); thisWeek()'>BENEFITS</span>
       <div class="dropdown_item_break" v-if="userID === 'default'">
 
@@ -117,7 +117,7 @@ export default {
       document.getElementById('dropdown_nav').classList.remove('dropdown_nav_touch')
       document.getElementById('dropdown_icon').classList.remove('dropdown_icon_touch')
       document.getElementById('dropdown_close').classList.remove('dropdown_close_touch')
-      document.getElementById('dropdown_nav').classList.add('dropdown_nav')
+      document.getElementById('dropdown_nav').classList.add('dropdown_nav_t')
       document.getElementById('dropdown_icon').classList.add('dropdown_icon')
       document.getElementById('dropdown_close').classList.add('dropdown_close')
     },
@@ -206,29 +206,6 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.dropdown_icon {
-  position: fixed;
-  z-index: 20;
-  top: 0;
-  left: 0;
-  margin-top: 40px;
-  margin-left: 40px;
-  height: 1.875em;
-  width: 1.875em;
-  transition: .8s ease-in-out;
-}
-.dropdown_close {
-  position: absolute;
-  z-index: 30;
-  top: 0;
-  left: 0;
-  margin-top: 40px;
-  margin-left: 40px;
-  height: 1.875em;
-  width: 1.875em;
-  opacity: 0;
-  transition: .8s ease-in-out;
-}
 .dropdown_item {
   color: black;
   font-size: 1.143em;
@@ -254,6 +231,7 @@ export default {
   border-bottom-width: 1px;
 }
 @media (hover:none) {
+  /* Touch devices */
   .dropdown_nav_t {
     position: fixed;
     z-index: 1;
@@ -264,6 +242,29 @@ export default {
     text-align: center;
     opacity: 1;
     padding-top: 120px;
+    transition: .8s ease-in-out;
+  }
+  .dropdown_icon_t {
+    position: fixed;
+    z-index: 20;
+    top: 0;
+    left: 0;
+    margin-top: 40px;
+    margin-left: 40px;
+    height: 1.875em;
+    width: 1.875em;
+    transition: .8s ease-in-out;
+  }
+  .dropdown_close_t {
+    position: absolute;
+    z-index: 30;
+    top: 0;
+    left: 0;
+    margin-top: 40px;
+    margin-left: 40px;
+    height: 1.875em;
+    width: 1.875em;
+    opacity: 0;
     transition: .8s ease-in-out;
   }
   .dropdown_nav_touch {
@@ -279,13 +280,30 @@ export default {
     transition: .8s ease-in-out;
   }
   .dropdown_icon_touch {
-    transform: rotate(360deg);
+    position: fixed;
     z-index: 0;
+    top: 0;
+    left: 0;
+    margin-top: 40px;
+    margin-left: 40px;
+    height: 1.875em;
+    width: 1.875em;
     opacity: 0;
+    transform: rotate(360deg);
+    transition: .8s ease-in-out;
   }
   .dropdown_close_touch {
-    transform: rotate(360deg);
+    position: absolute;
+    z-index: 30;
+    top: 0;
+    left: 0;
+    margin-top: 40px;
+    margin-left: 40px;
+    height: 1.875em;
+    width: 1.875em;
     opacity: 1;
+    transform: rotate(360deg);
+    transition: .8s ease-in-out;
   }
 }
 @media (hover:hover) {
@@ -302,19 +320,42 @@ export default {
     padding-top: 120px;
     transition: .8s ease-in-out;
   }
+  .dropdown_icon_p {
+    position: fixed;
+    z-index: 20;
+    top: 0;
+    left: 0;
+    margin-top: 40px;
+    margin-left: 40px;
+    height: 1.875em;
+    width: 1.875em;
+    transition: .8s ease-in-out;
+  }
+  .dropdown_close_p {
+    position: absolute;
+    z-index: 30;
+    top: 0;
+    left: 0;
+    margin-top: 40px;
+    margin-left: 40px;
+    height: 1.875em;
+    width: 1.875em;
+    opacity: 0;
+    transition: .8s ease-in-out;
+  }
   .dropdown:hover .dropdown_nav_p {
     left: 0;
   }
-  .dropdown:hover .dropdown_icon {
+  .dropdown:hover .dropdown_icon_p {
     transform: rotate(360deg);
     z-index: 0;
     opacity: 0;
   }
-  .dropdown:hover .dropdown_close {
+  .dropdown:hover .dropdown_close_p {
     transform: rotate(360deg);
     opacity: 1;
   }
-  .dropdown_close:hover {
+  .dropdown_close_p:hover {
     cursor: pointer;
   }
   .dropdown_item:hover {

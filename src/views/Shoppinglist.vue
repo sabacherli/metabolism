@@ -126,12 +126,6 @@ export default {
   animation-fill-mode: forwards;
   opacity: 0;
 }
-.container_meal:hover {
-  color: lightpink;
-  transition: .4s ease-in-out;
-  cursor: pointer;
-}
-
 .container_meal:active .meal {
   text-shadow: 1px 1px rgb(240, 240, 240);
 }
@@ -206,5 +200,12 @@ label {
 }
 .strikethrough {
   text-decoration: line-through
+}
+@media (hover:hover) {
+  .container_meal:hover {
+    color: lightpink;
+    transition: .4s ease-in-out;
+    cursor: pointer;
+  }
 }
 </style>

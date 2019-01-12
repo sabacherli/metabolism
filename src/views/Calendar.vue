@@ -225,13 +225,6 @@ export default {
   margin-top: 30px;
   margin-bottom: 50px;
 }
-.container_meal:hover {
-  cursor: pointer;
-  background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  transition: .4s ease-in-out;
-}
 .container_meal:active .meal {
   text-shadow: 1px 1px rgb(240, 240, 240);
 }
@@ -253,17 +246,6 @@ export default {
   border: 1.2px solid black;
   border-radius: 20px 20px;
 }
-.calendar_navigation_button:hover .calendar_navigation_text {
-  background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  transition: .4s ease-in-out;
-}
-.calendar_navigation_button:hover {
-  cursor: pointer;
-  background: black;
-  transition: .4s ease-in-out;
-}
 .calendar_navigation_button:active {
   transition: 0s;
   border: 1.2px solid rgb(102, 102, 102);
@@ -282,12 +264,6 @@ export default {
   font-size: .714em;
   border: 1.2px solid lightpink;
   border-radius: 20px 20px;
-}
-.purchase_button:hover {
-  background-color: lightpink;
-  color: white;
-  transition: .4s;
-  cursor: pointer;
 }
 .purchase_button:active {
   transition: 0s;
@@ -427,6 +403,32 @@ label {
   .calendar_navigation_button {
     position: relative;
     text-align: center;
+  }
+}
+@media (hover:hover) {
+  .purchase_button:hover {
+    background-color: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+    color: white;
+    transition: .4s;
+    cursor: pointer;
+  }
+  .container_meal:hover {
+    cursor: pointer;
+    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: .4s ease-in-out;
+  }
+  .calendar_navigation_button:hover .calendar_navigation_text {
+    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: .4s ease-in-out;
+  }
+  .calendar_navigation_button:hover {
+    cursor: pointer;
+    background: black;
+    transition: .4s ease-in-out;
   }
 }
 </style>

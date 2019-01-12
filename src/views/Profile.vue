@@ -640,11 +640,6 @@ export default {
   margin-top: 30px;
   margin-bottom: 50px;
 }
-.container_meal:hover {
-  color: lightpink;
-  transition: .4s ease-in-out;
-  cursor: pointer;
-}
 .container_meal:active .meal {
   text-shadow: 1px 1px rgb(240, 240, 240);
 }
@@ -666,11 +661,6 @@ export default {
   border: 1.2px solid black;
   border-radius: 20px 20px;
 }
-.calendar_navigation:hover {
-  background-color: rgb(240, 240, 240);
-  transition: .4s;
-  cursor: pointer;
-}
 .calendar_navigation:active {
   transition: 0s;
   border: 1.2px solid rgb(102, 102, 102);
@@ -678,18 +668,18 @@ export default {
   color: rgb(102, 102, 102);
 }
 @media (min-width: 1000px) {
-.container {
-  top: 240px;
-}
-.day {
-  display: inline-block;
-  width: calc(100%/9);
-  vertical-align: top;
-}
-.calendar_navigation {
-  position: relative;
-  text-align: center;
-}
+  .container {
+    top: 240px;
+  }
+  .day {
+    display: inline-block;
+    width: calc(100%/9);
+    vertical-align: top;
+  }
+  .calendar_navigation {
+    position: relative;
+    text-align: center;
+  }
 }
 .block_date {
   display: block;
@@ -701,19 +691,13 @@ export default {
   padding: 5px;
   margin-top: -20px;
   font-size: .714em;
-  border: 1.2px solid lightpink;
+  border: 1.2px solid linear-gradient(315deg, #ffdeb9, lightpink 100%);
   border-radius: 20px 20px;
-}
-.purchase_button:hover {
-  background-color: lightpink;
-  color: white;
-  transition: .4s;
-  cursor: pointer;
 }
 .purchase_button:active {
   transition: 0s;
   background-color: pink;
-  border: 1.2px solid lightpink;
+  border: 1.2px solid linear-gradient(315deg, #ffdeb9, lightpink 100%);
   text-shadow: 1px 1px lightgray;
   color: white;
 }
@@ -749,12 +733,12 @@ export default {
   padding-right: 7px;
 }
 .inline_date_border {
-  background-color: lightpink;
+  background-color: linear-gradient(315deg, #ffdeb9, lightpink 100%);
   color: white;
   border-radius: 20px 20px;
 }
 .inline_date_selected {
-  border: 1.4px solid lightpink;
+  border: 1.4px solid linear-gradient(315deg, #ffdeb9, lightpink 100%);
   color: lightpink;
   border-radius: 20px 20px;
   font-weight: 400;
@@ -848,19 +832,13 @@ label {
   padding: 5px;
   margin-top: -20px;
   font-size: .714em;
-  border: 1.2px solid lightpink;
+  border: 1.2px solid linear-gradient(315deg, #ffdeb9, lightpink 100%);
   border-radius: 20px 20px;
-}
-.purchase_button:hover {
-  background-color: lightpink;
-  color: white;
-  transition: .4s;
-  cursor: pointer;
 }
 .purchase_button:active {
   transition: 0s;
   background-color: pink;
-  border: 1.2px solid lightpink;
+  border: 1.2px solid linear-gradient(315deg, #ffdeb9, lightpink 100%);
   text-shadow: 1px 1px lightgray;
   color: white;
 }
@@ -896,12 +874,12 @@ label {
   padding-right: 7px;
 }
 .inline_date_border {
-  background-color: lightpink;
+  background-color: linear-gradient(315deg, #ffdeb9, lightpink 100%);
   color: white;
   border-radius: 20px 20px;
 }
 .inline_date_selected {
-  border: 1.4px solid lightpink;
+  border: 1.4px solid linear-gradient(315deg, #ffdeb9, lightpink 100%);
   color: lightpink;
   border-radius: 20px 20px;
   font-weight: 400;
@@ -980,5 +958,23 @@ label {
 }
 .year_date {
   font-weight: 500;
+}
+@media (hover:hover) {
+  .purchase_button:hover {
+    background-color: lightpink;
+    color: white;
+    transition: .4s;
+    cursor: pointer;
+  }
+  .container_meal:hover {
+    color: lightpink;
+    transition: .4s ease-in-out;
+    cursor: pointer;
+  }
+  .calendar_navigation:hover {
+    background-color: rgb(240, 240, 240);
+    transition: .4s;
+    cursor: pointer;
+  }
 }
 </style>

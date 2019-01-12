@@ -335,16 +335,18 @@ label {
   }
 }
 @media (min-width: 1000px) {
-  .box:hover {
-    cursor: pointer;
-  }
-  .box:hover .date {
-    opacity: 0;
-  }
-  .box:hover .edit_icon {
-    opacity: 1;
-    cursor: pointer;
-    transition: .8s ease-in-out;
+  @media (hover:hover) {
+    .box:hover {
+      cursor: pointer;
+    }
+    .box:hover .date {
+      opacity: 0;
+    }
+    .box:hover .edit_icon {
+      opacity: 1;
+      cursor: pointer;
+      transition: .8s ease-in-out;
+    }
   }
   .container {
     top: 240px;

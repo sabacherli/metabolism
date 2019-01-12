@@ -225,13 +225,6 @@ input[type=password].register_password:focus {
   border-radius: 20px 20px;
   padding: 5px 10px 5px 10px;
 }
-.register_button:hover {
-  cursor: pointer;
-  color: #ffdeb9;
-  font-weight: 400;
-  background: white;
-  transition: .4s ease-in-out;
-}
 .register_button:active {
   transition: 0s;
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
@@ -241,5 +234,14 @@ input[type=password].register_password:focus {
   font-family: Montserrat;
   color: lightgray;
   letter-spacing: .2px;
+}
+@media (hover:hover) {
+  .register_button:hover {
+    cursor: pointer;
+    color: #ffdeb9;
+    font-weight: 400;
+    background: white;
+    transition: .4s ease-in-out;
+  }
 }
 </style>

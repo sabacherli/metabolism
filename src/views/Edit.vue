@@ -166,12 +166,6 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.number:hover {
-  cursor: pointer;
-}
-.number:hover .add_recipe {
-  transform: rotate(270deg);
-}
 .save_button {
   position: fixed;
   bottom: -20px;
@@ -185,17 +179,6 @@ export default {
   color: white;
   font-size: 12px;
   font-weight: 500;
-}
-.save_button:hover .save_text {
-  background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  transition: .4s ease-in-out;
-}
-.save_button:hover {
-  cursor: pointer;
-  background: black;
-  transition: .4s ease-in-out;
 }
 .save_button:active {
   transition: 0s;
@@ -381,5 +364,24 @@ label {
   transform: translateX(-60px);
   margin-right: auto;
   font-size: 10px;
+}
+@media (hover:hover) {
+  .number:hover {
+    cursor: pointer;
+  }
+  .number:hover .add_recipe {
+    transform: rotate(270deg);
+  }
+  .save_button:hover .save_text {
+    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: .4s ease-in-out;
+  }
+  .save_button:hover {
+    cursor: pointer;
+    background: black;
+    transition: .4s ease-in-out;
+  }
 }
 </style>

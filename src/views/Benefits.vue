@@ -119,13 +119,6 @@ export default {
   border-radius: 20px 20px;
   padding: 5px 10px 5px 10px;
 }
-.enter_button:hover {
-  cursor: pointer;
-  color: #ffdeb9;
-  font-weight: 400;
-  background: white;
-  transition: .4s ease-in-out;
-}
 .enter_button:active {
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
   transition: 0s;
@@ -230,6 +223,15 @@ export default {
   .enter_button {
     top: 100px;
     margin-bottom: 20px;
+  }
+}
+@media (hover:hover) {
+  .enter_button:hover {
+    cursor: pointer;
+    color: #ffdeb9;
+    font-weight: 400;
+    background: white;
+    transition: .4s ease-in-out;
   }
 }
 </style>

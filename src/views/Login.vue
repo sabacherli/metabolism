@@ -155,13 +155,6 @@ input[type=password].login_password:focus {
   border-radius: 20px 20px;
   padding: 5px 10px 5px 10px;
 }
-.login_button:hover {
-  cursor: pointer;
-  color: #ffdeb9;
-  font-weight: 400;
-  background: white;
-  transition: .4s ease-in-out;
-}
 .login_button:active {
   transition: 0s;
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
@@ -204,6 +197,15 @@ input[type=password].login_password:focus {
   }
   .brand_small {
     display: none;
+  }
+}
+@media (hover:hover) {
+  .login_button:hover {
+    cursor: pointer;
+    color: #ffdeb9;
+    font-weight: 400;
+    background: white;
+    transition: .4s ease-in-out;
   }
 }
 </style>
