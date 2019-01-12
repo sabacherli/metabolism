@@ -1,8 +1,8 @@
 <template lang="html">
   <div id="container" class="dropdown">
-    <img class="dropdown_icon" src="../assets/icon-menu-dropdown.png" alt="Menu" @click="touchCome()">
-    <div id="dropdown_nav" class="dropdown_nav">
-      <img id="close" class="dropdown_close" src="../assets/icons8-delete-50.png" alt="Close" @click="touchLeave()">
+    <img id="dropdown_icon" class="dropdown_icon" src="../assets/icon-menu-dropdown.png" alt="Menu" @click="touchCome()">
+    <div id="dropdown_nav" class="dropdown_nav_p dropdown_nav_t">
+      <img id="dropdown_close" class="dropdown_close" src="../assets/icons8-delete-50.png" alt="Close" @click="touchLeave()">
       <span id="benefits" class="dropdown_item" v-if="userID === 'default'" v-on:click='goBenefits(); thisWeek()'>BENEFITS</span>
       <div class="dropdown_item_break" v-if="userID === 'default'">
 
@@ -101,16 +101,28 @@ export default {
         })
     },
     touchCome () {
-      document.getElementById('dropdown_nav').classList.remove('dropdown_nav')
+      // no hover actions
+      document.getElementById('dropdown_nav').classList.remove('dropdown_nav_t')
+      document.getElementById('dropdown_icon').classList.remove('dropdown_icon')
+      document.getElementById('dropdown_close').classList.remove('dropdown_close')
       document.getElementById('dropdown_nav').classList.add('dropdown_nav_touch')
+      document.getElementById('dropdown_icon').classList.add('dropdown_icon_touch')
+      document.getElementById('dropdown_close').classList.add('dropdown_close_touch')
     },
     touchLeave () {
-      document.getElementById('dropdown_nav').classList.remove('dropdown_nav_toch')
-      document.getElementById('dropdown_nav').classList.add('dropdown_nav')
+      // hover actions
       document.getElementById('container').classList.add('remove_hover')
       setTimeout(this.removeClass, 800)
+      // no hover actions
+      document.getElementById('dropdown_nav').classList.remove('dropdown_nav_touch')
+      document.getElementById('dropdown_icon').classList.remove('dropdown_icon_touch')
+      document.getElementById('dropdown_close').classList.remove('dropdown_close_touch')
+      document.getElementById('dropdown_nav').classList.add('dropdown_nav')
+      document.getElementById('dropdown_icon').classList.add('dropdown_icon')
+      document.getElementById('dropdown_close').classList.add('dropdown_close')
     },
     removeClass () {
+      // hover actions
       document.getElementById('container').classList.remove('remove_hover')
     }
   },
@@ -205,18 +217,6 @@ export default {
   width: 1.875em;
   transition: .8s ease-in-out;
 }
-.dropdown_nav {
-  position: fixed;
-  z-index: 1;
-  left: -250px;
-  height: 100%;
-  width: 250px;
-  background: white;
-  text-align: center;
-  opacity: 1;
-  padding-top: 120px;
-  transition: .8s ease-in-out;
-}
 .dropdown_close {
   position: absolute;
   z-index: 30;
@@ -254,6 +254,18 @@ export default {
   border-bottom-width: 1px;
 }
 @media (hover:none) {
+  .dropdown_nav_t {
+    position: fixed;
+    z-index: 1;
+    left: -250px;
+    height: 100%;
+    width: 250px;
+    background: white;
+    text-align: center;
+    opacity: 1;
+    padding-top: 120px;
+    transition: .8s ease-in-out;
+  }
   .dropdown_nav_touch {
     position: fixed;
     z-index: 1;
@@ -266,10 +278,31 @@ export default {
     padding-top: 120px;
     transition: .8s ease-in-out;
   }
+  .dropdown_icon_touch {
+    transform: rotate(360deg);
+    z-index: 0;
+    opacity: 0;
+  }
+  .dropdown_close_touch {
+    transform: rotate(360deg);
+    opacity: 1;
+  }
 }
 @media (hover:hover) {
   /* Mouse devices */
-  .dropdown:hover .dropdown_nav {
+  .dropdown_nav_p {
+    position: fixed;
+    z-index: 1;
+    left: -250px;
+    height: 100%;
+    width: 250px;
+    background: white;
+    text-align: center;
+    opacity: 1;
+    padding-top: 120px;
+    transition: .8s ease-in-out;
+  }
+  .dropdown:hover .dropdown_nav_p {
     left: 0;
   }
   .dropdown:hover .dropdown_icon {
