@@ -247,6 +247,38 @@ export default {
   border-bottom-color: black;
   border-bottom-width: 1px;
 }
+@media (hover:none) {
+  .dropdown:hover,
+  .dropdown:active .dropdown_nav {
+    left: 0;
+  }
+  .dropdown:hover,
+  .dropdown:active .dropdown_icon {
+    transform: rotate(360deg);
+    z-index: 0;
+    opacity: 0;
+  }
+  .dropdown:hover,
+  .dropdown:active .dropdown_close {
+    transform: rotate(360deg);
+    opacity: 1;
+  }
+  .dropdown_close:hover,
+  .dropdown_close:active {
+    cursor: pointer;
+  }
+  .dropdown_item:hover,
+  .dropdown_item:active {
+    cursor: pointer;
+    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: .4s ease-in-out;
+  }
+  .remove_hover {
+    pointer-events: none;
+  }
+}
 @media (hover:hover) {
   /* Mouse devices */
   .dropdown:hover .dropdown_nav {
