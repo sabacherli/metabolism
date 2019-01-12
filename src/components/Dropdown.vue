@@ -191,9 +191,6 @@ export default {
 .remove_hover {
   pointer-events: none;
 }
-.change_close {
-  color: black;
-}
 .dropdown_icon {
   position: fixed;
   z-index: 20;
@@ -224,18 +221,6 @@ export default {
   left: 0;
   margin-top: 40px;
   margin-left: 40px;
-  height: 1.875em;
-  width: 1.875em;
-  opacity: 0;
-  transition: .8s ease-in-out;
-}
-.dropdown_change{
-  position: absolute;
-  z-index: 30;
-  top: 0;
-  left: 0;
-  margin-top: 41px;
-  margin-left: 41px;
   height: 1.875em;
   width: 1.875em;
   opacity: 0;
