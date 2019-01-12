@@ -2,6 +2,7 @@
   <div class="dropdown">
     <img class="dropdown_icon" src="../assets/icon-menu-dropdown.png" alt="Menu">
     <div class="dropdown_nav">
+      <img class="dropdown_close" src="../assets/icons8-delete-50.png" alt="Close" @click="closeDropdown()">
       <span id="benefits" class="dropdown_item" v-if="userID === 'default'" v-on:click='goBenefits(); thisWeek()'>BENEFITS</span>
       <div class="dropdown_item_break" v-if="userID === 'default'">
 
@@ -191,13 +192,6 @@ export default {
   width: 1.875em;
   transition: .8s ease-in-out;
 }
-.dropdown:hover .dropdown_icon {
-  transform: rotate(360deg);
-}
-.dropdown:hover .background {
-  z-index: 300;
-  opacity: 0.6;
-}
 .dropdown_nav {
   position: fixed;
   z-index: 1;
@@ -210,19 +204,21 @@ export default {
   padding-top: 120px;
   transition: .8s ease-in-out;
 }
-.dropdown:hover .dropdown_nav {
+.dropdown_close {
+  position: absolute;
+  z-index: 200;
+  top: 0;
   left: 0;
+  margin-top: 40px;
+  margin-left: 40px;
+  height: 1.875em;
+  width: 1.875em;
+  opacity: 0;
+  transition: .8s ease-in-out;
 }
 .dropdown_item {
   color: black;
   font-size: 1.143em;
-  transition: .4s ease-in-out;
-}
-.dropdown_item:hover {
-  cursor: pointer;
-  background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   transition: .4s ease-in-out;
 }
 .dropdown_item_selected {
@@ -243,5 +239,43 @@ export default {
   border-bottom-style: solid;
   border-bottom-color: black;
   border-bottom-width: 1px;
+}
+@media (hover:none) {
+  /* Touch devices */
+  .dropdown:active .dropdown_nav {
+    left: 0;
+  }
+  .dropdown:active .dropdown_icon {
+    transform: rotate(360deg);
+    opacity: 0;
+  }
+  .dropdown:active .dropdown_close {
+    transform: rotate(360deg);
+    opacity: 1;
+  }
+}
+@media (hover:hover) {
+    /* Mouse devices */
+    .dropdown:hover .dropdown_nav {
+      left: 0;
+    }
+    .dropdown:hover .dropdown_icon {
+      transform: rotate(360deg);
+      opacity: 0;
+    }
+    .dropdown:hover .dropdown_close {
+      transform: rotate(360deg);
+      opacity: 1;
+    }
+    .dropdown_close:hover {
+      cursor: pointer;
+    }
+    .dropdown_item:hover {
+      cursor: pointer;
+      background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: .4s ease-in-out;
+    }
 }
 </style>

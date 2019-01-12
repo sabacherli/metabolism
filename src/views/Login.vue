@@ -13,7 +13,7 @@
           <br>
           <input class="login_password" type="password" name="password" value="" @keyup.enter="login()" v-model="password" placeholder="Password" autocomplete="current-password" style="margin-top: 10px" required>
           <br>
-          <button class="login_email" style="width: 100px; margin-top: 10px; font-size: 0.65em; text-algin: center; height: auto; padding: 5px" type="button" name="button" @click="resetPassword()">Reset Password</button>
+          <button class="login_email" style="margin-top: 10px; height: auto; width: 100px; font-size: 0.65em; text-algin: center; color: darkgrey; padding: 5px" type="button" name="button" @click="resetPassword()">Reset Password</button>
         </form>
         <div class="login_button" @click="login()">Login</div>
       </div>
