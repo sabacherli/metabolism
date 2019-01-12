@@ -248,9 +248,7 @@ export default {
 }
 .calendar_navigation_button:active {
   transition: 0s;
-  border: 1.2px solid rgb(102, 102, 102);
-  text-shadow: 1px 1px white;
-  color: rgb(102, 102, 102);
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
 }
 .block_date {
   display: block;

@@ -123,7 +123,7 @@
                 <p :class="{ inline_date_selected: month.isActive, inline_date_border: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
               </template>
             </div>
-            <p style="margin-top: 40px; color: lightpink" class="year_date">{{ price }} CHF</p>
+            <p class="year_date price">{{ price }} CHF</p>
             <p class="purchase_button" @click="addMonthsToDefault()">Add to Default</p>
           </div>
         </div>
@@ -186,7 +186,7 @@
                 <p :class="{ inline_date_selected: month.isActive, inline_date_border: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
               </template>
             </div>
-            <p style="margin-top: 40px; color: lightpink" class="year_date">{{ price }} CHF</p>
+            <p class="year_date price">{{ price }} CHF</p>
             <p class="purchase_button" @click="addMonths()">Purchase</p>
           </div>
         </div>
@@ -605,17 +605,6 @@ export default {
 .animated {
   animation: fadeIn .8s;
 }
-.container {
-  position: relative;
-  top: 210px;
-  text-align: center;
-}
-.container_animation {
-  animation: slideInUp .8s;
-  animation-delay: .4s;
-  animation-fill-mode: forwards;
-  opacity: 0;
-}
 .day {
   margin-top: 70px;
 }
@@ -640,32 +629,110 @@ export default {
   margin-top: 30px;
   margin-bottom: 50px;
 }
-.container_meal:active .meal {
-  text-shadow: 1px 1px rgb(240, 240, 240);
+.block_date {
+  display: block;
 }
-.meal {
-  /* transition: .4s; */
-}
-.meal_location {
-  font-size: 10px;
-  margin-top: -10px;
-  /* transition: .4s; */
-}
-.calendar_navigation {
+.purchase_button {
   position: relative;
-  top: 20px;
-  margin-top: 20px;
   display: inline-block;
-  padding: 5px;
+  background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+  color: white;
+  padding: 5px 10px 5px 10px;
+  margin-top: -20px;
   font-size: .714em;
-  border: 1.2px solid black;
   border-radius: 20px 20px;
 }
-.calendar_navigation:active {
+.purchase_button:active {
   transition: 0s;
-  border: 1.2px solid rgb(102, 102, 102);
-  text-shadow: 1px 1px white;
-  color: rgb(102, 102, 102);
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+}
+.container {
+  position: relative;
+  top: 210px;
+  text-align: center;
+  animation: slideInUp .8s;
+  animation-delay: .4s;
+  animation-fill-mode: forwards;
+  opacity: 0;
+}
+.ingredients_break {
+  position: relative;
+  top: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: auto;
+  margin-top: -10px;
+  margin-bottom: 35px;
+  border: 0px;
+  border-bottom-style: solid;
+  border-bottom-color: black;
+  border-bottom-width: 1px;
+}
+.inline_date {
+  display: inline-block;
+  margin: 7px;
+  width: 25px;
+  font-weight: 400;
+  border: 1.4px solid white;
+  border-radius: 20px 20px;
+  padding-left: 7px;
+  padding-right: 7px;
+}
+.inline_date_border {
+  background-color: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+  color: white;
+  border-radius: 20px 20px;
+}
+.inline_date_selected {
+  font-weight: 400;
+  border: 1.4px solid black;
+  border-radius: 20px 20px;
+}
+input[type=text].amount,
+input[type=password].amount {
+  border: 0px;
+  border-bottom-style: solid;
+  border-bottom-color: black;
+  border-bottom-width: 1px;
+  display: block;
+  width: 120px;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 5px;
+  font-size: 14px;
+  font-family: Montserrat;
+}
+input[type=text]:focus.amount,
+input[type=password]:focus.amount  {
+  border: 0px;
+  border-bottom-style: solid;
+  border-bottom-color: black;
+  border-bottom-width: 2px;
+  display: block;
+  width: 120px;
+  position: relative;
+  outline: none;
+}
+label {
+  position: relative;
+  display: block;
+  text-align: left;
+  top: 36px;
+  width: 100px;
+  left: 50%;
+  transform: translateX(-60px);
+  font-size: 10px;
+}
+.year_date {
+  font-weight: 500;
+}
+.price {
+  margin-top: 40px;
+  background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 @media (min-width: 1000px) {
   .container {
@@ -676,304 +743,14 @@ export default {
     width: calc(100%/9);
     vertical-align: top;
   }
-  .calendar_navigation {
-    position: relative;
-    text-align: center;
-  }
-}
-.block_date {
-  display: block;
-}
-.purchase_button {
-  position: relative;
-  display: inline-block;
-  color: lightpink;
-  padding: 5px;
-  margin-top: -20px;
-  font-size: .714em;
-  border: 1.2px solid linear-gradient(315deg, #ffdeb9, lightpink 100%);
-  border-radius: 20px 20px;
-}
-.purchase_button:active {
-  transition: 0s;
-  background-color: pink;
-  border: 1.2px solid linear-gradient(315deg, #ffdeb9, lightpink 100%);
-  text-shadow: 1px 1px lightgray;
-  color: white;
-}
-.container {
-  position: relative;
-  top: 210px;
-  text-align: center;
-  animation: slideInUp .8s;
-  animation-delay: .4s;
-  animation-fill-mode: forwards;
-  opacity: 0;
-}
-.day {
-  margin-top: 70px;
-}
-.date {
-  width: 30px;
-  padding: 5px;
-  margin-top: 10px;
-  margin: auto;
-  font-size: 20px;
-  border: 2px solid black;
-}
-.dayname {
-  font-size: 20px;
-  margin-top: 30px;
-  margin-bottom: 50px;
-}
-.inline_date {
-  display: inline-block;
-  margin: 7px;
-  padding-left: 7px;
-  padding-right: 7px;
-}
-.inline_date_border {
-  background-color: linear-gradient(315deg, #ffdeb9, lightpink 100%);
-  color: white;
-  border-radius: 20px 20px;
-}
-.inline_date_selected {
-  border: 1.4px solid linear-gradient(315deg, #ffdeb9, lightpink 100%);
-  color: lightpink;
-  border-radius: 20px 20px;
-  font-weight: 400;
-}
-input[type=text].amount {
-  border: 0px;
-  border-bottom-style: solid;
-  border-bottom-color: black;
-  border-bottom-width: 1px;
-  display: block;
-  width: 120px;
-  position: relative;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 5px;
-  font-size: 14px;
-  font-family: Montserrat;
-}
-input[type=text]:focus.amount {
-  border: 0px;
-  border-bottom-style: solid;
-  border-bottom-color: black;
-  border-bottom-width: 2px;
-  display: block;
-  width: 120px;
-  position: relative;
-  outline: none;
-}
-input[type=password].amount {
-  border: 0px;
-  border-bottom-style: solid;
-  border-bottom-color: black;
-  border-bottom-width: 1px;
-  display: block;
-  width: 120px;
-  position: relative;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 5px;
-  font-size: 14px;
-  font-family: Montserrat;
-}
-input[type=password]:focus.amount {
-  border: 0px;
-  border-bottom-style: solid;
-  border-bottom-color: black;
-  border-bottom-width: 2px;
-  display: block;
-  width: 120px;
-  position: relative;
-  outline: none;
-}
-label {
-  position: relative;
-  color: black;
-  display: block;
-  text-align: left;
-  top: 36px;
-  width: 100px;
-  left: 50%;
-  transform: translateX(-60px);
-  margin-right: auto;
-  font-size: 10px;
-}
-.ingredients_break {
-  position: relative;
-  top: auto;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 20px;
-  height: auto;
-  margin-top: -10px;
-  margin-bottom: 35px;
-  border: 0px;
-  border-bottom-style: solid;
-  border-bottom-color: black;
-  border-bottom-width: 1px;}
-.year_date {
-  font-weight: 500;
-}
-.animated {
-
-}
-.block_date {
-  display: block;
-}
-.purchase_button {
-  position: relative;
-  display: inline-block;
-  color: lightpink;
-  padding: 5px;
-  margin-top: -20px;
-  font-size: .714em;
-  border: 1.2px solid linear-gradient(315deg, #ffdeb9, lightpink 100%);
-  border-radius: 20px 20px;
-}
-.purchase_button:active {
-  transition: 0s;
-  background-color: pink;
-  border: 1.2px solid linear-gradient(315deg, #ffdeb9, lightpink 100%);
-  text-shadow: 1px 1px lightgray;
-  color: white;
-}
-.container {
-  position: relative;
-  top: 210px;
-  text-align: center;
-  animation: slideInUp .8s;
-  animation-delay: .4s;
-  animation-fill-mode: forwards;
-  opacity: 0;
-}
-.day {
-  margin-top: 70px;
-}
-.date {
-  width: 30px;
-  padding: 5px;
-  margin-top: 10px;
-  margin: auto;
-  font-size: 20px;
-  border: 2px solid black;
-}
-.dayname {
-  font-size: 20px;
-  margin-top: 30px;
-  margin-bottom: 50px;
-}
-.inline_date {
-  display: inline-block;
-  margin: 7px;
-  padding-left: 7px;
-  padding-right: 7px;
-}
-.inline_date_border {
-  background-color: linear-gradient(315deg, #ffdeb9, lightpink 100%);
-  color: white;
-  border-radius: 20px 20px;
-}
-.inline_date_selected {
-  border: 1.4px solid linear-gradient(315deg, #ffdeb9, lightpink 100%);
-  color: lightpink;
-  border-radius: 20px 20px;
-  font-weight: 400;
-}
-input[type=text].amount {
-  border: 0px;
-  border-bottom-style: solid;
-  border-bottom-color: black;
-  border-bottom-width: 1px;
-  display: block;
-  width: 120px;
-  position: relative;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 5px;
-  font-size: 14px;
-  font-family: Montserrat;
-}
-input[type=text]:focus.amount {
-  border: 0px;
-  border-bottom-style: solid;
-  border-bottom-color: black;
-  border-bottom-width: 2px;
-  display: block;
-  width: 120px;
-  position: relative;
-  outline: none;
-}
-input[type=password].amount {
-  border: 0px;
-  border-bottom-style: solid;
-  border-bottom-color: black;
-  border-bottom-width: 1px;
-  display: block;
-  width: 120px;
-  position: relative;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 5px;
-  font-size: 14px;
-  font-family: Montserrat;
-}
-input[type=password]:focus.amount {
-  border: 0px;
-  border-bottom-style: solid;
-  border-bottom-color: black;
-  border-bottom-width: 2px;
-  display: block;
-  width: 120px;
-  position: relative;
-  outline: none;
-}
-label {
-  position: relative;
-  display: block;
-  text-align: left;
-  top: 36px;
-  width: 100px;
-  left: 50%;
-  transform: translateX(-60px);
-  font-size: 10px;
-}
-.ingredients_break {
-  position: relative;
-  top: auto;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 20px;
-  height: auto;
-  margin-top: -10px;
-  margin-bottom: 35px;
-  border: 0px;
-  border-bottom-style: solid;
-  border-bottom-color: black;
-  border-bottom-width: 1px;
-}
-.year_date {
-  font-weight: 500;
 }
 @media (hover:hover) {
   .purchase_button:hover {
-    background-color: lightpink;
-    color: white;
+    font-weight: 600;
     transition: .4s;
     cursor: pointer;
   }
-  .container_meal:hover {
-    color: lightpink;
-    transition: .4s ease-in-out;
-    cursor: pointer;
-  }
-  .calendar_navigation:hover {
-    background-color: rgb(240, 240, 240);
-    transition: .4s;
+  .inline_date:hover {
     cursor: pointer;
   }
 }
