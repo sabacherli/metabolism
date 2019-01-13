@@ -226,7 +226,7 @@ export default {
   margin-bottom: 50px;
 }
 .container_meal:active .meal {
-  text-shadow: 1px 1px rgb(240, 240, 240);
+  text-shadow: 1px 1px #e0e0de;
 }
 .meal {
   /* transition: .4s; */

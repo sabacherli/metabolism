@@ -3,7 +3,7 @@
     <!-- Remove meal from calendar if one has been chosen. -->
     <div class="day" v-if="checkSelection(userCalendar, pointer)">
       <div class="box" @click="returnToCalendar(pointer); removeMeal()">
-        <p class="date">x</p>
+        <p class="sign_remove" style="transform: rotate(45deg)">+</p>
       </div>
       <p class="dayname" @click="returnToCalendar(pointer); removeMeal()">Remove Meal</p>
       <div class="ingredients_break">
@@ -14,13 +14,16 @@
     <template v-for="meal in filtered(userData)">
       <!-- eslint-disable-next-line -->
       <div class="day">
+        <!-- A user needs to be able to edit the meal -->
         <div class="box" v-if="userID !== 'default'" @click="setEditor(meal); goEdit()">
           <p class="date"> {{ meal.id }} </p>
           <img class="edit_icon" src="../assets/icon-edit.png" alt="Edit">
         </div>
+        <!-- Default user shouldn't be able to edit the meal, thus the edit icon is not shown -->
         <div class="box_default" v-if="userID == 'default'">
           <p class="date_default"> {{ meal.id }} </p>
         </div>
+        <!-- Meal is selected and entered into the calendar in the backend -->
         <p class="dayname" @click="returnToCalendar(pointer); selectMeal(meal)"> {{ meal.name }} </p>
         <div class="ingredients_break">
 
@@ -262,6 +265,15 @@ export default {
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
 }
+.sign_remove {
+  position: absolute;
+  top: 50%;
+  margin-top: -19px;
+  left: 50%;
+  margin-left: -7px;
+  font-size: 30px;
+  transition: .8s ease-in-out;
+}
 .day {
   margin-top: 70px;
 }
@@ -415,5 +427,11 @@ label {
     cursor: pointer;
     transition: .4s ease-in-out;
   }
+  .dayname:hover {
+    cursor: pointer;
+    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: .4s ease-in-out;  }
 }
 </style>

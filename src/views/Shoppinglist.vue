@@ -128,9 +128,6 @@ export default {
   animation-fill-mode: forwards;
   opacity: 0;
 }
-.container_meal:active .meal {
-  text-shadow: 1px 1px rgb(240, 240, 240);
-}
 .day {
   margin-top: 70px;
 }
@@ -150,7 +147,6 @@ export default {
 .meal_location {
   font-size: 10px;
   margin-top: -10px;
-  /* transition: .4s; */
 }
 .ingredients_break {
   position: relative;
@@ -201,7 +197,7 @@ label {
   font-size: 10px;
 }
 .strikethrough {
-  text-decoration: line-through
+  text-decoration: line-through;
 }
 .add_button {
   position: relative;
@@ -219,8 +215,6 @@ label {
 }
 @media (hover:hover) {
   .container_meal:hover {
-    color: lightpink;
-    transition: .4s ease-in-out;
     cursor: pointer;
   }
   .add_button:hover .add_text {

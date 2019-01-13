@@ -233,14 +233,17 @@ export default new Vuex.Store({
               breakfastID: '',
               breakfastLocation: 'Home',
               breakfastAddress: 'default',
+              breakfastIngredients: [],
               lunch: 'Lunch',
               lunchID: '',
               lunchLocation: 'Home',
               lunchAddress: 'default',
+              lunchIngredients: [],
               dinner: 'Dinner',
               dinnerID: '',
               dinnerLocation: 'Home',
-              dinnerAddress: 'default'
+              dinnerAddress: 'default',
+              dinnerIngredients: []
             }
             db.collection('users').doc('default').collection('calendar').doc(docName)
               .set(dayTemplate)
@@ -278,14 +281,17 @@ export default new Vuex.Store({
               breakfastID: '',
               breakfastLocation: 'Home',
               breakfastAddress: state.userAddresses[0].address,
+              breakfastIngredients: [],
               lunch: 'Lunch',
               lunchID: '',
               lunchLocation: 'Home',
               lunchAddress: state.userAddresses[0].address,
+              lunchIngredients: [],
               dinner: 'Dinner',
               dinnerID: '',
               dinnerLocation: 'Home',
-              dinnerAddress: state.userAddresses[0].address
+              dinnerAddress: state.userAddresses[0].address,
+              dinnerIngredients: []
             }
             db.collection('users').doc(state.userID).collection('calendar').doc(docName)
               .set(dayTemplate)
@@ -497,6 +503,16 @@ export default new Vuex.Store({
     selectMeal (state, meal) {
       const mealName = JSON.parse(JSON.stringify(meal.name))
       const mealID = JSON.parse(JSON.stringify(meal.uniqueID))
+      for (let i = 0; i < meal.ingredients.length; i++) {
+        const ingredientObject = JSON.parse(JSON.stringify(meal.ingredients[i]))
+        if (state.pointer.position === 'breakfast') {
+          state.userCalendar[state.pointer.doc].breakfastIngredients.push(ingredientObject)
+        } else if (state.pointer.position === 'lunch') {
+          state.userCalendar[state.pointer.doc].lunchIngredients.push(ingredientObject)
+        } else {
+          state.userCalendar[state.pointer.doc].dinnerIngredients.push(ingredientObject)
+        }
+      }
       if (state.pointer.position === 'breakfast') {
         state.userCalendar[state.pointer.doc].breakfast = mealName
         state.userCalendar[state.pointer.doc].breakfastID = mealID
