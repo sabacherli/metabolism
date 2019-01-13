@@ -5,7 +5,7 @@
         SIGN UP
       </div>
       <div class="container_costs">
-        <p class="costs_explanation" >Months are purchased in the app after the account is created and cost CHF 5</p>
+        <p class="costs_explanation">Months are purchased in the app after the account is created and cost CHF 5</p>
         <!-- <p class="cost_icon">5.- Fr</p> -->
         <!-- <p> For the price of a <u><a id="loaf_of_bread" href="https://produkte.migros.ch/pain-creation-knusperbrot-111471500500">loaf of bread</a></u>  a month </p> -->
         <!-- <div class="cost_explanation">The price of metabolism probably amortises itself on average through cost savings due to reduced waste.</div> -->
@@ -234,6 +234,32 @@ input[type=password].register_password:focus {
   font-family: Montserrat;
   color: lightgray;
   letter-spacing: .2px;
+}
+@media (max-width: 700px) {
+  .brand_large {
+    position: relative;
+    top: 180px;
+    width: 100%;
+    text-align: center;
+    line-height: 1em;
+    color: white;
+    font-size: 6em;
+    font-weight: 800;
+    letter-spacing: .05em;
+    opacity: 0;
+    transform: translateY(-150%);
+    animation: slideInLeft .8s 1.2s forwards;
+  }
+  .container_costs {
+    width: 70%;
+  }
+  .costs_explanation {
+    font-size: 1.5em;
+  }
+  .register_email,
+  .register_password {
+   width: 60%;
+ }
 }
 @media (hover:hover) {
   .register_button:hover {

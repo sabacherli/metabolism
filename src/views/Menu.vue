@@ -61,6 +61,9 @@
         <label for="">Meal Name</label>
         <input class="amount" type="text" name="" value="" @keyup.enter="addMealName(); focusIngredient()" v-model="mealName" required>
         <br>
+        <div class="add_button" @click="addMealName()" style="margin-top: 40px">
+          <span class="add_text">Add Meal Name</span>
+        </div>
       </div>
       <div class="" v-if="meal.name">
         <label for="">Ingredient</label>
@@ -71,6 +74,10 @@
         <br>
         <label for="">Unit</label>
         <input id="newUnit" class="amount" type="text" name="" value="" @keyup.enter="addIngredientToMeal()" v-model="newUnit">
+        <br>
+        <div class="add_button" @click="addIngredientToMeal()" style="margin-top: 40px">
+          <span class="add_text">Add Ingredient</span>
+        </div>
       </div>
     </div>
   </div>
@@ -296,6 +303,19 @@ export default {
   cursor: pointer;
   transform: rotate(270deg);
 }
+.add_button {
+  position: relative;
+  display: inline-block;
+  margin-top: -20px;
+  font-size: .714em;
+  border: 1.2px solid black;
+  border-radius: 20px 20px;
+  padding: 5px 10px 5px 10px;
+}
+.add_button:active {
+  transition: 0s;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+}
 input[type=text].amount {
   border: 0px;
   border-bottom-style: solid;
@@ -382,6 +402,18 @@ label {
     border-bottom-style: solid;
     border-bottom-color: black;
     border-bottom-width: 1px;
+  }
+}
+@media (hover:hover) {
+  .add_button:hover .add_text {
+    color: white;
+    transition: .4s ease-in-out;
+  }
+  .add_button:hover {
+    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+    border: 1.2px solid #ffc0b8;
+    cursor: pointer;
+    transition: .4s ease-in-out;
   }
 }
 </style>

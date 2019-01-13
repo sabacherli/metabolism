@@ -487,9 +487,6 @@ export default {
         alert('Add a filter first.')
       }
     },
-    // toggleSelected (event) {
-    //
-    // },
     updatePassword () {
       const user = firebase.auth().currentUser
       if (this.checkPassword === this.newPassword) {
