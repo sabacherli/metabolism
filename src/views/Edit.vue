@@ -217,7 +217,6 @@ export default {
   }
   .add_recipe {
     position: absolute;
-    font-size: 20px;
     top: 50%;
     margin-top: -19px;
     left: 50%;

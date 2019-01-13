@@ -2,8 +2,8 @@
   <div class="container">
     <div class="animated" v-if="profileFilters[0].isActive">
       <div class="">
-        <div class="day" @click="updateEmail()">
-          <p class="date">@</p>
+        <div class="box" @click="updateEmail()">
+          <p class="sign_special">@</p>
         </div>
         <p class="dayname">Email</p>
         <div class="ingredients_break">
@@ -16,8 +16,8 @@
         </div>
       </div>
       <div class="">
-        <div class="day" @click="updatePassword()">
-          <p class="date">#</p>
+        <div class="box" @click="updatePassword()">
+          <p class="sign_special">#</p>
         </div>
         <p class="dayname">Password</p>
         <div class="ingredients_break">
@@ -52,8 +52,8 @@
         </div>
       </div>
       <div class="">
-        <div class="day" @click="deleteAccount()">
-          <p class="date">x</p>
+        <div class="box" @click="deleteAccount()">
+          <p class="sign" style="transform: rotate(45deg)">+</p>
         </div>
         <p class="dayname">Delete Account</p>
         <div class="ingredients_break">
@@ -68,8 +68,8 @@
 
       <!-- Adds days for the month ahead to the currently signed in user, also default if not signed in. -->
       <div v-if="this.userID == '0E2NXBmuwZhr0r0CuKCZT1N27CE3'" class="">
-        <div class="day">
-          <p class="date">+</p>
+        <div class="box">
+          <p class="sign">+</p>
         </div>
         <p class="dayname">Add Months to Default</p>
         <div class="ingredients_break">
@@ -133,8 +133,8 @@
 
       <!-- Adds days for the month ahead to the currently signed in user, also default if not signed in. -->
       <div class="" style="margin-bottom: 100px">
-        <div class="day">
-          <p class="date">+</p>
+        <div class="box">
+          <p class="sign">+</p>
         </div>
         <p class="dayname">Add Months</p>
         <div class="ingredients_break">
@@ -199,8 +199,8 @@
     <div class="animated" v-if="profileFilters[1].isActive">
       <template v-for="(place, index) in userData.addresses">
         <!-- eslint-disable-next-line -->
-        <div class="day" @click="deletePlace(place)">
-          <p class="date">x</p>
+        <div class="box" @click="deletePlace(place)">
+          <p class="sign" style="transform: rotate(45deg)">+</p>
         </div>
         <!-- eslint-disable-next-line -->
         <p class="dayname"> {{ place.name }} </p>
@@ -245,8 +245,8 @@
         </div>
       </template>
       <div class="" style="margin-bottom: 200px">
-        <div class="day" @click="addPlace">
-          <p class="date">+</p>
+        <div class="box" @click="addPlace">
+          <p class="sign">+</p>
         </div>
         <p class="dayname">New Place</p>
         <div class="ingredients_break">
@@ -262,8 +262,8 @@
     <div class="animated" v-if="profileFilters[2].isActive">
       <template v-for="tag in userData.tagList">
         <!-- eslint-disable-next-line -->
-        <div class="day" @click="deleteFilter(tag)">
-          <p class="date">+</p>
+        <div class="box" @click="deleteFilter(tag)">
+          <p class="sign" style="transform: rotate(45deg)">+</p>
         </div>
         <!-- eslint-disable-next-line -->
         <p class="dayname"> {{ tag.text }} </p>
@@ -278,17 +278,20 @@
           <br>
         </div>
       </template>
-      <div class="">
-        <div class="day">
-          <p class="date" @click="addFilter()">+</p>
+      <div class="" style="margin-bottom: 200px">
+        <div class="box">
+          <p class="sign" @click="addFilter()">+</p>
         </div>
         <p class="dayname">New Filter</p>
         <div class="ingredients_break">
 
         </div>
-        <div class="" style="margin-bottom: 200px">
+        <div class="">
           <label for="">New Filter</label>
           <input class="amount" id="newFilter" type="text" name="" value="" @keyup.enter="addFilter()" v-model="newFilter" required>
+        </div>
+        <div class="purchase_button" @click="addFilter()" style="margin-top: 40px">
+          <span class="purchase_text">Add Filter</span>
         </div>
       </div>
     </div>
@@ -609,16 +612,31 @@ export default {
 .animated {
   animation: fadeIn .8s;
 }
-.day {
-  margin-top: 70px;
-}
-.date {
-  width: 30px;
-  padding: 5px;
-  margin-top: 10px;
+.box {
   margin: auto;
   font-size: 20px;
+  padding: 5px;
+  width: 30px;
+  height: 25px;
+  margin-bottom: 30px;
+  margin-top: 100px;
+  position: relative;
+  text-align: center;
   border: 2px solid black;
+}
+.sign {
+  position: absolute;
+  top: 50%;
+  margin-top: -19px;
+  left: 50%;
+  margin-left: -7px;
+  font-size: 30px;
+  transition: .8s ease-in-out;
+}
+.sign_special {
+  margin-top: 0px;
+  font-size: 20px;
+  transition: .8s ease-in-out;
 }
 .past {
   position: relative;
@@ -761,6 +779,12 @@ label {
   }
   .inline_date:hover {
     cursor: pointer;
+  }
+  .box:hover {
+    cursor: pointer;
+  }
+  .box:hover .sign {
+    transform: rotate(270deg);
   }
 }
 </style>

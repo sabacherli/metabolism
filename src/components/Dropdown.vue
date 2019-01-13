@@ -12,19 +12,19 @@
 
       </div>
       <span id="shoppinglist" class="dropdown_item" v-on:click='goShoppinglist()'>SHOPPING LIST</span>
-      <div style="border: .5px solid black;" class="dropdown_item_break">
+      <div class="dropdown_item_break">
 
       </div>
       <span id="menu" class="dropdown_item" v-on:click='goMenu()'>MENU</span>
-      <div style="border: .5px solid black;" class="dropdown_item_break">
+      <div class="dropdown_item_break">
 
       </div>
       <span id="profile" class="dropdown_item" v-if="userID !== 'default'" v-on:click='goProfile()'>PROFILE</span>
-      <div style="border: .5px solid black;" class="dropdown_item_break" v-if="userID !== 'default'">
+      <div class="dropdown_item_break" v-if="userID !== 'default'">
 
       </div>
       <span id="register" class="dropdown_item" v-if="userID === 'default'" v-on:click='goRegister()'>REGISTER</span>
-      <div style="border: .5px solid black;" class="dropdown_item_break" v-if="userID === 'default'">
+      <div class="dropdown_item_break" v-if="userID === 'default'">
 
       </div>
       <span id="login" class="dropdown_item" v-if="userID === 'default'" v-on:click='goLogin()'>LOGIN</span>
