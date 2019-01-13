@@ -707,16 +707,16 @@ export default new Vuex.Store({
           })
       }
     },
-    createList (state) {
+    createCalendarList (state) {
       state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
       for (let place = 0; place < state.userAddresses.length; place++) {
-        // Empties shopping list and calendar list of the address in each iteration
+        // resets all lists
         state.userAddresses[place].shoppingList = []
         state.userAddresses[place].calendarList = []
         state.userAddresses[place].foodsList = []
-        // Queries calendar list for each address in each iteration.
+        // goes through the calendar and general information (foods etc.) of each member of that place
         for (let member = 0; member < state.userAddresses[place].members.length; member++) {
-          // Populates userAddresses[place].calendarList per Address
+          // merges all the calendars of the different members into one for the amount of display days
           const calendarRef = db.collection('users').doc(state.userAddresses[place].members[member].uid).collection('calendar')
           calendarRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
             .then((querySnapshot) => {
@@ -728,82 +728,170 @@ export default new Vuex.Store({
             .catch((error) => {
               console.log('Error getting documents: ', error)
             })
-          // Populates userAddresses[place].foodsList per Address
-          const docRef = db.collection('users').doc(state.userAddresses[place].members[member].uid)
-          docRef.get()
-            .then((doc) => {
-              if (doc.exists) {
-                for (let meal = 0; meal < doc.data().foods.length; meal++) {
-                  state.userAddresses[place].foodsList.push(doc.data().foods[meal])
+        }
+      }
+      // should use an async function here!
+      setTimeout(() => {
+        createShoppingLists()
+      }, 1000)
+      function createShoppingLists () {
+        for (let place = 0; place < state.userAddresses.length; place++) {
+          // goes through the calendars of all members and sees if the place of the breakfast corresponds to the current place who's shopping list is being created
+          for (let day = 0; day < state.userAddresses[place].calendarList.length; day++) {
+            if (state.userAddresses[place].calendarList[day].breakfastAddress === state.userAddresses[place].address) {
+              // goes through the ingredients listed on that day for the breakfast
+              for (let ingredient = 0; ingredient < state.userAddresses[place].calendarList[day].breakfastIngredients.length; ingredient++) {
+                // needs to check whether the ingredient is already purchased / active
+                if (state.userAddresses[place].calendarList[day].breakfastIngredients[ingredient].isActive === false) {
+                  // for each ingredient, it checks whether the ingredient is already in the shopping list
+                  let check = true
+                  for (let item = 0; item < state.userAddresses[place].shoppingList.length; item++) {
+                    // if it is, it increases the amount
+                    if (state.userAddresses[place].shoppingList[item].ingredient === state.userAddresses[place].calendarList[day].breakfastIngredients[ingredient].ingredient) {
+                      state.userAddresses[place].shoppingList[item].amount += state.userAddresses[place].calendarList[day].breakfastIngredients[ingredient].amount
+                      check = false
+                    }
+                  }
+                  // if the ingredient isn't already on the list, then it adds it
+                  if (check) {
+                    state.userAddresses[place].shoppingList.push(JSON.parse(JSON.stringify(state.userAddresses[place].calendarList[day].breakfastIngredients[ingredient])))
+                  }
                 }
-              } else {
-                console.log('userData doc is not there.')
               }
+            }
+            if (state.userAddresses[place].calendarList[day].lunchAddress === state.userAddresses[place].address) {
+              // goes through the ingredients listed on that day for the lunch
+              for (let ingredient = 0; ingredient < state.userAddresses[place].calendarList[day].lunchIngredients.length; ingredient++) {
+                // needs to check whether the ingredient is already purchased / active
+                if (state.userAddresses[place].calendarList[day].lunchIngredients[ingredient].isActive === false) {
+                  // for each ingredient, it checks whether the ingredient is already in the shopping list
+                  let check = true
+                  for (let item = 0; item < state.userAddresses[place].shoppingList.length; item++) {
+                    // if it is, it increases the amount
+                    if (state.userAddresses[place].shoppingList[item].ingredient === state.userAddresses[place].calendarList[day].lunchIngredients[ingredient].ingredient) {
+                      state.userAddresses[place].shoppingList[item].amount += state.userAddresses[place].calendarList[day].lunchIngredients[ingredient].amount
+                      check = false
+                    }
+                  }
+                  // if the ingredient isn't already on the list, then it adds it
+                  if (check) {
+                    state.userAddresses[place].shoppingList.push(JSON.parse(JSON.stringify(state.userAddresses[place].calendarList[day].lunchIngredients[ingredient])))
+                  }
+                }
+              }
+            }
+            if (state.userAddresses[place].calendarList[day].dinnerAddress === state.userAddresses[place].address) {
+              // goes through the ingredients listed on that day for the dinner
+              for (let ingredient = 0; ingredient < state.userAddresses[place].calendarList[day].dinnerIngredients.length; ingredient++) {
+                // needs to check whether the ingredient is already purchased / active
+                if (state.userAddresses[place].calendarList[day].dinnerIngredients[ingredient].isActive === false) {
+                  // for each ingredient, it checks whether the ingredient is already in the shopping list
+                  let check = true
+                  for (let item = 0; item < state.userAddresses[place].shoppingList.length; item++) {
+                    // if it is, it increases the amount
+                    if (state.userAddresses[place].shoppingList[item].ingredient === state.userAddresses[place].calendarList[day].dinnerIngredients[ingredient].ingredient) {
+                      state.userAddresses[place].shoppingList[item].amount += state.userAddresses[place].calendarList[day].dinnerIngredients[ingredient].amount
+                      check = false
+                    }
+                  }
+                  // if the ingredient isn't already on the list, then it adds it
+                  if (check) {
+                    state.userAddresses[place].shoppingList.push(JSON.parse(JSON.stringify(state.userAddresses[place].calendarList[day].dinnerIngredients[ingredient])))
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    createCalendarWithPromise (state) {
+      state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
+      for (let place = 0; place < state.userAddresses.length; place++) {
+        // resets all lists
+        state.userAddresses[place].shoppingList = []
+        state.userAddresses[place].calendarList = []
+        state.userAddresses[place].foodsList = []
+        // goes through the calendar and general information (foods etc.) of each member of that place
+        for (let member = 0; member < state.userAddresses[place].members.length; member++) {
+          // merges all the calendars of the different members into one for the amount of display days
+          const calendarRef = db.collection('users').doc(state.userAddresses[place].members[member].uid).collection('calendar')
+          calendarRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
+            .then((querySnapshot) => {
+              querySnapshot.forEach((doc) => {
+                // doc.data() is never undefined for query doc snapshots
+                state.userAddresses[place].calendarList.push(doc.data())
+              })
             })
             .catch((error) => {
               console.log('Error getting documents: ', error)
             })
         }
       }
-      setTimeout(() => {
-        populateShoppingLists()
-      }, 1000)
-      function populateShoppingLists () {
-        state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
-        for (let place = 0; place < state.userAddresses.length; place++) {
-          // Goes through listCalendar and see's if either breakfastID, lunchID, or dinnerID corresponds with a uniqueID from the listFoods
-          for (let day = 0; day < state.userAddresses[place].calendarList.length; day++) {
-            if (state.userAddresses[place].calendarList[day].breakfastAddress === state.userAddresses[place].address) {
-              for (let meal = 0; meal < state.userAddresses[place].foodsList.length; meal++) {
-                if (state.userAddresses[place].calendarList[day].breakfastID === state.userAddresses[place].foodsList[meal].uniqueID) {
-                  for (let ingredient = 0; ingredient < state.userAddresses[place].foodsList[meal].ingredients.length; ingredient++) {
-                    let check = true
-                    for (let item = 0; item < state.userAddresses[place].shoppingList.length; item++) {
-                      if (state.userAddresses[place].shoppingList[item].ingredient === state.userAddresses[place].foodsList[meal].ingredients[ingredient].ingredient) {
-                        state.userAddresses[place].shoppingList[item].amount += state.userAddresses[place].foodsList[meal].ingredients[ingredient].amount
-                        check = false
-                      }
-                    }
-                    if (check) {
-                      state.userAddresses[place].shoppingList.push(JSON.parse(JSON.stringify(state.userAddresses[place].foodsList[meal].ingredients[ingredient])))
-                    }
+    },
+    createShoppingWithPromise (state) {
+      for (let place = 0; place < state.userAddresses.length; place++) {
+        // goes through the calendars of all members and sees if the place of the breakfast corresponds to the current place who's shopping list is being created
+        for (let day = 0; day < state.userAddresses[place].calendarList.length; day++) {
+          if (state.userAddresses[place].calendarList[day].breakfastAddress === state.userAddresses[place].address) {
+            // goes through the ingredients listed on that day for the breakfast
+            for (let ingredient = 0; ingredient < state.userAddresses[place].calendarList[day].breakfastIngredients.length; ingredient++) {
+              // needs to check whether the ingredient is already purchased / active
+              if (state.userAddresses[place].calendarList[day].breakfastIngredients[ingredient].isActive === false) {
+                // for each ingredient, it checks whether the ingredient is already in the shopping list
+                let check = true
+                for (let item = 0; item < state.userAddresses[place].shoppingList.length; item++) {
+                  // if it is, it increases the amount
+                  if (state.userAddresses[place].shoppingList[item].ingredient === state.userAddresses[place].calendarList[day].breakfastIngredients[ingredient].ingredient) {
+                    state.userAddresses[place].shoppingList[item].amount += state.userAddresses[place].calendarList[day].breakfastIngredients[ingredient].amount
+                    check = false
                   }
+                }
+                // if the ingredient isn't already on the list, then it adds it
+                if (check) {
+                  state.userAddresses[place].shoppingList.push(JSON.parse(JSON.stringify(state.userAddresses[place].calendarList[day].breakfastIngredients[ingredient])))
                 }
               }
             }
-            if (state.userAddresses[place].calendarList[day].lunchAddress === state.userAddresses[place].address) {
-              for (let meal = 0; meal < state.userAddresses[place].foodsList.length; meal++) {
-                if (state.userAddresses[place].calendarList[day].lunchID === state.userAddresses[place].foodsList[meal].uniqueID) {
-                  for (let ingredient = 0; ingredient < state.userAddresses[place].foodsList[meal].ingredients.length; ingredient++) {
-                    let check = true
-                    for (let item = 0; item < state.userAddresses[place].shoppingList.length; item++) {
-                      if (state.userAddresses[place].shoppingList[item].ingredient === state.userAddresses[place].foodsList[meal].ingredients[ingredient].ingredient) {
-                        state.userAddresses[place].shoppingList[item].amount += state.userAddresses[place].foodsList[meal].ingredients[ingredient].amount
-                        check = false
-                      }
-                    }
-                    if (check) {
-                      state.userAddresses[place].shoppingList.push(JSON.parse(JSON.stringify(state.userAddresses[place].foodsList[meal].ingredients[ingredient])))
-                    }
+          }
+          if (state.userAddresses[place].calendarList[day].lunchAddress === state.userAddresses[place].address) {
+            // goes through the ingredients listed on that day for the lunch
+            for (let ingredient = 0; ingredient < state.userAddresses[place].calendarList[day].lunchIngredients.length; ingredient++) {
+              // needs to check whether the ingredient is already purchased / active
+              if (state.userAddresses[place].calendarList[day].lunchIngredients[ingredient].isActive === false) {
+                // for each ingredient, it checks whether the ingredient is already in the shopping list
+                let check = true
+                for (let item = 0; item < state.userAddresses[place].shoppingList.length; item++) {
+                  // if it is, it increases the amount
+                  if (state.userAddresses[place].shoppingList[item].ingredient === state.userAddresses[place].calendarList[day].lunchIngredients[ingredient].ingredient) {
+                    state.userAddresses[place].shoppingList[item].amount += state.userAddresses[place].calendarList[day].lunchIngredients[ingredient].amount
+                    check = false
                   }
+                }
+                // if the ingredient isn't already on the list, then it adds it
+                if (check) {
+                  state.userAddresses[place].shoppingList.push(JSON.parse(JSON.stringify(state.userAddresses[place].calendarList[day].lunchIngredients[ingredient])))
                 }
               }
             }
-            if (state.userAddresses[place].calendarList[day].dinnerAddress === state.userAddresses[place].address) {
-              for (let meal = 0; meal < state.userAddresses[place].foodsList.length; meal++) {
-                if (state.userAddresses[place].calendarList[day].dinnerID === state.userAddresses[place].foodsList[meal].uniqueID) {
-                  for (let ingredient = 0; ingredient < state.userAddresses[place].foodsList[meal].ingredients.length; ingredient++) {
-                    let check = true
-                    for (let item = 0; item < state.userAddresses[place].shoppingList.length; item++) {
-                      if (state.userAddresses[place].shoppingList[item].ingredient === state.userAddresses[place].foodsList[meal].ingredients[ingredient].ingredient) {
-                        state.userAddresses[place].shoppingList[item].amount += state.userAddresses[place].foodsList[meal].ingredients[ingredient].amount
-                        check = false
-                      }
-                    }
-                    if (check) {
-                      state.userAddresses[place].shoppingList.push(JSON.parse(JSON.stringify(state.userAddresses[place].foodsList[meal].ingredients[ingredient])))
-                    }
+          }
+          if (state.userAddresses[place].calendarList[day].dinnerAddress === state.userAddresses[place].address) {
+            // goes through the ingredients listed on that day for the dinner
+            for (let ingredient = 0; ingredient < state.userAddresses[place].calendarList[day].dinnerIngredients.length; ingredient++) {
+              // needs to check whether the ingredient is already purchased / active
+              if (state.userAddresses[place].calendarList[day].dinnerIngredients[ingredient].isActive === false) {
+                // for each ingredient, it checks whether the ingredient is already in the shopping list
+                let check = true
+                for (let item = 0; item < state.userAddresses[place].shoppingList.length; item++) {
+                  // if it is, it increases the amount
+                  if (state.userAddresses[place].shoppingList[item].ingredient === state.userAddresses[place].calendarList[day].dinnerIngredients[ingredient].ingredient) {
+                    state.userAddresses[place].shoppingList[item].amount += state.userAddresses[place].calendarList[day].dinnerIngredients[ingredient].amount
+                    check = false
                   }
+                }
+                // if the ingredient isn't already on the list, then it adds it
+                if (check) {
+                  state.userAddresses[place].shoppingList.push(JSON.parse(JSON.stringify(state.userAddresses[place].calendarList[day].dinnerIngredients[ingredient])))
                 }
               }
             }
@@ -820,13 +908,16 @@ export default new Vuex.Store({
       state.authFlag = false
     },
     getData (state) {
+      // set reference to user
       const docRef = db.collection('users').doc(state.userID)
       state.userAddresses = []
       docRef.get()
         .then((doc) => {
           if (doc.exists) {
             state.userData = doc.data()
+            // goes through addresses of the user
             for (let a = 0; a < state.userData.addresses.length; a++) {
+              // collects the uniqueID of each address and pushes the data of each address into userAddresses
               const addressRef = db.collection('addresses').doc(state.userData.addresses[a].address)
               addressRef.get()
                 .then((doc) => {
@@ -883,9 +974,9 @@ export default new Vuex.Store({
     getCalendar (state) {
       // if user is not default, then iterate through calendar and save it
       if (state.userID !== 'default' && state.userCalendar.length > 0) {
-        for (let d = 0; d < state.userCalendar.length; d++) {
-          db.collection('users').doc(state.userID).collection('calendar').doc(state.userCalendar[d].date.toString())
-            .set(state.userCalendar[d])
+        for (let day = 0; day < state.userCalendar.length; day++) {
+          db.collection('users').doc(state.userID).collection('calendar').doc(state.userCalendar[day].date.toString())
+            .set(state.userCalendar[day])
         }
       }
       const calendarRef = db.collection('users').doc(state.userID).collection('calendar')
@@ -996,6 +1087,10 @@ export default new Vuex.Store({
     setDefault ({ commit }) {
       commit('saveData')
       commit('setDefaultUser')
+    },
+    createShopping ({ commit }) {
+      commit('createCalendarWithPromise')
+      commit('createShoppingWithPromise')
     }
   }
 })

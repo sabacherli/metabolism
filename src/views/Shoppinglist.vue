@@ -52,7 +52,7 @@ import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'Shoppinglist',
   created () {
-    this.$store.commit('createList')
+    this.$store.commit('createCalendarList')
     this.$store.commit('setPage', 'shoppinglist')
   },
   computed: {

@@ -2,8 +2,8 @@
   <!-- The first empty div is required because all templates need one encompassing div -->
   <div class="">
     <div class="banner">
-      <h1 class="brand_large" @click="goCalendar()">METABOLISM</h1>
-      <h1 class="brand_small" @click="goCalendar()">ME</h1>
+      <h1 class="brand_large target" @click="goCalendar()">METABOLISM</h1>
+      <h1 class="brand_small target" @click="goCalendar()">ME</h1>
       <dropdownComponent></dropdownComponent>
       <transition name="slide" mode="out-in" appear>
       <component :is="currentPageComponent"></component>
@@ -45,6 +45,13 @@ export default {
       this.$store.commit('setPage', 'calendar')
       this.$router.push('calendar')
       this.$store.commit('getCalendar')
+      document.getElementsByClassName('target')[0].classList.add('no_pointer')
+      document.getElementsByClassName('target')[1].classList.add('no_pointer')
+      setTimeout(this.removeClass, 3000)
+    },
+    removeClass () {
+      document.getElementsByClassName('target')[0].classList.remove('no_pointer')
+      document.getElementsByClassName('target')[1].classList.remove('no_pointer')
     }
   }
 }
@@ -100,6 +107,9 @@ export default {
   }
   .brand_small {
     display: none;
+  }
+  .no_pointer {
+    pointer-events: none;
   }
 }
 </style>
