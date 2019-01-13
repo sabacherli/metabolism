@@ -41,7 +41,7 @@
         <input id="unit" class="amount" type="text" name="" value="" @keyup.enter="addItem(userAddresses.indexOf(place))" v-model="newUnit" required>
       </div>
       <!-- eslint-disable-next-line  -->
-      <div class="calendar_navigation_button" style="margin-bottom: 70px" @click="addItem(userAddresses.indexOf(place))"><span class="calendar_navigation_text">Add ingredient</span></div>
+      <div class="add_button" style="margin-bottom: 70px" @click="addItem(userAddresses.indexOf(place))"><span class="add_text">Add ingredient</span></div>
     </template>
   </div>
 </template>
@@ -203,17 +203,22 @@ label {
 .strikethrough {
   text-decoration: line-through
 }
-.calendar_navigation_button {
+.add_button {
   position: relative;
-  top: 20px;
-  margin-top: 20px;
   display: inline-block;
-  padding: 5px;
+  top: 20px;
+  margin-top: 40px;
   font-size: .714em;
-  border: 1.2px solid black;
+  background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
   border-radius: 20px 20px;
+  padding: 5px 10px 5px 10px;
 }
-.calendar_navigation_button:active {
+.add_text {
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+}
+.add_button:active {
   transition: 0s;
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
 }
@@ -223,13 +228,13 @@ label {
     transition: .4s ease-in-out;
     cursor: pointer;
   }
-  .calendar_navigation_button:hover .calendar_navigation_text {
+  .add_button:hover .add_text {
     background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     transition: .4s ease-in-out;
   }
-  .calendar_navigation_button:hover {
+  .add_button:hover {
     cursor: pointer;
     background: black;
     transition: .4s ease-in-out;
