@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="container container_animation" style="margin-bottom: 150px">
+  <div class="container container_animation">
     <template v-for="place in userAddresses">
       <!-- eslint-disable-next-line -->
       <div class="day">
@@ -41,7 +41,7 @@
         <input id="unit" class="amount" type="text" name="" value="" @keyup.enter="addItem(userAddresses.indexOf(place))" v-model="newUnit" required>
       </div>
       <!-- eslint-disable-next-line  -->
-      <div class="add_button" style="margin-bottom: 70px" @click="addItem(userAddresses.indexOf(place))"><span class="add_text">Add ingredient</span></div>
+      <div class="add_button" style="margin-bottom: 40px" @click="addItem(userAddresses.indexOf(place))"><span class="add_text">Add Item</span></div>
     </template>
   </div>
 </template>
