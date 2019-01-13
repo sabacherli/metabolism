@@ -124,7 +124,9 @@
               </template>
             </div>
             <p class="year_date price">{{ price }} CHF</p>
-            <p class="purchase_button" @click="addMonthsToDefault()">Add to Default</p>
+            <div class="purchase_button" @click="addMonthsToDefault()">
+              <span class="purchase_text">Add to Default</span>
+            </div>
           </div>
         </div>
       </div>
@@ -187,7 +189,9 @@
               </template>
             </div>
             <p class="year_date price">{{ price }} CHF</p>
-            <p class="purchase_button" @click="addMonths()">Purchase</p>
+            <div class="purchase_button" @click="addMonths()">
+              <span class="purchase_text">Purchase Months</span>
+            </div>
           </div>
         </div>
       </div>
@@ -635,12 +639,11 @@ export default {
 .purchase_button {
   position: relative;
   display: inline-block;
-  background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
-  color: white;
-  padding: 5px 10px 5px 10px;
   margin-top: -20px;
   font-size: .714em;
+  border: 1.2px solid black;
   border-radius: 20px 20px;
+  padding: 5px 10px 5px 10px;
 }
 .purchase_button:active {
   transition: 0s;
@@ -746,10 +749,15 @@ label {
   }
 }
 @media (hover:hover) {
+  .purchase_button:hover .purchase_text {
+    color: white;
+    transition: .4s ease-in-out;
+  }
   .purchase_button:hover {
-    font-weight: 600;
-    transition: .4s;
+    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+    border: 1.2px solid #ffc0b8;
     cursor: pointer;
+    transition: .4s ease-in-out;
   }
   .inline_date:hover {
     cursor: pointer;

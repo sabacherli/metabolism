@@ -209,14 +209,9 @@ label {
   top: 20px;
   margin-top: 40px;
   font-size: .714em;
-  background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+  border: 1.2px solid black;
   border-radius: 20px 20px;
   padding: 5px 10px 5px 10px;
-}
-.add_text {
-  color: white;
-  font-size: 12px;
-  font-weight: 500;
 }
 .add_button:active {
   transition: 0s;
@@ -229,14 +224,13 @@ label {
     cursor: pointer;
   }
   .add_button:hover .add_text {
-    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: white;
     transition: .4s ease-in-out;
   }
   .add_button:hover {
+    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+    border: 1.2px solid #ffc0b8;
     cursor: pointer;
-    background: black;
     transition: .4s ease-in-out;
   }
 }

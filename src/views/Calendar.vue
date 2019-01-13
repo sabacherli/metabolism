@@ -238,13 +238,13 @@ export default {
 }
 .calendar_navigation_button {
   position: relative;
+  display: inline-block;
   top: 20px;
   margin-top: 20px;
-  display: inline-block;
-  padding: 5px;
   font-size: .714em;
   border: 1.2px solid black;
   border-radius: 20px 20px;
+  padding: 5px;
 }
 .calendar_navigation_button:active {
   transition: 0s;
@@ -256,19 +256,15 @@ export default {
 .purchase_button {
   position: relative;
   display: inline-block;
-  color: lightpink;
-  padding: 5px;
   margin-top: -20px;
   font-size: .714em;
-  border: 1.2px solid lightpink;
+  border: 1.2px solid black;
   border-radius: 20px 20px;
+  padding: 5px 10px 5px 10px;
 }
 .purchase_button:active {
   transition: 0s;
-  background-color: pink;
-  border: 1.2px solid lightpink;
-  text-shadow: 1px 1px lightgray;
-  color: white;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
 }
 .container {
   position: relative;
@@ -404,11 +400,15 @@ label {
   }
 }
 @media (hover:hover) {
-  .purchase_button:hover {
-    background-color: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+  .purchase_button:hover .purchase_text {
     color: white;
-    transition: .4s;
+    transition: .4s ease-in-out;
+  }
+  .purchase_button:hover {
+    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+    border: 1.2px solid #ffc0b8;
     cursor: pointer;
+    transition: .4s ease-in-out;
   }
   .container_meal:hover {
     cursor: pointer;
@@ -418,14 +418,13 @@ label {
     transition: .4s ease-in-out;
   }
   .calendar_navigation_button:hover .calendar_navigation_text {
-    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: white;
     transition: .4s ease-in-out;
   }
   .calendar_navigation_button:hover {
+    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+    border: 1.2px solid #ffc0b8;
     cursor: pointer;
-    background: black;
     transition: .4s ease-in-out;
   }
 }
