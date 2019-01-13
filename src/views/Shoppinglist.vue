@@ -40,6 +40,8 @@
         <label for="">Unit</label>
         <input id="unit" class="amount" type="text" name="" value="" @keyup.enter="addItem(userAddresses.indexOf(place))" v-model="newUnit" required>
       </div>
+      <!-- eslint-disable-next-line  -->
+      <div class="calendar_navigation_button" style="margin-bottom: 70px" @click="addItem(userAddresses.indexOf(place))"><span class="calendar_navigation_text">Add ingredient</span></div>
     </template>
   </div>
 </template>
@@ -201,11 +203,36 @@ label {
 .strikethrough {
   text-decoration: line-through
 }
+.calendar_navigation_button {
+  position: relative;
+  top: 20px;
+  margin-top: 20px;
+  display: inline-block;
+  padding: 5px;
+  font-size: .714em;
+  border: 1.2px solid black;
+  border-radius: 20px 20px;
+}
+.calendar_navigation_button:active {
+  transition: 0s;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+}
 @media (hover:hover) {
   .container_meal:hover {
     color: lightpink;
     transition: .4s ease-in-out;
     cursor: pointer;
+  }
+  .calendar_navigation_button:hover .calendar_navigation_text {
+    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: .4s ease-in-out;
+  }
+  .calendar_navigation_button:hover {
+    cursor: pointer;
+    background: black;
+    transition: .4s ease-in-out;
   }
 }
 </style>

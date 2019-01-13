@@ -18,7 +18,7 @@
           <p class="date"> {{ meal.id }} </p>
           <img class="edit_icon" src="../assets/icon-edit.png" alt="Edit">
         </div>
-        <div class="box" v-if="userID == 'default'">
+        <div class="box_default" v-if="userID == 'default'">
           <p class="date_default"> {{ meal.id }} </p>
         </div>
         <p class="dayname" @click="returnToCalendar(pointer); selectMeal(meal)"> {{ meal.name }} </p>
@@ -207,15 +207,24 @@ export default {
   padding: 5px;
   border: 2px solid black;
 }
-  .edit_icon {
-    position: absolute;
-    height: 20px;
-    width: 20px;
-    top: 50%;
-    left: 50%;
-    opacity: 0;
-    transform: translateX(-50%) translateY(-50%);
-  }
+.box_default {
+  position: relative;
+  width: 30px;
+  height: 25px;
+  margin: auto;
+  margin-bottom: 30px;
+  padding: 5px;
+  border: 2px solid black;
+}
+.edit_icon {
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  top: 50%;
+  left: 50%;
+  opacity: 0;
+  transform: translateX(-50%) translateY(-50%);
+}
 .container {
   position: relative;
   top: 210px;
