@@ -43,7 +43,7 @@
         </div>
         <div class="">
           <form class="" action="" method="post">
-            <label for="">Confirm New Password</label>
+            <label for="">Confirm Password</label>
             <!-- Email input field required for accessibility reasons -->
             <input type="text" name="email" value="..." autocomplete="username email" style="display: none;">
             <input class="amount" type="password" name="" value="" v-model="checkPassword" @keyup.enter="updatePassword()" autocomplete="new-password" required>
