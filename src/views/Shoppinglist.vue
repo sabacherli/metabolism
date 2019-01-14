@@ -12,7 +12,7 @@
         </div>
         <template v-for="item in place.shoppingList">
           <!-- eslint-disable-next-line -->
-          <div class="" @click="toggleIsActive(item)">
+          <div class="item" @click="toggleIsActive(item)">
             <p :class="{ strikethrough: item.isActive }" class="meal"> {{ item.ingredient }} </p>
             <p :class="{ strikethrough: item.isActive }" class="meal_location"> {{ item.amount }} {{ item.unit }} </p>
           </div>
@@ -43,11 +43,14 @@
       <!-- eslint-disable-next-line  -->
       <div class="add_button" style="margin-bottom: 40px" @click="addItem(userAddresses.indexOf(place))"><span class="add_text">Add Item</span></div>
     </template>
+    <div class="confirm_button" style="margin-bottom: 70px" @click="updateShopping()">
+      <span class="confirm_text">Confirm Purchase</span>
+    </div>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 
 export default {
   name: 'Shoppinglist',
@@ -61,7 +64,9 @@ export default {
       'newAmount',
       'newUnit',
       'userAddresses',
-      'userID'
+      'userID',
+      'tempCal',
+      'start'
     ]),
     newIngredient: {
       get () {
@@ -91,14 +96,18 @@ export default {
   methods: {
     ...mapMutations([
       'addItem',
-      'toggleIsActive'
+      'toggleIsActive',
+      'confirmPurchase'
     ]),
     focusAmount () {
       document.getElementById('amount').focus()
     },
     focusUnit () {
       document.getElementById('unit').focus()
-    }
+    },
+    ...mapActions([
+      'updateShopping'
+    ])
   }
 }
 </script>
@@ -210,22 +219,43 @@ label {
   padding: 5px 10px 5px 10px;
 }
 .add_button:active {
-  transition: 0s;
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+  transition: 0s;
+}
+.confirm_button {
+  position: fixed;
+  bottom: -20px;
+  left: 50px;
+  font-size: .714em;
+  background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+  border-radius: 20px 20px;
+  padding: 10px;
+}
+.confirm_text {
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+}
+.confirm_button:active {
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+  transition: 0s;
 }
 @media (hover:hover) {
   .container_meal:hover {
     cursor: pointer;
   }
-  .add_button:hover .add_text {
-    color: white;
-    transition: .4s ease-in-out;
-  }
   .add_button:hover {
-    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
-    border: 1.2px solid #ffc0b8;
     cursor: pointer;
-    transition: .4s ease-in-out;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.4);
+    transition: .2s;
+  }
+  .item:hover {
+    cursor: pointer;
+  }
+  .confirm_button:hover {
+    cursor: pointer;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.4);
+    transition: 0.2s;
   }
 }
 </style>

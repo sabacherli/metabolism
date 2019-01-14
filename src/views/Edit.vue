@@ -378,16 +378,11 @@ export default {
   .number:hover .add_recipe {
     transform: rotate(270deg);
   }
-  .save_button:hover .save_text {
-    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    transition: .4s ease-in-out;
-  }
   .save_button:hover {
     cursor: pointer;
-    background: black;
-    transition: .4s ease-in-out;
+    background: linear-gradient(315deg, lightpink, #ffdeb9 100%);
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+    transition: 0s;
   }
 }
 </style>

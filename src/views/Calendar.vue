@@ -125,6 +125,9 @@ export default {
   created () {
     this.$store.commit('setToday', moment().format('YYYYMMDD'))
     this.$store.commit('populateMonthList', this.currentYear)
+    if (this.userCalendar.length !== 0) {
+      this.$store.commit('getCalendar')
+    }
     this.$store.commit('setPage', 'calendar')
   },
   data () {
@@ -132,10 +135,6 @@ export default {
       currentYearMonth: moment().format('YYYYMM'),
       currentYear: moment().format('YYYY')
     }
-  },
-  updated () {
-    // do something after updating vue instance
-    setTimeout(this.checkUserCalendar, 3000)
   },
   computed: {
     ...mapState([
@@ -162,11 +161,6 @@ export default {
     openMenu () {
       if (this.menu.isActive) {
         this.$router.push('menu')
-      }
-    },
-    checkUserCalendar () {
-      if (this.userCalendar.length === 0) {
-        this.$store.commit('getCalendar')
       }
     }
   }
@@ -400,15 +394,10 @@ label {
   }
 }
 @media (hover:hover) {
-  .purchase_button:hover .purchase_text {
-    color: white;
-    transition: .4s ease-in-out;
-  }
   .purchase_button:hover {
-    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
-    border: 1.2px solid #ffc0b8;
     cursor: pointer;
-    transition: .4s ease-in-out;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.4);
+    transition: .2s;
   }
   .container_meal:hover {
     cursor: pointer;
@@ -417,15 +406,10 @@ label {
     -webkit-text-fill-color: transparent;
     transition: .4s ease-in-out;
   }
-  .calendar_navigation_button:hover .calendar_navigation_text {
-    color: white;
-    transition: .4s ease-in-out;
-  }
   .calendar_navigation_button:hover {
-    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
-    border: 1.2px solid #ffc0b8;
     cursor: pointer;
-    transition: .4s ease-in-out;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.4);
+    transition: .2s;
   }
 }
 </style>

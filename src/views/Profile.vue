@@ -764,15 +764,10 @@ label {
   }
 }
 @media (hover:hover) {
-  .purchase_button:hover .purchase_text {
-    color: white;
-    transition: .4s ease-in-out;
-  }
   .purchase_button:hover {
-    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
-    border: 1.2px solid #ffc0b8;
     cursor: pointer;
-    transition: .4s ease-in-out;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.4);
+    transition: .2s;
   }
   .inline_date:hover {
     cursor: pointer;

@@ -34,7 +34,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'currentPage'
+      'currentPage',
+      'userCalendar'
     ]),
     currentPageComponent () {
       return 'filters-' + this.currentPage
@@ -42,16 +43,11 @@ export default {
   },
   methods: {
     goCalendar () {
-      this.$store.commit('setPage', 'calendar')
-      this.$router.push('calendar')
-      this.$store.commit('getCalendar')
-      document.getElementsByClassName('target')[0].classList.add('no_pointer')
-      document.getElementsByClassName('target')[1].classList.add('no_pointer')
-      setTimeout(this.removeClass, 3000)
-    },
-    removeClass () {
-      document.getElementsByClassName('target')[0].classList.remove('no_pointer')
-      document.getElementsByClassName('target')[1].classList.remove('no_pointer')
+      if (this.userCalendar.length !== 0) {
+        this.$store.commit('setPage', 'calendar')
+        this.$router.push('calendar')
+        this.$store.commit('getCalendar')
+      }
     }
   }
 }
