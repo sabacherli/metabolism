@@ -716,15 +716,14 @@ export default new Vuex.Store({
       }
     },
     createCalendarList (state) {
-      state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
       for (let place = 0; place < state.userAddresses.length; place++) {
-        // resets all lists
+        // resets lists
         state.userAddresses[place].shoppingList = []
         state.userAddresses[place].calendarList = []
-        state.userAddresses[place].foodsList = []
         // goes through the calendar and general information (foods etc.) of each member of that place
         for (let member = 0; member < state.userAddresses[place].members.length; member++) {
           // merges all the calendars of the different members into one for the amount of display days
+          state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
           const calendarRef = db.collection('users').doc(state.userAddresses[place].members[member].uid).collection('calendar')
           calendarRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
             .then((querySnapshot) => {
@@ -907,53 +906,60 @@ export default new Vuex.Store({
     //     }
     //   }
     // },
-    confirmPurchase (state) {
-      state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
+    confirmPurchase (state, address) {
       for (let place in state.userAddresses) {
-        for (let ingredient in state.userAddresses[place].shoppingList) {
-          if (state.userAddresses[place].shoppingList[ingredient].isActive) {
-            let searchIngredient = state.userAddresses[place].shoppingList[ingredient].ingredient
-            for (let member in state.userAddresses[place].members) {
-              state.tempCal = []
-              const calendarRef = db.collection('users').doc(state.userAddresses[place].members[member].uid).collection('calendar')
-              calendarRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
-                .then((querySnapshot) => {
-                  querySnapshot.forEach((doc) => {
-                    // doc.data() is never undefined for query doc snapshots
-                    state.tempCal.push(doc.data())
+        if (state.userAddresses[place].address === address) {
+          for (let ingredient in state.userAddresses[place].shoppingList) {
+            if (state.userAddresses[place].shoppingList[ingredient].isActive) {
+              let searchIngredient = state.userAddresses[place].shoppingList[ingredient].ingredient
+              for (let member in state.userAddresses[place].members) {
+                state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
+                state.tempCal = []
+                const calendarRef = db.collection('users').doc(state.userAddresses[place].members[member].uid).collection('calendar')
+                calendarRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
+                  .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                      // doc.data() is never undefined for query doc snapshots
+                      state.tempCal.push(doc.data())
+                    })
                   })
-                })
-                .catch((error) => {
-                  console.log('Error getting documents: ', error)
-                })
-              // should use an async function here!
-              setTimeout(() => {
-                setPurchased()
-              }, 1000)
-              // eslint-disable-next-line
-              function setPurchased () {
-                for (let days in state.tempCal) {
-                  for (let ingr in state.tempCal[days].breakfastIngredients) {
-                    if (searchIngredient === state.tempCal[days].breakfastIngredients[ingr].ingredient) {
-                      state.tempCal[days].breakfastIngredients[ingr].isActive = true
+                  .catch((error) => {
+                    console.log('Error getting documents: ', error)
+                  })
+                // should use an async function here!
+                setTimeout(() => {
+                  setPurchased()
+                }, 1000)
+                // eslint-disable-next-line
+                function setPurchased () {
+                  for (let days in state.tempCal) {
+                    for (let ingr in state.tempCal[days].breakfastIngredients) {
+                      if (searchIngredient === state.tempCal[days].breakfastIngredients[ingr].ingredient && state.tempCal[days].breakfastAddress === address) {
+                        state.tempCal[days].breakfastIngredients[ingr].isActive = true
+                      }
+                    }
+                    for (let ingr in state.tempCal[days].lunchIngredients) {
+                      if (searchIngredient === state.tempCal[days].lunchIngredients[ingr].ingredient && state.tempCal[days].lunchAddress === address) {
+                        state.tempCal[days].lunchIngredients[ingr].isActive = true
+                      }
+                    }
+                    for (let ingr in state.tempCal[days].dinnerIngredients) {
+                      if (searchIngredient === state.tempCal[days].dinnerIngredients[ingr].ingredient && state.tempCal[days].lunchAddress === address) {
+                        state.tempCal[days].dinnerIngredients[ingr].isActive = true
+                      }
                     }
                   }
-                  for (let ingr in state.tempCal[days].lunchIngredients) {
-                    if (searchIngredient === state.tempCal[days].lunchIngredients[ingr].ingredient) {
-                      state.tempCal[days].lunchIngredients[ingr].isActive = true
-                    }
+                  for (let day in state.tempCal) {
+                    db.collection('users').doc(state.userAddresses[place].members[member].uid).collection('calendar').doc(state.tempCal[day].date.toString())
+                      .set(state.tempCal[day])
                   }
-                  for (let ingr in state.tempCal[days].dinnerIngredients) {
-                    if (searchIngredient === state.tempCal[days].dinnerIngredients[ingr].ingredient) {
-                      state.tempCal[days].dinnerIngredients[ingr].isActive = true
-                    }
-                  }
-                }
-                for (let day in state.tempCal) {
-                  db.collection('users').doc(state.userAddresses[place].members[member].uid).collection('calendar').doc(state.tempCal[day].date.toString())
-                    .set(state.tempCal[day])
                 }
               }
+            }
+          }
+          for (let item in state.userAddresses[place].personalList) {
+            if (state.userAddresses[place].personalList[item].isActive === true) {
+              state.userAddresses[place].personalList.splice(item, 1)
             }
           }
         }
@@ -1171,8 +1177,8 @@ export default new Vuex.Store({
       commit('createCalendarWithPromise')
       commit('createShoppingWithPromise')
     },
-    updateShopping ({ commit }) {
-      commit('confirmPurchase')
+    updateShopping ({ commit }, address) {
+      commit('confirmPurchase', address)
       setTimeout(() => {
         commit('createCalendarList')
         commit('pureGetCalendar')

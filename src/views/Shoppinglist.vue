@@ -1,51 +1,57 @@
 <template lang="html">
   <div class="container container_animation">
     <template v-for="place in userAddresses">
-      <!-- eslint-disable-next-line -->
-      <div class="day">
-        <div class="date">
-          {{ place.shoppingList.length + place.personalList.length }}
-        </div>
-        <p class="dayname">Shopping List</p>
-        <div class="ingredients_break">
-
-        </div>
-        <template v-for="item in place.shoppingList">
+      <template v-for="address in userData.addresses">
+        <!-- eslint-disable-next-line -->
+        <div v-if="address.address === place.address && address.isActive">
           <!-- eslint-disable-next-line -->
-          <div class="item" @click="toggleIsActive(item)">
-            <p :class="{ strikethrough: item.isActive }" class="meal"> {{ item.ingredient }} </p>
-            <p :class="{ strikethrough: item.isActive }" class="meal_location"> {{ item.amount }} {{ item.unit }} </p>
-          </div>
-        </template>
-        <template v-for="item in place.personalList">
-          <!-- eslint-disable-next-line -->
-          <div class="container_meal" @click="toggleIsActive(item)">
-            <p :class="{ strikethrough: item.isActive }" class="meal"> {{ item.ingredient }} </p>
-            <p :class="{ strikethrough: item.isActive }" class="meal_location"> {{ item.amount }} {{ item.unit }} </p>
-          </div>
-        </template>
-        <div class="container_meal">
-          <p class="meal"> {{ newIngredient }} </p>
-          <p class="meal_location"> {{ newAmount }} <span v-if="newUnit"> {{ newUnit }} </span> </p>
-        </div>
-        <div class="ingredients_break" style="margin-top: 40px" v-if="newIngredient">
+          <div class="day">
+            <div class="date">
+              {{ place.shoppingList.length + place.personalList.length }}
+            </div>
+            <p class="dayname">Shopping List</p>
+            <div class="ingredients_break">
 
+            </div>
+            <template v-for="item in place.shoppingList">
+              <!-- eslint-disable-next-line -->
+              <div class="item" @click="toggleIsActive(item)">
+                <p :class="{ strikethrough: item.isActive }" class="meal"> {{ item.ingredient }} </p>
+                <p :class="{ strikethrough: item.isActive }" class="meal_location"> {{ item.amount }} {{ item.unit }} </p>
+              </div>
+            </template>
+            <template v-for="item in place.personalList">
+              <!-- eslint-disable-next-line -->
+              <div class="container_meal" @click="toggleIsActive(item)">
+                <p :class="{ strikethrough: item.isActive }" class="meal"> {{ item.ingredient }} </p>
+                <p :class="{ strikethrough: item.isActive }" class="meal_location"> {{ item.amount }} {{ item.unit }} </p>
+              </div>
+            </template>
+            <div class="container_meal">
+              <p class="meal"> {{ newIngredient }} </p>
+              <p class="meal_location"> {{ newAmount }} <span v-if="newUnit"> {{ newUnit }} </span> </p>
+            </div>
+            <div class="ingredients_break" style="margin-top: 40px" v-if="newIngredient">
+
+            </div>
+            <label style="margin-top: 40px" for="">Add item</label>
+            <input id="ingredient" class="amount" type="text" name="" value="" @keyup.enter="focusAmount" v-model="newIngredient" required>
+            <br>
+            <label for="">Amount</label>
+            <input id="amount" class="amount" type="text" name="" value="" @keyup.enter="focusUnit" v-model="newAmount" required>
+            <br>
+            <label for="">Unit</label>
+            <input id="unit" class="amount" type="text" name="" value="" @keyup.enter="addItem(userAddresses.indexOf(place))" v-model="newUnit" required>
+          </div>
+          <!-- eslint-disable-next-line  -->
+          <div class="add_button" style="margin-bottom: 40px" @click="addItem(userAddresses.indexOf(place))"><span class="add_text">Add Item</span></div>
+          <!-- eslint-disable-next-line  -->
+          <div class="confirm_button" style="margin-bottom: 70px" @click="updateShopping(address.address)">
+            <span class="confirm_text">Confirm Purchase</span>
+          </div>
         </div>
-        <label style="margin-top: 40px" for="">Add item</label>
-        <input id="ingredient" class="amount" type="text" name="" value="" @keyup.enter="focusAmount" v-model="newIngredient" required>
-        <br>
-        <label for="">Amount</label>
-        <input id="amount" class="amount" type="text" name="" value="" @keyup.enter="focusUnit" v-model="newAmount" required>
-        <br>
-        <label for="">Unit</label>
-        <input id="unit" class="amount" type="text" name="" value="" @keyup.enter="addItem(userAddresses.indexOf(place))" v-model="newUnit" required>
-      </div>
-      <!-- eslint-disable-next-line  -->
-      <div class="add_button" style="margin-bottom: 40px" @click="addItem(userAddresses.indexOf(place))"><span class="add_text">Add Item</span></div>
+      </template>
     </template>
-    <div class="confirm_button" style="margin-bottom: 70px" @click="updateShopping()">
-      <span class="confirm_text">Confirm Purchase</span>
-    </div>
   </div>
 </template>
 
@@ -66,7 +72,8 @@ export default {
       'userAddresses',
       'userID',
       'tempCal',
-      'start'
+      'start',
+      'userData'
     ]),
     newIngredient: {
       get () {

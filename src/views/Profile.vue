@@ -256,6 +256,9 @@
           <label for="dayname">New Place</label>
           <input class="amount" type="text" name="" value="" @keyup.enter="addPlace()" v-model="newPlace">
           <br>
+          <div class="purchase_button" @click="addPlace()" style="margin-top: 40px">
+            <span class="purchase_text">Add Place</span>
+          </div>
         </div>
       </div>
     </div>
