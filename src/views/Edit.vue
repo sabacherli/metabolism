@@ -276,6 +276,12 @@ export default {
     margin-right: auto;
     font-size: 10px;
   }
+  @media (min-resolution: 300dpi) and (max-resolution: 350dpi) {
+    label {
+      top: 42px;
+      transform: translateX(-66px);
+    }
+  }
 }
 @media (min-width: 850px) {
   .container_recipies {
@@ -369,6 +375,12 @@ export default {
     width: 100%;
     margin-right: auto;
     font-size: 10px;
+  }
+  @media (min-resolution: 300dpi) and (max-resolution: 350dpi) {
+    label {
+      top: 48px;
+      transform: translateX(-66px);
+    }
   }
 }
 @media (hover:hover) {

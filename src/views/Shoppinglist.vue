@@ -35,13 +35,13 @@
 
             </div>
             <label style="margin-top: 40px" for="">Add item</label>
-            <input id="ingredient" class="amount" type="text" name="" value="" @keyup.enter="focusAmount" v-model="newIngredient" required>
+            <input id="ingredient" class="amount" type="text" autocomplete="off" @keyup.enter="focusAmount" v-model="newIngredient" required>
             <br>
             <label for="">Amount</label>
-            <input id="amount" class="amount" type="text" name="" value="" @keyup.enter="focusUnit" v-model="newAmount" required>
+            <input id="amount" class="amount" type="text" autocomplete="off" @keyup.enter="focusUnit" v-model="newAmount" required>
             <br>
             <label for="">Unit</label>
-            <input id="unit" class="amount" type="text" name="" value="" @keyup.enter="addItem(userAddresses.indexOf(place))" v-model="newUnit" required>
+            <input id="unit" class="amount" type="text" autocomplete="off" @keyup.enter="addItem(userAddresses.indexOf(place))" v-model="newUnit" required>
           </div>
           <!-- eslint-disable-next-line  -->
           <div class="add_button" style="margin-bottom: 40px" @click="addItem(userAddresses.indexOf(place))"><span class="add_text">Add Item</span></div>
@@ -211,6 +211,12 @@ label {
   left: 50%;
   transform: translateX(-60px);
   font-size: 10px;
+}
+@media (min-resolution: 300dpi) and (max-resolution: 350dpi) {
+  label {
+    top: 42px;
+    transform: translateX(-66px);
+  }
 }
 .strikethrough {
   text-decoration: line-through;

@@ -412,4 +412,10 @@ label {
     transition: .2s;
   }
 }
+@media (min-resolution: 300dpi) and (max-resolution: 350dpi) {
+  label {
+    top: 42px;
+    transform: translateX(-66px);
+  }
+}
 </style>

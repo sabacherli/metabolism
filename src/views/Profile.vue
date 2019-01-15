@@ -817,7 +817,8 @@ label {
 }
 @media (min-resolution: 300dpi) and (max-resolution: 350dpi) {
   label {
-    top: 43px;
-    transform: translateX(-64px);
-  }}
+    top: 42px;
+    transform: translateX(-66px);
+  }
+}
 </style>
