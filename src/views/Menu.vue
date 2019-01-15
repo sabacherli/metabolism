@@ -24,7 +24,7 @@
           <p class="date_default"> {{ meal.id }} </p>
         </div>
         <!-- Meal is selected and entered into the calendar in the backend -->
-        <p class="dayname" @click="returnToCalendar(pointer); selectMeal(meal)"> {{ meal.name }} </p>
+        <p class="dayname" @click="returnToCalendar(pointer); removeMeal(); selectMeal(meal)"> {{ meal.name }} </p>
         <div class="ingredients_break">
 
         </div>

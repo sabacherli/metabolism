@@ -2,8 +2,25 @@
   <div class="container">
     <div class="animated" v-if="profileFilters[0].isActive">
       <div class="">
+        <div class="box" @click="removeFocus()">
+          <img class="edit_icon" src="../assets/icon-edit.png" alt="Edit">
+        </div>
+        <p class="dayname">Shopping List Length</p>
+        <div class="ingredients_break">
+
+        </div>
+        <div class="" align="left">
+          <label for="">Days</label>
+          <input class="amount" type="number" min="1" max="365" autocomplete="off" v-model="shoppingListLength" @keyup.enter="removeFocus()">
+          <br>
+        </div>
+        <div class="purchase_button" @click="removeFocus()" style="margin-top: 20px">
+          <span class="purchase_text">Update Length</span>
+        </div>
+      </div>
+      <div class="">
         <div class="box" @click="updateEmail()">
-          <p class="sign_special">@</p>
+          <img class="edit_icon" src="../assets/icon-edit.png" alt="Edit">
         </div>
         <p class="dayname">Email</p>
         <div class="ingredients_break">
@@ -20,7 +37,7 @@
       </div>
       <div class="">
         <div class="box" @click="updatePassword()">
-          <p class="sign_special">#</p>
+          <img class="edit_icon" src="../assets/icon-edit.png" alt="Edit">
         </div>
         <p class="dayname">Password</p>
         <div class="ingredients_break">
@@ -362,6 +379,14 @@ export default {
       },
       set (value) {
         this.$store.commit('syncUserEmail', value)
+      }
+    },
+    shoppingListLength: {
+      get () {
+        return this.$store.state.shoppingListLength
+      },
+      set (value) {
+        this.$store.commit('syncShoppingListLength', value)
       }
     }
   },
@@ -742,6 +767,7 @@ export default {
   border-radius: 20px 20px;
 }
 input[type=text].amount,
+input[type=number].amount,
 input[type=password].amount {
   border: 0px;
   border-bottom-style: solid;
@@ -757,6 +783,7 @@ input[type=password].amount {
   font-family: Montserrat;
 }
 input[type=text]:focus.amount,
+input[type=number].amount,
 input[type=password]:focus.amount  {
   position: relative;
   display: block;
@@ -785,6 +812,14 @@ label {
   background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+.edit_icon {
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
 }
 @media (min-width: 1000px) {
   .container {

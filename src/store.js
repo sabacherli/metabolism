@@ -65,6 +65,7 @@ export default new Vuex.Store({
       id: null
     },
     displayAmount: 7,
+    shoppingListLength: 7,
     profileFilters: [
       {
         text: 'Account',
@@ -158,6 +159,12 @@ export default new Vuex.Store({
     },
     syncUnit (state, unit) {
       state.newUnit = unit
+    },
+    syncUserEmail (state, email) {
+      state.userEmail = email
+    },
+    syncShoppingListLength (state, days) {
+      state.shoppingListLength = days
     },
     setEditor (state, meal) {
       state.editor.id = meal.id
@@ -726,7 +733,7 @@ export default new Vuex.Store({
           // merges all the calendars of the different members into one for the amount of display days
           state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
           const calendarRef = db.collection('users').doc(state.userAddresses[place].members[member].uid).collection('calendar')
-          calendarRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
+          calendarRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.shoppingListLength, 'days').add(1, 'days').format('YYYYMMDD'))).orderBy('date').get()
             .then((querySnapshot) => {
               querySnapshot.forEach((doc) => {
                 // doc.data() is never undefined for query doc snapshots
@@ -824,7 +831,7 @@ export default new Vuex.Store({
     //     for (let member = 0; member < state.userAddresses[place].members.length; member++) {
     //       // merges all the calendars of the different members into one for the amount of display days
     //       const calendarRef = db.collection('users').doc(state.userAddresses[place].members[member].uid).collection('calendar')
-    //       calendarRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
+    //       calendarRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.shoppingListLength, 'days').format('YYYYMMDD'))).orderBy('date').get()
     //         .then((querySnapshot) => {
     //           querySnapshot.forEach((doc) => {
     //             // doc.data() is never undefined for query doc snapshots
@@ -917,7 +924,7 @@ export default new Vuex.Store({
                 state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
                 state.tempCal = []
                 const calendarRef = db.collection('users').doc(state.userAddresses[place].members[member].uid).collection('calendar')
-                calendarRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
+                calendarRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.shoppingListLength, 'days').add(1, 'days').format('YYYYMMDD'))).orderBy('date').get()
                   .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
                       // doc.data() is never undefined for query doc snapshots
@@ -1045,7 +1052,7 @@ export default new Vuex.Store({
       state.userCalendar = []
       state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
       if (state.userData.months.includes(moment().format('YYYYMM'))) {
-        calendarRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
+        calendarRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.shoppingListLength, 'days').add(1, 'days').format('YYYYMMDD'))).orderBy('date').get()
           .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
               // doc.data() is never undefined for query doc snapshots

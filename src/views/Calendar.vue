@@ -50,9 +50,9 @@
     </div>
     <div class="" v-else>
       <!-- Adds days for the month ahead to the currently signed in user, also default if not signed in. -->
-      <div v-if="userID !== 'default'" class="" style="margin-bottom: 100px">
-        <div class="day">
-          <p class="date">+</p>
+      <div class="" style="margin-bottom: 40px">
+        <div class="box">
+          <p class="sign">+</p>
         </div>
         <p class="dayname">Add Months</p>
         <div class="ingredients_break">
@@ -66,19 +66,19 @@
             <div class="block_date">
               <template v-for="month in listMonths.slice(0,4)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_border: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in listMonths.slice(4,8)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_border: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in listMonths.slice(8,12)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_border: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
               </template>
             </div>
           </div>
@@ -91,23 +91,25 @@
             <div class="block_date">
               <template v-for="month in listMonths.slice(12,16)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_border: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in listMonths.slice(16,20)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_border: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in listMonths.slice(20,24)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_border: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
               </template>
             </div>
-            <p style="margin-top: 40px; color: lightpink" class="year_date">{{ price }} CHF</p>
-            <p class="purchase_button" @click="addMonths()">Purchase</p>
+            <p class="year_date price">{{ price }} CHF</p>
+            <div class="purchase_button" @click="addMonths()">
+              <span class="purchase_text">Purchase Months</span>
+            </div>
           </div>
         </div>
       </div>
@@ -180,6 +182,32 @@ export default {
 }
 .animated {
   animation: fadeIn .8s;
+}
+.box {
+  margin: auto;
+  font-size: 20px;
+  padding: 5px;
+  width: 30px;
+  height: 25px;
+  margin-bottom: 30px;
+  margin-top: 100px;
+  position: relative;
+  text-align: center;
+  border: 2px solid black;
+}
+.sign {
+  position: absolute;
+  top: 50%;
+  margin-top: -19px;
+  left: 50%;
+  margin-left: -7px;
+  font-size: 30px;
+  transition: .8s ease-in-out;
+}
+.sign_special {
+  margin-top: 0px;
+  font-size: 20px;
+  transition: .8s ease-in-out;
 }
 .container {
   position: relative;
@@ -288,19 +316,23 @@ export default {
 .inline_date {
   display: inline-block;
   margin: 7px;
+  width: 25px;
+  font-weight: 400;
+  border: 1.4px solid white;
+  border-radius: 20px 20px;
   padding-left: 7px;
   padding-right: 7px;
 }
-.inline_date_border {
-  background-color: lightpink;
-  color: white;
-  border-radius: 20px 20px;
+.inline_date_bought {
+    background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+    color: white;
+    padding: auto 5px auto 5px;
+    border-radius: 20px 20px;
 }
 .inline_date_selected {
-  border: 1.4px solid lightpink;
-  color: lightpink;
-  border-radius: 20px 20px;
   font-weight: 400;
+  border: 1.4px solid black;
+  border-radius: 20px 20px;
 }
 input[type=text].amount {
   border: 0px;
@@ -410,6 +442,15 @@ label {
     cursor: pointer;
     box-shadow: 1px 1px 1px rgba(0,0,0,0.4);
     transition: .2s;
+  }
+  .inline_date:hover {
+    cursor: pointer;
+  }
+  .box:hover {
+    cursor: pointer;
+  }
+  .box:hover .sign {
+    transform: rotate(270deg);
   }
 }
 @media (min-resolution: 300dpi) and (max-resolution: 350dpi) {
