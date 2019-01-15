@@ -30,6 +30,9 @@
       <span id="login" class="dropdown_item" v-if="userID === 'default'" v-on:click='goLogin()'>LOGIN</span>
       <span class="dropdown_item" v-if="userID !== 'default'" v-on:click='logout()'>LOGOUT</span>
     </div>
+    <div id="background" class="" @click="touchLeave()">
+
+    </div>
   </div>
 </template>
 
@@ -108,6 +111,7 @@ export default {
       document.getElementById('dropdown_nav').classList.add('dropdown_nav_touch')
       document.getElementById('dropdown_icon').classList.add('dropdown_icon_touch')
       document.getElementById('dropdown_close').classList.add('dropdown_close_touch')
+      document.getElementById('background').classList.add('background_t')
     },
     touchLeave () {
       // hover actions
@@ -120,6 +124,7 @@ export default {
       document.getElementById('dropdown_nav').classList.add('dropdown_nav_t')
       document.getElementById('dropdown_icon').classList.add('dropdown_icon')
       document.getElementById('dropdown_close').classList.add('dropdown_close')
+      document.getElementById('background').classList.remove('background_t')
     },
     removeClass () {
       // hover actions
@@ -206,6 +211,9 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.background {
+  display: none;
+}
 .dropdown_item {
   color: black;
   font-size: 1.143em;
@@ -304,6 +312,12 @@ export default {
     opacity: 1;
     transform: rotate(360deg);
     transition: .8s ease-in-out;
+  }
+  .background_t {
+    position: fixed;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
   }
 }
 @media (hover:hover) {

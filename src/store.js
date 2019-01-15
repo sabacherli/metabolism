@@ -650,69 +650,70 @@ export default new Vuex.Store({
         })
     },
     deletePlace (state, place) {
-      alert('Are you sure you want to remove this place?')
-      const index = state.userData.addresses.indexOf(place)
-      for (let m = 0; m < state.userAddresses[index].members.length; m++) {
-        const docAddress = state.userAddresses[index].members[m].uid
-        if (state.userAddresses[index].members[m].role === 'Owner' && state.userAddresses[index].members[m].uid === state.userID) {
-          // Deletes the address document in addresses collection.
-          db.collection('addresses').doc(place.address).delete()
-            .then(() => {
-              console.log('Document successfully delete.')
+      if (confirm('Are you sure you want to remove this place?')) {
+        const index = state.userData.addresses.indexOf(place)
+        for (let m = 0; m < state.userAddresses[index].members.length; m++) {
+          const docAddress = state.userAddresses[index].members[m].uid
+          if (state.userAddresses[index].members[m].role === 'Owner' && state.userAddresses[index].members[m].uid === state.userID) {
+            // Deletes the address document in addresses collection.
+            db.collection('addresses').doc(place.address).delete()
+              .then(() => {
+                console.log('Document successfully delete.')
+              })
+              .catch((error) => {
+                console.log('Error removing document: ', error)
+              })
+          }
+          // Gets the user data of each member and saves it into tempArray.
+          const docRef = db.collection('users').doc(state.userAddresses[index].members[m].uid)
+          var tempData = ''
+          docRef.get()
+            .then((doc) => {
+              if (doc.exists) {
+                tempData = doc.data()
+                // Deletes the address out of the addressess record.
+                for (let a = 0; a < tempData.addresses.length; a++) {
+                  if (tempData.addresses[a].address === place.address) {
+                    tempData.addresses.splice(a, 1)
+                  }
+                }
+                // Saves the tempArray back into the edited users' document.
+                db.collection('users').doc(docAddress).set(tempData)
+                // Get new userData and userAddresses
+                const docRef = db.collection('users').doc(state.userID)
+                state.userData = ''
+                state.userAddresses = []
+                docRef.get().then((doc) => {
+                  if (doc.exists) {
+                    state.userData = doc.data()
+                    for (let a = 0; a < state.userData.addresses.length; a++) {
+                      const addressRef = db.collection('addresses').doc(state.userData.addresses[a].address)
+                      addressRef.get()
+                        .then((doc) => {
+                          if (doc.exists) {
+                            state.userAddresses.push(doc.data())
+                          } else {
+                            // doc.data() will be undefined in this case
+                            console.log('No such document!')
+                          }
+                        })
+                    }
+                  } else {
+                    // doc.data() will be undefined in this case
+                    console.log('No such document!')
+                  }
+                }).catch((error) => {
+                  console.log('Error getting document:', error)
+                })
+              } else {
+                // doc.data() will be undefined in this case
+                console.log('No such document!')
+              }
             })
             .catch((error) => {
-              console.log('Error removing document: ', error)
+              console.log('Error getting document:', error)
             })
         }
-        // Gets the user data of each member and saves it into tempArray.
-        const docRef = db.collection('users').doc(state.userAddresses[index].members[m].uid)
-        var tempData = ''
-        docRef.get()
-          .then((doc) => {
-            if (doc.exists) {
-              tempData = doc.data()
-              // Deletes the address out of the addressess record.
-              for (let a = 0; a < tempData.addresses.length; a++) {
-                if (tempData.addresses[a].address === place.address) {
-                  tempData.addresses.splice(a, 1)
-                }
-              }
-              // Saves the tempArray back into the edited users' document.
-              db.collection('users').doc(docAddress).set(tempData)
-              // Get new userData and userAddresses
-              const docRef = db.collection('users').doc(state.userID)
-              state.userData = ''
-              state.userAddresses = []
-              docRef.get().then((doc) => {
-                if (doc.exists) {
-                  state.userData = doc.data()
-                  for (let a = 0; a < state.userData.addresses.length; a++) {
-                    const addressRef = db.collection('addresses').doc(state.userData.addresses[a].address)
-                    addressRef.get()
-                      .then((doc) => {
-                        if (doc.exists) {
-                          state.userAddresses.push(doc.data())
-                        } else {
-                          // doc.data() will be undefined in this case
-                          console.log('No such document!')
-                        }
-                      })
-                  }
-                } else {
-                  // doc.data() will be undefined in this case
-                  console.log('No such document!')
-                }
-              }).catch((error) => {
-                console.log('Error getting document:', error)
-              })
-            } else {
-              // doc.data() will be undefined in this case
-              console.log('No such document!')
-            }
-          })
-          .catch((error) => {
-            console.log('Error getting document:', error)
-          })
       }
     },
     createCalendarList (state) {

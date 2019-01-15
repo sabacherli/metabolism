@@ -64,7 +64,7 @@
         <label for="">Meal Name</label>
         <input class="amount" type="text" name="" value="" @keyup.enter="addMealName(); focusIngredient()" v-model="mealName" required>
         <br>
-        <div class="add_button" @click="addMealName()" style="margin-top: 40px">
+        <div class="add_button" @click="addMealName()" style="margin-top: 20px">
           <span class="add_text">Add Meal Name</span>
         </div>
       </div>
@@ -78,7 +78,7 @@
         <label for="">Unit</label>
         <input id="newUnit" class="amount" type="text" name="" value="" @keyup.enter="addIngredientToMeal()" v-model="newUnit">
         <br>
-        <div class="add_button" @click="addIngredientToMeal()" style="margin-top: 40px">
+        <div class="add_button" @click="addIngredientToMeal()" style="margin-top: 20px">
           <span class="add_text">Add Ingredient</span>
         </div>
       </div>

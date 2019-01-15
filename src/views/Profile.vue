@@ -9,10 +9,13 @@
         <div class="ingredients_break">
 
         </div>
-        <div class="">
+        <div class="" align="left">
           <label for="">New Email</label>
           <input class="amount" type="text" name="" value="" v-model="userEmail" @keyup.enter="updateEmail()">
           <br>
+        </div>
+        <div class="purchase_button" @click="updateEmail()" style="margin-top: 20px">
+          <span class="purchase_text">Update Email</span>
         </div>
       </div>
       <div class="">
@@ -23,32 +26,32 @@
         <div class="ingredients_break">
 
         </div>
-        <div class="">
+        <div class="" align="left">
           <form class="" action="" method="post">
             <label for="">Old Password</label>
             <!-- Email input field required for accessibility reasons -->
-            <input type="text" name="email" value="..." autocomplete="username email" style="display: none;">
             <input class="amount" type="password" name="" value="" v-model="oldPassword" autocomplete="current-password" required>
           </form>
           <br>
         </div>
-        <div class="">
+        <div class="" align="left">
           <form class="" action="" method="post">
             <label for="">New Password</label>
             <!-- Email input field required for accessibility reasons -->
-            <input type="text" name="email" value="..." autocomplete="username email" style="display: none;">
             <input class="amount" type="password" name="" value="" v-model="newPassword" autocomplete="new-password" required>
           </form>
           <br>
         </div>
-        <div class="">
+        <div class="" align="left">
           <form class="" action="" method="post">
             <label for="">Confirm Password</label>
             <!-- Email input field required for accessibility reasons -->
-            <input type="text" name="email" value="..." autocomplete="username email" style="display: none;">
             <input class="amount" type="password" name="" value="" v-model="checkPassword" @keyup.enter="updatePassword()" autocomplete="new-password" required>
           </form>
           <br>
+        </div>
+        <div class="purchase_button" @click="updatePassword()" style="margin-top: 20px">
+          <span class="purchase_text">Update Password</span>
         </div>
       </div>
       <div class="">
@@ -59,10 +62,13 @@
         <div class="ingredients_break">
 
         </div>
-        <div class="">
+        <div class="" align="left">
           <label for="">Enter YES</label>
           <input class="amount" type="text" name="" value="" v-model="deleteConfirmation" @keyup.enter="deleteAccount()" required>
           <br>
+        </div>
+        <div class="purchase_button" @click="deleteAccount()" style="margin-top: 20px">
+          <span class="purchase_text">Confirm</span>
         </div>
       </div>
 
@@ -209,7 +215,7 @@
 
         </div>
         <!-- eslint-disable-next-line -->
-        <div class="">
+        <div class="" align="left">
           <label for="">Edit Place</label>
           <input class="amount" type="text" name="" value="" v-model="place.name" @keyup.enter="removeFocus()" required>
           <br>
@@ -218,22 +224,29 @@
         <div class="" v-if="checkOwner(index)">
           <template v-for="member in userAddresses[index].members">
             <!-- eslint-disable-next-line -->
+            <div class="" align="left">
               <div v-if="member.role != 'Owner'">
-                <button @click="removeMember(member, index)">Remove</button>
+                <span class="sign_remove" @click="removeMember(member, index)">+</span>
               </div>
               <!-- eslint-disable-next-line -->
-            <label>{{ member.role }}</label>
-            <!-- eslint-disable-next-line -->
-            <input class="amount" type="text" @keyup.enter="removeFocus()" v-model="member.email" required>
-            <!-- eslint-disable-next-line -->
-            <br>
+              <label>{{ member.role }}</label>
+              <!-- eslint-disable-next-line -->
+              <input class="amount" type="text" @keyup.enter="removeFocus()" v-model="member.email" required>
+              <!-- eslint-disable-next-line -->
+              <br>
+            </div>
           </template>
-          <label for="">Add Member</label>
-          <input class="amount" type="text" name="" value="" @keyup.enter="addMember(place)" v-model="newMember" required>
-          <br>
+          <div class="" align="left">
+            <label for="">Add Member</label>
+            <input class="amount" type="text" name="" value="" @keyup.enter="addMember(place)" v-model="newMember" required>
+            <br>
+          </div>
+          <div class="purchase_button" @click="addMember(place)" style="margin-top: 20px">
+            <span class="purchase_text">Add Member</span>
+          </div>
         </div>
         <!-- eslint-disable-next-line -->
-        <div class="" v-else>
+        <div class="" align="left" v-else>
           <template v-for="member in userAddresses[index].members">
             <!-- eslint-disable-next-line -->
             <label>{{ member.role }}</label>
@@ -253,10 +266,12 @@
 
         </div>
         <div class="">
-          <label for="dayname">New Place</label>
-          <input class="amount" type="text" name="" value="" @keyup.enter="addPlace()" v-model="newPlace">
+          <div class="" align="left">
+            <label for="dayname">New Place</label>
+            <input class="amount" type="text" name="" value="" @keyup.enter="addPlace()" v-model="newPlace">
+          </div>
           <br>
-          <div class="purchase_button" @click="addPlace()" style="margin-top: 40px">
+          <div class="purchase_button" @click="addPlace()" style="margin-top: 20px">
             <span class="purchase_text">Add Place</span>
           </div>
         </div>
@@ -275,10 +290,14 @@
 
         </div>
         <!-- eslint-disable-next-line -->
-        <div class="">
+        <div class="" align="left">
           <label for="">Edit Filter</label>
           <input class="amount" type="text" name="" value="" @keyup.enter="removeFocus()" v-model="tag.text" required>
           <br>
+        </div>
+        <!-- eslint-disable-next-line -->
+        <div class="purchase_button" @click="removeFocus()" style="margin-top: 20px">
+          <span class="purchase_text">Update Filter</span>
         </div>
       </template>
       <div class="" style="margin-bottom: 200px">
@@ -289,7 +308,7 @@
         <div class="ingredients_break">
 
         </div>
-        <div class="">
+        <div class="" align="left">
           <label for="">New Filter</label>
           <input class="amount" id="newFilter" type="text" name="" value="" @keyup.enter="addFilter()" v-model="newFilter" required>
         </div>
@@ -441,36 +460,38 @@ export default {
         })
     },
     removeMember (member, index) {
-      // Removes the address from the users addresses' array.
-      const localUserAddresses = this.userAddresses
-      this.userAddresses[index].members.splice(this.userAddresses[index].members.indexOf(member), 1)
-      db.collection('addresses').doc(localUserAddresses[index].address).set(this.userAddresses[index])
+      if (confirm('Are you sure you want to remove this member?')) {
+        // Removes the address from the users addresses' array.
+        const localUserAddresses = this.userAddresses
+        this.userAddresses[index].members.splice(this.userAddresses[index].members.indexOf(member), 1)
+        db.collection('addresses').doc(localUserAddresses[index].address).set(this.userAddresses[index])
 
-      // Removes the user in the members array of the address.
-      db.collection('users').doc(member.uid).get()
-        .then(function (doc) {
-          if (doc.exists) {
-            const memberData = doc.data()
-            for (let a = 0; a < memberData.addresses.length; a++) {
-              if (localUserAddresses[index].address === memberData.addresses[a].address) {
-                memberData.addresses.splice(a, 1)
+        // Removes the user in the members array of the address.
+        db.collection('users').doc(member.uid).get()
+          .then(function (doc) {
+            if (doc.exists) {
+              const memberData = doc.data()
+              for (let a = 0; a < memberData.addresses.length; a++) {
+                if (localUserAddresses[index].address === memberData.addresses[a].address) {
+                  memberData.addresses.splice(a, 1)
+                }
               }
+              // Saves the array with removed data to the user's document.
+              db.collection('users').doc(member.uid).set(memberData)
+                .then(function () {
+                  console.log("Address successfully removed in member's documents!")
+                })
+                .catch(function (error) {
+                  console.error('Error writing document: ', error)
+                })
+            } else {
+              // doc.data() will be undefined in this case
+              console.log('No such document.')
             }
-            // Saves the array with removed data to the user's document.
-            db.collection('users').doc(member.uid).set(memberData)
-              .then(function () {
-                console.log("Address successfully removed in member's documents!")
-              })
-              .catch(function (error) {
-                console.error('Error writing document: ', error)
-              })
-          } else {
-            // doc.data() will be undefined in this case
-            console.log('No such document.')
-          }
-        }).catch(function (error) {
-          console.log('Error getting document:', error)
-        })
+          }).catch(function (error) {
+            console.log('Error getting document:', error)
+          })
+      }
     },
     addPlace () {
       if (this.newPlace !== '') {
@@ -638,6 +659,15 @@ export default {
   font-size: 20px;
   transition: .8s ease-in-out;
 }
+.sign_remove {
+  position: absolute;
+  display: inline-block;
+  left: 50%;
+  transform: translateX(-100px) rotate(45deg);
+  margin-top: 42px;
+  width: 100px;
+  font-size: 25px;
+}
 .past {
   position: relative;
   top: -43px;
@@ -728,13 +758,13 @@ input[type=password].amount {
 }
 input[type=text]:focus.amount,
 input[type=password]:focus.amount  {
+  position: relative;
+  display: block;
+  width: 120px;
   border: 0px;
   border-bottom-style: solid;
   border-bottom-color: black;
   border-bottom-width: 2px;
-  display: block;
-  width: 120px;
-  position: relative;
   outline: none;
 }
 label {
@@ -781,5 +811,13 @@ label {
   .box:hover .sign {
     transform: rotate(270deg);
   }
+  .sign_remove:hover {
+    cursor: pointer;
+  }
 }
+@media (min-resolution: 300dpi) and (max-resolution: 350dpi) {
+  label {
+    top: 43px;
+    transform: translateX(-64px);
+  }}
 </style>
