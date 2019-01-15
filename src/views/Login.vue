@@ -5,7 +5,7 @@
         <a>METABOLISM</a>
       </div>
       <div class="brand_small">
-        <img src="../assets/logo.png" alt="Logo">
+        <img class="brand_img" src="../assets/logo.png" alt="Logo">
       </div>
       <div class="container_login">
         <form class="" action="index.html" method="post">
@@ -108,8 +108,8 @@ export default {
   animation: slideInDown 1.2s;
 }
 .container_login {
-   position: relative;
-   top: 270px;
+   position: absolute;
+   top: 60vh;
    width: 100%;
    opacity: 0;
    animation: fadeIn .8s;
@@ -120,7 +120,7 @@ export default {
 .login_password {
    position: relative;
    display: inline-block;
-   top: 15%;
+   top: 0vh;
    left: 50%;
    transform: translateX(-50%);
    height: 30px;
@@ -128,7 +128,7 @@ export default {
    text-align: center;
    color: lightgray;
    font-family: Montserrat;
-   font-size: 14px;
+   font-size: 1em;
    letter-spacing: .2px;
    background: white;
    border-style: none;
@@ -137,10 +137,10 @@ export default {
  }
 input[type=email].login_email:focus,
 input[type=password].login_password:focus {
+  font-size: 1em;
+  letter-spacing: .2px;
   background-color: #F8F8F8;
   outline: none;
-  letter-spacing: .2px;
-  font-size: 14px;
 }
 .login_button {
   position: relative;
@@ -160,7 +160,7 @@ input[type=password].login_password:focus {
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
 }
 ::placeholder {
-  font-size: 14px;
+  font-size: 1em;
   font-family: Montserrat;
   color: lightgray;
   letter-spacing: .2px;
@@ -171,10 +171,13 @@ input[type=password].login_password:focus {
   }
   .brand_small {
     position: relative;
-    top: 150px;
+    top: 20vh;
     text-align: center;
     opacity: 0;
     animation: slideInLeft .8s 1.2s forwards;
+  }
+  .brand_img {
+    width: 50vw;
   }
   .login_email,
   .login_password {
@@ -183,14 +186,14 @@ input[type=password].login_password:focus {
 }
 @media (min-width: 850px) {
   .brand_large {
+    position: relative;
+    top: 25vh;
+    width: 100%;
     text-align: center;
+    color: white;
     font-size: 9em;
     font-weight: 800;
     letter-spacing: .05em;
-    color: white;
-    width: 100%;
-    position: relative;
-    top: 200px;
     opacity: 0;
     transform: translateY(-150%);
     animation: slideInLeft .8s 1.2s forwards;

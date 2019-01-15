@@ -47,7 +47,7 @@
           <div class="add_button" style="margin-bottom: 40px" @click="addItem(userAddresses.indexOf(place))"><span class="add_text">Add Item</span></div>
           <!-- eslint-disable-next-line  -->
           <div class="confirm_button" style="margin-bottom: 70px" @click="updateShopping(address.address)">
-            <span class="confirm_text">Confirm Purchase</span>
+            <span class="confirm_text">Done</span>
           </div>
         </div>
       </template>

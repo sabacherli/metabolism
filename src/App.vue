@@ -57,6 +57,10 @@ div {
   -ms-user-select: none; /* IE 10+ */
   user-select: none; /* Standard syntax */
 }
+input {
+  border-radius: 0;
+  overflow: visible;
+}
 @keyframes slideInRight {
   from {
     opacity: 0;
