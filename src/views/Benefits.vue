@@ -5,7 +5,7 @@
         <a>METABOLISM</a>
       </div>
       <div class="brand_small">
-        <img src="../assets/logo.png" alt="Logo">
+        <img class="brand_img" src="../assets/logo.png" alt="Logo">
       </div>
       <div class="container_benefits">
         <div id="benefit1" class="benefits">
@@ -75,7 +75,7 @@ export default {
 }
 .container_benefits {
   position: absolute;
-  top: 550px;
+  top: 60vh;
   width: 80%;
   padding-left: 10%;
 }
@@ -129,10 +129,13 @@ export default {
   }
   .brand_small {
     position: relative;
-    top: 150px;
+    top: 20vh;
     text-align: center;
     opacity: 0;
     animation: slideInLeft .8s 1.2s forwards;
+  }
+  .brand_img {
+    width: 50vw;
   }
   .benefits {
     position: relative;
@@ -192,7 +195,7 @@ export default {
     color: white;
     width: 100%;
     position: relative;
-    top: 200px;
+    top: 20vh;
     opacity: 0;
     transform: translateY(-150%);
     animation: slideInLeft .8s 1.2s forwards;
@@ -201,7 +204,7 @@ export default {
     display: none;
   }
   .container_benefits {
-    top: 450px;
+    top: 55vh;
   }
   .benefits {
     color: white;
