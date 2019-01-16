@@ -92,7 +92,8 @@ export default {
                 ],
                 info: {
                   email: obj.user.email,
-                  uid: obj.user.uid
+                  uid: obj.user.uid,
+                  shoppingListLength: 7
                 },
                 months: []
               }

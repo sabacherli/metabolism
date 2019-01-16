@@ -7,7 +7,7 @@
           <!-- eslint-disable-next-line -->
           <div class="day">
             <div class="date">
-              {{ place.shoppingList.length + place.personalList.length }}
+              {{ userData.info.shoppingListLength }}
             </div>
             <p class="dayname">Shopping List</p>
             <div class="ingredients_break">
@@ -38,7 +38,7 @@
             <input id="ingredient" class="amount" type="text" autocomplete="off" @keyup.enter="focusAmount" v-model="newIngredient" required>
             <br>
             <label for="">Amount</label>
-            <input id="amount" class="amount" type="text" autocomplete="off" @keyup.enter="focusUnit" v-model="newAmount" required>
+            <input id="amount" class="amount" type="number" autocomplete="off" @keyup.enter="focusUnit" v-model="newAmount" required>
             <br>
             <label for="">Unit</label>
             <input id="unit" class="amount" type="text" autocomplete="off" @keyup.enter="addItem(userAddresses.indexOf(place))" v-model="newUnit" required>
@@ -178,7 +178,8 @@ export default {
   border-bottom-color: black;
   border-bottom-width: 1px;
 }
-input[type=text].amount {
+input[type=text].amount,
+input[type=number].amount {
   border: 0px;
   border-bottom-style: solid;
   border-bottom-color: black;
@@ -192,7 +193,8 @@ input[type=text].amount {
   font-size: 14px;
   font-family: Montserrat;
 }
-input[type=text]:focus.amount {
+input[type=text]:focus.amount,
+input[type=number]:focus.amount {
   border: 0px;
   border-bottom-style: solid;
   border-bottom-color: black;
@@ -211,12 +213,6 @@ label {
   left: 50%;
   transform: translateX(-60px);
   font-size: 10px;
-}
-@media (min-resolution: 300dpi) and (max-resolution: 350dpi) {
-  label {
-    top: 42px;
-    transform: translateX(-66px);
-  }
 }
 .strikethrough {
   text-decoration: line-through;

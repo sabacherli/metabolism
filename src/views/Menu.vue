@@ -62,23 +62,23 @@
       </div>
       <div class="" v-if="!meal.name">
         <label for="">Meal Name</label>
-        <input class="amount" type="text" name="" value="" @keyup.enter="addMealName(); focusIngredient()" v-model="mealName" required>
+        <input class="amount" type="text" @keyup.enter="addMealName(); focusIngredient()" v-model="mealName" required>
         <br>
-        <div class="add_button" @click="addMealName()" style="margin-top: 20px">
+        <div class="add_button" @click="addMealName()" style="margin-top: 20px; margin-bottom: 40px">
           <span class="add_text">Add Meal Name</span>
         </div>
       </div>
       <div class="" v-if="meal.name">
         <label for="">Ingredient</label>
-        <input id="newIngredient" class="amount" type="text" name="" value="" @keyup.enter="focusAmount()" v-model="newIngredient">
+        <input id="newIngredient" class="amount" type="text" @keyup.enter="focusAmount()" v-model="newIngredient">
         <br>
         <label for="">Amount</label>
-        <input id="newAmount" class="amount" type="text" name="" value="" @keyup.enter="focusUnit()" v-model="newAmount">
+        <input id="newAmount" class="amount" type="amount" @keyup.enter="focusUnit()" v-model="newAmount">
         <br>
         <label for="">Unit</label>
-        <input id="newUnit" class="amount" type="text" name="" value="" @keyup.enter="addIngredientToMeal()" v-model="newUnit">
+        <input id="newUnit" class="amount" type="text" @keyup.enter="addIngredientToMeal()" v-model="newUnit">
         <br>
-        <div class="add_button" @click="addIngredientToMeal()" style="margin-top: 20px">
+        <div class="add_button" @click="addIngredientToMeal()" style="margin-top: 20px; margin-bottom: 40px">
           <span class="add_text">Add Ingredient</span>
         </div>
       </div>
@@ -328,7 +328,8 @@ export default {
   transition: .05s;
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
 }
-input[type=text].amount {
+input[type=text].amount,
+input[type=number].amount {
   border: 0px;
   border-bottom-style: solid;
   border-bottom-color: black;
@@ -342,7 +343,8 @@ input[type=text].amount {
   font-size: 14px;
   font-family: Montserrat;
 }
-input[type=text]:focus.amount {
+input[type=text]:focus.amount,
+input[type=number]:focus.amount {
   border: 0px;
   border-bottom-style: solid;
   border-bottom-color: black;
@@ -363,12 +365,6 @@ label {
   transform: translateX(-60px);
   margin-right: auto;
   font-size: 10px;
-}
-@media (min-resolution: 300dpi) and (max-resolution: 350dpi) {
-  label {
-    top: 42px;
-    transform: translateX(-66px);
-  }
 }
 @media (max-width: 1000px) {
   .edit_icon {

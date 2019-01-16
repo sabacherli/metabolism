@@ -11,7 +11,7 @@
         </div>
         <div class="" align="left">
           <label for="">Days</label>
-          <input class="amount" type="number" min="1" max="365" autocomplete="off" v-model="shoppingListLength" @keyup.enter="removeFocus()">
+          <input class="amount" type="number" min="1" max="365" autocomplete="off" v-model="userData.info.shoppingListLength" @keyup.enter="removeFocus()">
           <br>
         </div>
         <div class="purchase_button" @click="removeFocus()" style="margin-top: 20px">
@@ -383,7 +383,7 @@ export default {
     },
     shoppingListLength: {
       get () {
-        return this.$store.state.shoppingListLength
+        return this.$store.state.userData.info.shoppingListLength
       },
       set (value) {
         this.$store.commit('syncShoppingListLength', value)
@@ -848,12 +848,6 @@ label {
   }
   .sign_remove:hover {
     cursor: pointer;
-  }
-}
-@media (min-resolution: 300dpi) and (max-resolution: 350dpi) {
-  label {
-    top: 42px;
-    transform: translateX(-66px);
   }
 }
 </style>

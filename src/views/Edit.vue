@@ -12,7 +12,10 @@
         </div>
         <div class="" align="left">
           <label for="">Recipe Name</label>
-          <input id="mealName" class="amount editPlace" type="text" name="" value="" @keyup.enter="removeFocus()" v-model="filteredmeal.name" required>
+          <input id="mealName" class="amount editPlace" type="text" @keyup.enter="removeFocus()" v-model="filteredmeal.name" required>
+        </div>
+        <div class="purchase_button" @click="removeFocus()" style="margin-top: 20px">
+          <span class="purchase_text">Update Meal Name</span>
         </div>
       </div>
       <!-- eslint-disable-next-line -->
@@ -26,13 +29,16 @@
           <p class="amount"> {{ ingredient.amount }} {{ ingredient.unit }} </p>
           <div class="" align="left">
             <label for="">Ingredient</label>
-            <input class="amount" type="text" name="" value="" @keyup.enter="focusAmount" v-model="ingredient.ingredient" required>
+            <input class="amount" type="text" @keyup.enter="focusAmount" v-model="ingredient.ingredient" required>
             <br>
             <label for="">Amount</label>
-            <input id="amount" class="amount" type="text" name="" value="" @keyup.enter="focusUnit" v-model="ingredient.amount" required>
+            <input id="amount" class="amount" type="number" name="" value="" @keyup.enter="focusUnit" v-model="ingredient.amount" required>
             <br>
             <label for="">Unit</label>
-            <input id="unit" class="amount editPlace" type="text" name="" value="" @keyup.enter="removeFocus" v-model="ingredient.unit" required>
+            <input id="unit" class="amount editPlace" type="text" @keyup.enter="removeFocus" v-model="ingredient.unit" required>
+          </div>
+          <div class="purchase_button" @click="removeFocus()" style="margin-top: 20px">
+            <span class="purchase_text">Update Ingredient</span>
           </div>
         </div>
       </template>
@@ -66,6 +72,9 @@
         <br>
         <label for="">Unit</label>
         <input class="amount" type="text" name="" value="" @keyup.enter="focusIngredient(), addIngredient()" v-model="newUnit" required>
+      </div>
+      <div class="purchase_button" @click="focusIngredient(), addIngredient()" style="margin-top: 20px">
+        <span class="purchase_text">Add Ingredient</span>
       </div>
     </div>
     <div class="save_button" style="margin-bottom: 70px" @click="returnToMenu()">
@@ -186,6 +195,19 @@ export default {
   transition: 0s;
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
 }
+.purchase_button {
+  position: relative;
+  display: inline-block;
+  margin-top: -20px;
+  font-size: .714em;
+  border: 1.2px solid black;
+  border-radius: 20px 20px;
+  padding: 5px 10px 5px 10px;
+}
+.purchase_button:active {
+  transition: 0s;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+}
 @media (max-width: 850px) and (min-height: 400px) {
   .container_recipies {
     position: absolute;
@@ -244,6 +266,7 @@ export default {
     margin-bottom: 10px;
   }
   input[type=text].amount,
+  input[type=number].amount,
   input[type=password].amount {
     position: relative;
     display: block;
@@ -257,6 +280,7 @@ export default {
     border-bottom: 1px solid black;
   }
   input[type=text]:focus.amount,
+  input[type=number]:focus.amount,
   input[type=password]:focus.amount {
     position: relative;
     display: block;
@@ -275,12 +299,6 @@ export default {
     transform: translateX(-60px);
     margin-right: auto;
     font-size: 10px;
-  }
-  @media (min-resolution: 300dpi) and (max-resolution: 350dpi) {
-    label {
-      top: 42px;
-      transform: translateX(-66px);
-    }
   }
 }
 @media (min-width: 850px) {
@@ -346,6 +364,7 @@ export default {
     transition: .3s;
   }
   input[type=text].amount,
+  input[type=number].amount,
   input[type=password].amount {
     position: relative;
     display: inline-block;
@@ -359,6 +378,7 @@ export default {
     border-bottom: 1px solid black;
   }
   input[type=text]:focus.amount,
+  input[type=number]:focus.amount,
   input[type=password]:focus.amount {
     position: relative;
     display: inline-block;
@@ -376,12 +396,6 @@ export default {
     margin-right: auto;
     font-size: 10px;
   }
-  @media (min-resolution: 300dpi) and (max-resolution: 350dpi) {
-    label {
-      top: 48px;
-      transform: translateX(-66px);
-    }
-  }
 }
 @media (hover:hover) {
   .number:hover {
@@ -395,6 +409,11 @@ export default {
     background: linear-gradient(315deg, lightpink, #ffdeb9 100%);
     box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
     transition: 0s;
+  }
+  .purchase_button:hover {
+    cursor: pointer;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.4);
+    transition: .2s;
   }
 }
 </style>

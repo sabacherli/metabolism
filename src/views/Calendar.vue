@@ -334,66 +334,6 @@ export default {
   border: 1.4px solid black;
   border-radius: 20px 20px;
 }
-input[type=text].amount {
-  border: 0px;
-  border-bottom-style: solid;
-  border-bottom-color: black;
-  border-bottom-width: 1px;
-  display: block;
-  width: 120px;
-  position: relative;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 5px;
-  font-size: 14px;
-  font-family: Montserrat;
-}
-input[type=text]:focus.amount {
-  border: 0px;
-  border-bottom-style: solid;
-  border-bottom-color: black;
-  border-bottom-width: 2px;
-  display: block;
-  width: 120px;
-  position: relative;
-  outline: none;
-}
-input[type=password].amount {
-  border: 0px;
-  border-bottom-style: solid;
-  border-bottom-color: black;
-  border-bottom-width: 1px;
-  display: block;
-  width: 120px;
-  position: relative;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 5px;
-  font-size: 14px;
-  font-family: Montserrat;
-}
-input[type=password]:focus.amount {
-  border: 0px;
-  border-bottom-style: solid;
-  border-bottom-color: black;
-  border-bottom-width: 2px;
-  display: block;
-  width: 120px;
-  position: relative;
-  outline: none;
-}
-label {
-  position: relative;
-  color: black;
-  display: block;
-  text-align: left;
-  top: 36px;
-  width: 100%;
-  left: 50%;
-  transform: translateX(-60px);
-  margin-right: auto;
-  font-size: 10px;
-}
 .ingredients_break {
   position: relative;
   top: auto;
@@ -451,12 +391,6 @@ label {
   }
   .box:hover .sign {
     transform: rotate(270deg);
-  }
-}
-@media (min-resolution: 300dpi) and (max-resolution: 350dpi) {
-  label {
-    top: 42px;
-    transform: translateX(-66px);
   }
 }
 </style>
