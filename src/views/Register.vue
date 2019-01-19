@@ -33,13 +33,15 @@ import { mapState } from 'vuex'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import db from '@/database.js'
+import moment from 'moment'
 
 export default {
   name: 'Register',
   data () {
     return {
       email: '',
-      password: ''
+      password: '',
+      currentYear: moment().format('YYYY')
     }
   },
   created () {
@@ -55,6 +57,17 @@ export default {
   },
   methods: {
     createUser () {
+      const twoYears = []
+      for (let y = 0; y < 2; y++) {
+        for (let month = 0; month < 12; month++) {
+          twoYears.push({
+            month: moment().year(Number(this.currentYear)).month(month).add(y, 'years').format('YYYYMM'),
+            display: moment().year(Number(this.currentYear)).month(month).add(y, 'years').format('MMM'),
+            isActive: false,
+            isPurchased: false
+          })
+        }
+      }
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
         .then(user => {
           const obj = JSON.parse(JSON.stringify(user))
@@ -66,7 +79,8 @@ export default {
             }],
             personalList: [],
             shoppingList: [],
-            address: ''
+            address: '',
+            months: twoYears
           })
             .then(docRef => {
               const template = {
@@ -74,7 +88,8 @@ export default {
                 addresses: [{
                   name: 'Home',
                   isActive: true,
-                  address: docRef.id
+                  address: docRef.id,
+                  isDefault: true
                 }],
                 tagList: [
                   {
@@ -94,8 +109,7 @@ export default {
                   email: obj.user.email,
                   uid: obj.user.uid,
                   shoppingListLength: 7
-                },
-                months: []
+                }
               }
               db.collection('users').doc(obj.user.uid).set(template)
               db.collection('addresses').doc(docRef.id).update({

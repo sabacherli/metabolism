@@ -44,26 +44,29 @@
 
         </div>
         <div class="" align="left">
-          <form class="" action="" method="post">
+          <form method="post">
             <label for="">Old Password</label>
             <!-- Email input field required for accessibility reasons -->
-            <input class="amount" type="password" name="" value="" v-model="oldPassword" autocomplete="current-password" required>
+            <input style="display: none" autocomplete="username" type="text" required>
+            <input class="amount" type="password" v-model="oldPassword" autocomplete="off" required>
           </form>
           <br>
         </div>
         <div class="" align="left">
-          <form class="" action="" method="post">
+          <form method="post">
             <label for="">New Password</label>
             <!-- Email input field required for accessibility reasons -->
-            <input class="amount" type="password" name="" value="" v-model="newPassword" autocomplete="new-password" required>
+            <input style="display: none" autocomplete="username" type="text" required>
+            <input class="amount" type="password" v-model="newPassword" autocomplete="new-password" required>
           </form>
           <br>
         </div>
         <div class="" align="left">
-          <form class="" action="" method="post">
+          <form method="post">
             <label for="">Confirm Password</label>
             <!-- Email input field required for accessibility reasons -->
-            <input class="amount" type="password" name="" value="" v-model="checkPassword" @keyup.enter="updatePassword()" autocomplete="new-password" required>
+            <input style="display: none" autocomplete="username" type="text" required>
+            <input class="amount" type="password" v-model="checkPassword" @keyup.enter="updatePassword()" autocomplete="new-password" required>
           </form>
           <br>
         </div>
@@ -88,6 +91,8 @@
           <span class="purchase_text">Confirm</span>
         </div>
       </div>
+    </div>
+    <div class="animated" v-if="profileFilters[1].isActive">
 
       <!-- Adds days for the month ahead to the currently signed in user, also default if not signed in. -->
       <div v-if="this.userID == '0E2NXBmuwZhr0r0CuKCZT1N27CE3'" class="">
@@ -106,19 +111,19 @@
             <div class="block_date">
               <template v-for="month in listMonthsDefault.slice(0,4)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in listMonthsDefault.slice(4,8)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in listMonthsDefault.slice(8,12)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
               </template>
             </div>
           </div>
@@ -131,19 +136,19 @@
             <div class="block_date">
               <template v-for="month in listMonthsDefault.slice(12,16)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in listMonthsDefault.slice(16,20)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in listMonthsDefault.slice(20,24)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
               </template>
             </div>
             <p class="year_date price">{{ price }} CHF</p>
@@ -154,79 +159,99 @@
         </div>
       </div>
 
-      <!-- Adds days for the month ahead to the currently signed in user, also default if not signed in. -->
-      <div class="" style="margin-bottom: 100px">
-        <div class="box">
+      <template v-for="(place, index) in userData.addresses">
+        <!-- eslint-disable-next-line -->
+        <div class="box" @click="addMonths(index)">
           <p class="sign">+</p>
         </div>
-        <p class="dayname">Add Months</p>
+        <!-- eslint-disable-next-line -->
+        <div class="set_default" @click="setDefault(index)">
+          <!-- eslint-disable-next-line -->
+          <p class="dayname"> {{ place.name }} </p>
+        </div>
+        <!-- eslint-disable-next-line -->
         <div class="ingredients_break">
 
         </div>
+        <!-- Adds days for the month ahead to the currently signed in user, also default if not signed in. -->
+        <!-- eslint-disable-next-line -->
         <div class="" style="margin-bottom: 35px">
+          <!-- eslint-disable-next-line -->
           <div class="year_date">
             <p>{{ currentYear }}</p>
           </div>
           <div class="">
             <div class="block_date">
-              <template v-for="month in listMonths.slice(0,4)">
+              <template v-for="month in userAddresses[index].months.slice(0,4)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
               </template>
             </div>
             <div class="block_date">
-              <template v-for="month in listMonths.slice(4,8)">
+              <template v-for="month in userAddresses[index].months.slice(4,8)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
               </template>
             </div>
             <div class="block_date">
-              <template v-for="month in listMonths.slice(8,12)">
+              <template v-for="month in userAddresses[index].months.slice(8,12)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
               </template>
             </div>
           </div>
         </div>
+        <!-- eslint-disable-next-line -->
         <div class="">
+          <!-- eslint-disable-next-line -->
           <div class="year_date">
             <p>{{ Number(currentYear) + 1 }}</p>
           </div>
           <div class="">
             <div class="block_date">
-              <template v-for="month in listMonths.slice(12,16)">
+              <template v-for="month in userAddresses[index].months.slice(12,16)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
               </template>
             </div>
             <div class="block_date">
-              <template v-for="month in listMonths.slice(16,20)">
+              <template v-for="month in userAddresses[index].months.slice(16,20)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
               </template>
             </div>
             <div class="block_date">
-              <template v-for="month in listMonths.slice(20,24)">
+              <template v-for="month in userAddresses[index].months.slice(20,24)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
               </template>
             </div>
             <p class="year_date price">{{ price }} CHF</p>
-            <div class="purchase_button" @click="addMonths()">
+            <div class="purchase_button" @click="addMonths(index)">
               <span class="purchase_text">Purchase Months</span>
             </div>
           </div>
         </div>
-      </div>
+      </template>
     </div>
-    <div class="animated" v-if="profileFilters[1].isActive">
+    <div class="animated" v-if="profileFilters[2].isActive">
       <template v-for="(place, index) in userData.addresses">
         <!-- eslint-disable-next-line -->
         <div class="box" @click="deletePlace(place)">
           <p class="sign" style="transform: rotate(45deg)">+</p>
         </div>
         <!-- eslint-disable-next-line -->
-        <p class="dayname"> {{ place.name }} </p>
+        <div class="set_default" @click="setDefault(index)">
+          <!-- eslint-disable-next-line -->
+          <p class="dayname"> {{ place.name }} </p>
+          <div class="box_default" v-if="!place.isDefault">
+            <span class="text_default">Set this to your default place</span>
+          </div>
+        </div>
+          <!-- eslint-disable-next-line -->
+        <div class="box_default" v-if="place.isDefault">
+          DEFAULT
+        </div>
         <!-- eslint-disable-next-line -->
         <div class="ingredients_break">
 
@@ -275,7 +300,7 @@
         </div>
       </template>
       <div class="" style="margin-bottom: 200px">
-        <div class="box" @click="addPlace">
+        <div class="box" @click="addPlace()">
           <p class="sign">+</p>
         </div>
         <p class="dayname">New Place</p>
@@ -294,7 +319,7 @@
         </div>
       </div>
     </div>
-    <div class="animated" v-if="profileFilters[2].isActive">
+    <div class="animated" v-if="profileFilters[3].isActive">
       <template v-for="tag in userData.tagList">
         <!-- eslint-disable-next-line -->
         <div class="box" @click="deleteFilter(tag)">
@@ -369,7 +394,6 @@ export default {
       'userAddresses',
       'userEmail',
       'userID',
-      'listMonths',
       'listMonthsDefault',
       'price'
     ]),
@@ -396,7 +420,8 @@ export default {
       'deletePlace',
       'toggleSelected',
       'addMonths',
-      'addMonthsToDefault'
+      'addMonthsToDefault',
+      'setDefault'
     ]),
     removeFocus () {
       const placesList = document.getElementsByClassName('editPlace')
@@ -520,7 +545,7 @@ export default {
     },
     addPlace () {
       if (this.newPlace !== '') {
-        this.$store.commit('addPlace', this.newPlace)
+        this.$store.commit('addPlace', this.newPlace, this.currentYear)
         this.newPlace = ''
         document.getElementById('newPlace').focus()
       } else {
@@ -669,6 +694,18 @@ export default {
   position: relative;
   text-align: center;
   border: 2px solid black;
+}
+.box_default {
+  position: relative;
+  top: -45px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: auto;
+  width: 35px;
+  text-align: center;
+  font-size: 0.5em;
+  letter-spacing: .1em;
+  padding: 3px;
 }
 .sign {
   position: absolute;
@@ -821,6 +858,20 @@ label {
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
 }
+.text_default {
+  position: absolute;
+  opacity: 0;
+  z-index: 20;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  text-align: center;
+  color: #fff;
+  border-radius: 6px;
+  background-color: black;
+  padding: 5px 0;
+}
 @media (min-width: 1000px) {
   .container {
     top: 240px;
@@ -848,6 +899,13 @@ label {
   }
   .sign_remove:hover {
     cursor: pointer;
+  }
+  .set_default:hover {
+    cursor: pointer;
+  }
+  .set_default:hover .text_default {
+    opacity: 1;
+    transition: .8s ease-in-out;
   }
 }
 </style>

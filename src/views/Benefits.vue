@@ -66,6 +66,7 @@ export default {
   position: fixed;
   display: block;
   overflow: scroll;
+  scroll-behavior: smooth;
   top: 0;
   left: 0;
   width: 100%;

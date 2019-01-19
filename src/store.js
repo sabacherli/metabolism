@@ -22,9 +22,6 @@ export default new Vuex.Store({
       },
       tagList: [
 
-      ],
-      months: [
-
       ]
     },
     userCalendar: [],
@@ -41,9 +38,6 @@ export default new Vuex.Store({
 
       },
       tagList: [
-
-      ],
-      months: [
 
       ]
     },
@@ -69,6 +63,10 @@ export default new Vuex.Store({
       {
         text: 'Account',
         isActive: true
+      },
+      {
+        text: 'Months',
+        isActive: false
       },
       {
         text: 'Places',
@@ -110,15 +108,6 @@ export default new Vuex.Store({
     populateMonthList (state, currentYear) {
       state.listMonths = []
       state.listMonthsDefault = []
-      for (let y = 0; y < 2; y++) {
-        for (let month = 0; month < 12; month++) {
-          state.listMonths.push({
-            month: moment().year(Number(currentYear) + y).month(month),
-            isActive: false,
-            isPurchased: false
-          })
-        }
-      }
       if (state.userData.months.length > 0) {
         for (let m = 0; m < state.userData.months.length; m++) {
           for (let l = 0; l < state.listMonths.length; l++) {
@@ -262,7 +251,7 @@ export default new Vuex.Store({
         state.price = 0
       }
     },
-    addMonths (state) {
+    addMonths (state, index) {
       for (let month = 0; month < state.listMonths.length; month++) {
         if (state.listMonths[month].isActive === true) {
           const daysInMonth = state.listMonths[month].month.daysInMonth()
@@ -300,7 +289,7 @@ export default new Vuex.Store({
               dinnerAddress: state.userAddresses[0].address,
               dinnerIngredients: []
             }
-            db.collection('users').doc(state.userID).collection('calendar').doc(docName)
+            db.collection('addresses').doc(state.userData.addresses[index].address).collection('calendar').doc(docName)
               .set(dayTemplate)
           }
           state.listMonths[month].isPurchased = true
@@ -364,6 +353,12 @@ export default new Vuex.Store({
         }
         state.userData.tagList[2].isActive = true
       }
+    },
+    setDefault (state, index) {
+      for (var i = 0; i < state.userData.addresses.length; i++) {
+        Vue.set(state.userData.addresses[i], 'isDefault', false)
+      }
+      Vue.set(state.userData.addresses[index], 'isDefault', true)
     },
     toggleLocation (state, address) {
       for (let a = 0; a < state.userData.addresses.length; a++) {
@@ -612,7 +607,18 @@ export default new Vuex.Store({
         }
       }
     },
-    addPlace (state, newPlace) {
+    addPlace (state, newPlace, currentYear) {
+      const twoYears = []
+      for (let y = 0; y < 2; y++) {
+        for (let month = 0; month < 12; month++) {
+          twoYears.push({
+            month: moment().year(Number(currentYear)).month(month).add(y, 'years').format('YYYYMM'),
+            display: moment().year(Number(currentYear)).month(month).add(y, 'years').format('MMM'),
+            isActive: false,
+            isPurchased: false
+          })
+        }
+      }
       db.collection('addresses').add({
         address: '',
         members: [{
@@ -621,13 +627,15 @@ export default new Vuex.Store({
           uid: state.userID
         }],
         personalList: [],
-        shoppingList: []
+        shoppingList: [],
+        months: twoYears
       })
         .then((docRef) => {
           const newAddress = {
             name: newPlace,
             isActive: false,
-            address: docRef.id
+            address: docRef.id,
+            isDefault: false
           }
           state.userData.addresses.push(newAddress)
           db.collection('users').doc(state.userID).set(state.userData)
