@@ -61,7 +61,7 @@ export default {
     goCalendar () {
       this.$store.commit('setPage', 'calendar')
       this.$router.push('calendar')
-      this.$store.commit('getCalendar')
+      // this.$store.commit('getCalendar')
       this.$forceUpdate()
     },
     goMenu () {
@@ -93,7 +93,6 @@ export default {
     logout () {
       firebase.auth().signOut()
         .then(success => {
-          this.$store.dispatch('setDefault')
           this.$store.commit('setPage', 'login')
           this.$router.push('login')
           this.$forceUpdate()

@@ -13,7 +13,7 @@
           <br>
           <input class="login_password" type="password" name="password" value="" @keyup.enter="login()" v-model="password" placeholder="Password" autocomplete="current-password" style="margin-top: 10px" required>
           <br>
-          <button class="login_email" style="margin-top: 10px; height: auto; width: 100px; font-size: 0.65em; text-algin: center; color: darkgrey; padding: 5px" type="button" name="button" @click="resetPassword()">Reset Password</button>
+          <button id="reset_button" class="login_email" style="margin-top: 10px; height: auto; width: 100px; font-size: 0.65em; text-algin: center; color: darkgrey; padding: 5px" type="button" name="button" @click="resetPassword()">Reset Password</button>
         </form>
         <div class="login_button" @click="login()">Login</div>
       </div>
@@ -39,28 +39,18 @@ export default {
   },
   computed: {
     ...mapState([
-      'userID'
+      'userID',
+      'userEmail',
+      'userAddresses',
+      'userData'
     ])
   },
   methods: {
     login () {
-      firebase.auth().signOut()
-        .then(success => {
-          this.$store.dispatch('setDefault')
-        })
-        .catch(error => {
-          alert(error.message)
-          console.log(error.code)
-        })
       firebase.auth().signInWithEmailAndPassword(this.email, this.password)
         .then(user => {
-          if (user) {
-            if (firebase.auth().currentUser.emailVerified) {
-              this.$store.commit('resetUserCalendar')
-              this.$router.push('calendar')
-            } else {
-              alert('You need to verify your email before you can log in.')
-            }
+          if (firebase.auth().currentUser.emailVerified) {
+            this.$router.push('calendar')
           } else {
             alert('You need to verify your email before you can log in.')
           }
@@ -159,6 +149,11 @@ input[type=password].login_password:focus {
   transition: 0s;
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
 }
+#reset_button:active {
+  transition: 0s;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+  outline: none;
+}
 ::placeholder {
   font-size: 1em;
   font-family: Montserrat;
@@ -209,6 +204,14 @@ input[type=password].login_password:focus {
     font-weight: 400;
     background: white;
     transition: .4s ease-in-out;
+  }
+  #reset_button {
+    cursor: pointer;
+    color: #ffdeb9;
+    font-weight: 400;
+    background: white;
+    transition: .4s ease-in-out;
+    outline: none;
   }
 }
 </style>

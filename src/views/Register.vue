@@ -17,7 +17,8 @@
           <input class="register_email" type="email" name="email" value="" v-model="email" placeholder="Email" autocomplete="email" required>
           <br>
           <input class="register_password" type="password" name="password" value="" v-model="password" placeholder="Password" autocomplete="current-password" style="margin-top: 10px" @keyup.enter="createUser()" required>
-
+          <br>
+          <button id="resend_button" class="register_email" style="margin-top: 10px; height: auto; width: 120px; font-size: 0.65em; text-algin: center; color: darkgrey; padding: 5px" type="button" name="button" @click="resendVerification()">Resend Verification</button>
           <!-- <input class="register" id="register_email" required>
           <input class="register" id="register_password" required> -->
 
@@ -32,7 +33,6 @@
 import { mapState } from 'vuex'
 import firebase from 'firebase/app'
 import 'firebase/auth'
-import db from '@/database.js'
 import moment from 'moment'
 
 export default {
@@ -45,7 +45,7 @@ export default {
     }
   },
   created () {
-    this.$store.commit('populateMonthList', this.currentYear)
+    // this.$store.commit('populateMonthList', this.currentYear)
   },
   beforeMount () {
     this.$store.commit('setPage', 'register')
@@ -57,83 +57,34 @@ export default {
   },
   methods: {
     createUser () {
-      const twoYears = []
-      for (let y = 0; y < 2; y++) {
-        for (let month = 0; month < 12; month++) {
-          twoYears.push({
-            month: moment().year(Number(this.currentYear)).month(month).add(y, 'years').format('YYYYMM'),
-            display: moment().year(Number(this.currentYear)).month(month).add(y, 'years').format('MMM'),
-            isActive: false,
-            isPurchased: false
-          })
-        }
-      }
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
         .then(user => {
-          const obj = JSON.parse(JSON.stringify(user))
-          db.collection('addresses').add({
-            members: [{
-              email: obj.user.email,
-              role: 'Owner',
-              uid: obj.user.uid
-            }],
-            personalList: [],
-            shoppingList: [],
-            address: '',
-            months: twoYears
-          })
-            .then(docRef => {
-              const template = {
-                foods: [],
-                addresses: [{
-                  name: 'Home',
-                  isActive: true,
-                  address: docRef.id,
-                  isDefault: true
-                }],
-                tagList: [
-                  {
-                    text: 'Breakfast',
-                    isActive: true
-                  },
-                  {
-                    text: 'Lunch',
-                    isActive: true
-                  },
-                  {
-                    text: 'Dinner',
-                    isActive: true
-                  }
-                ],
-                info: {
-                  email: obj.user.email,
-                  uid: obj.user.uid,
-                  shoppingListLength: 7
-                }
-              }
-              db.collection('users').doc(obj.user.uid).set(template)
-              db.collection('addresses').doc(docRef.id).update({
-                address: docRef.id
-              })
-              firebase.auth().useDeviceLanguage()
-              firebase.auth().currentUser.sendEmailVerification()
-                .then(function () {
-                  // Email sent.
-                  alert('Verification email sent. Please verify your email address and then log in.')
-                })
-                .catch(function (error) {
-                  // An error happened.
-                  console.log(error.message)
-                })
-            })
-            .catch(function (error) {
-              alert(error.message)
-              console.log(error.code)
-            })
-          // Enter application.
+          this.$store.commit('createUser', user)
+          // still requires the verification of the email before the user can log in
           this.$router.push('/login')
         })
         .catch(function (error) {
+          alert(error)
+          console.log(error.code)
+        })
+    },
+    resendVerification () {
+      firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+        .then(user => {
+          firebase.auth().currentUser.sendEmailVerification()
+            .then(function () {
+              // Email sent.
+              alert('Another verification email has been sent.')
+              firebase.auth().signOut()
+                .then(function () {
+                // Sign-out successful.
+                }).catch(function (error) {
+                  // An error happened.
+                  console.log(error.code)
+                })
+            })
+        })
+        .catch(error => {
           alert(error.message)
           console.log(error.code)
         })
@@ -244,6 +195,11 @@ input[type=password].register_password:focus {
   transition: 0s;
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
 }
+#resend_button:active {
+  transition: 0s;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+  outline: none;
+}
 ::placeholder {
   font-size: 14px;
   font-family: Montserrat;
@@ -283,6 +239,14 @@ input[type=password].register_password:focus {
     font-weight: 400;
     background: white;
     transition: .4s ease-in-out;
+  }
+  #resend_button {
+    cursor: pointer;
+    color: #ffdeb9;
+    font-weight: 400;
+    background: white;
+    transition: .4s ease-in-out;
+    outline: none;
   }
 }
 </style>

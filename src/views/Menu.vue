@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="container">
     <!-- Remove meal from calendar if one has been chosen. -->
-    <div class="day" v-if="checkSelection(userCalendar, pointer)">
+    <div class="day" v-if="checkSelection(userData, pointer)">
       <div class="box" @click="returnToCalendar(pointer); removeMeal()">
         <p class="sign_remove" style="transform: rotate(45deg)">+</p>
       </div>
@@ -96,7 +96,6 @@ export default {
   },
   computed: {
     ...mapState([
-      'userCalendar',
       'userData',
       'userID',
       'pointer',
@@ -170,15 +169,15 @@ export default {
       }
       return filteredMeals
     },
-    checkSelection (userCalendar, pointer) {
+    checkSelection (userData, pointer) {
       if (pointer.position === 'breakfast') {
-        return userCalendar[pointer.doc].breakfast !== 'Breakfast'
+        return userData.calendar[pointer.doc].breakfast !== 'Breakfast'
       }
       if (pointer.position === 'lunch') {
-        return userCalendar[pointer.doc].lunch !== 'Lunch'
+        return userData.calendar[pointer.doc].lunch !== 'Lunch'
       }
       if (pointer.position === 'dinner') {
-        return userCalendar[pointer.doc].dinner !== 'Dinner'
+        return userData.calendar[pointer.doc].dinner !== 'Dinner'
       }
     },
     focusIngredient () {

@@ -34,8 +34,7 @@ export default {
   },
   computed: {
     ...mapState([
-      'currentPage',
-      'userCalendar'
+      'currentPage'
     ]),
     currentPageComponent () {
       return 'filters-' + this.currentPage
@@ -43,11 +42,8 @@ export default {
   },
   methods: {
     goCalendar () {
-      if (this.userCalendar.length !== 0) {
-        this.$store.commit('setPage', 'calendar')
-        this.$router.push('calendar')
-        this.$store.commit('getCalendar')
-      }
+      this.$store.commit('setPage', 'calendar')
+      this.$router.push('calendar')
     }
   }
 }

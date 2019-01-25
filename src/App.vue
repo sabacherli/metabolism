@@ -14,21 +14,11 @@ import 'typeface-montserrat'
 export default {
   created () {
     firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        // User is signed in.
-        if (user.emailVerified) {
-          store.dispatch('setUser', user)
-        }
+      if (user && user.emailVerified) {
+        store.commit('setUser', user)
       } else {
         // User is signed out.
-        firebase.auth().signOut()
-          .then((success) => {
-            store.dispatch('setDefault')
-          })
-          .catch((error) => {
-            alert(error.message)
-            console.log(error.code)
-          })
+        store.dispatch('setDefault')
       }
     })
     window.onbeforeunload = function () {

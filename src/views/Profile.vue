@@ -5,6 +5,23 @@
         <div class="box" @click="removeFocus()">
           <img class="edit_icon" src="../assets/icon-edit.png" alt="Edit">
         </div>
+        <p class="dayname">Daily Calorie Intake</p>
+        <div class="ingredients_break">
+
+        </div>
+        <div class="" align="left">
+          <label for="">Kcal</label>
+          <input class="amount" type="number" min="1" max="20000" autocomplete="off" v-model="userData.info.calories" @keyup.enter="removeFocus()">
+          <br>
+        </div>
+        <div class="purchase_button" @click="removeFocus()" style="margin-top: 20px">
+          <span class="purchase_text">Update Calories</span>
+        </div>
+      </div>
+      <div class="">
+        <div class="box" @click="removeFocus()">
+          <img class="edit_icon" src="../assets/icon-edit.png" alt="Edit">
+        </div>
         <p class="dayname">Shopping List Length</p>
         <div class="ingredients_break">
 
@@ -44,11 +61,11 @@
 
         </div>
         <div class="" align="left">
-          <form method="post">
+          <form autocomplete="off" method="post">
             <label for="">Old Password</label>
             <!-- Email input field required for accessibility reasons -->
-            <input style="display: none" autocomplete="username" type="text" required>
-            <input class="amount" type="password" v-model="oldPassword" autocomplete="off" required>
+            <input style="display: none" type="text" autocomplete="off" required>
+            <input class="amount" type="password" v-model="oldPassword" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" oncopy="return false" ondrag="return false" ondrop="return false" onpaste="return false" oncontextmenu="return false" required>
           </form>
           <br>
         </div>
@@ -74,7 +91,7 @@
           <span class="purchase_text">Update Password</span>
         </div>
       </div>
-      <div class="">
+      <div class="" style="margin-bottom: 100px">
         <div class="box" @click="deleteAccount()">
           <p class="sign" style="transform: rotate(45deg)">+</p>
         </div>
@@ -83,19 +100,21 @@
 
         </div>
         <div class="" align="left">
-          <label for="">Enter YES</label>
-          <input class="amount" type="text" name="" value="" v-model="deleteConfirmation" @keyup.enter="deleteAccount()" required>
-          <br>
+          <form method="post">
+            <label for="">Enter Password</label>
+            <input class="amount" type="password" v-model="deleteConfirmation" autocomplete="off" @keyup.enter="deleteAccount()" required>
+            <br>
+          </form>
         </div>
         <div class="purchase_button" @click="deleteAccount()" style="margin-top: 20px">
           <span class="purchase_text">Confirm</span>
         </div>
       </div>
     </div>
-    <div class="animated" v-if="profileFilters[1].isActive">
+    <div class="animated" v-if="profileFilters[1].isActive" style="margin-bottom: 100px">
 
       <!-- Adds days for the month ahead to the currently signed in user, also default if not signed in. -->
-      <div v-if="this.userID == '0E2NXBmuwZhr0r0CuKCZT1N27CE3'" class="">
+      <!-- <div v-if="this.userID == '0E2NXBmuwZhr0r0CuKCZT1N27CE3'" class="">
         <div class="box">
           <p class="sign">+</p>
         </div>
@@ -109,21 +128,21 @@
           </div>
           <div class="">
             <div class="block_date">
-              <template v-for="month in listMonthsDefault.slice(0,4)">
+              <template v-for="month in listMonthsDefault.slice(0,4)"> -->
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
+                <!-- <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
               </template>
             </div>
             <div class="block_date">
-              <template v-for="month in listMonthsDefault.slice(4,8)">
+              <template v-for="month in listMonthsDefault.slice(4,8)"> -->
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
+                <!-- <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
               </template>
             </div>
             <div class="block_date">
-              <template v-for="month in listMonthsDefault.slice(8,12)">
+              <template v-for="month in listMonthsDefault.slice(8,12)"> -->
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
+                <!-- <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
               </template>
             </div>
           </div>
@@ -134,21 +153,21 @@
           </div>
           <div class="">
             <div class="block_date">
-              <template v-for="month in listMonthsDefault.slice(12,16)">
+              <template v-for="month in listMonthsDefault.slice(12,16)"> -->
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
+                <!-- <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
               </template>
             </div>
             <div class="block_date">
-              <template v-for="month in listMonthsDefault.slice(16,20)">
+              <template v-for="month in listMonthsDefault.slice(16,20)"> -->
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
+                <!-- <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
               </template>
             </div>
             <div class="block_date">
-              <template v-for="month in listMonthsDefault.slice(20,24)">
+              <template v-for="month in listMonthsDefault.slice(20,24)"> -->
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
+                <!-- <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
               </template>
             </div>
             <p class="year_date price">{{ price }} CHF</p>
@@ -157,7 +176,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <template v-for="(place, index) in userData.addresses">
         <!-- eslint-disable-next-line -->
@@ -299,7 +318,7 @@
           </template>
         </div>
       </template>
-      <div class="" style="margin-bottom: 200px">
+      <div class="" style="margin-bottom: 100px">
         <div class="box" @click="addPlace()">
           <p class="sign">+</p>
         </div>
@@ -310,7 +329,7 @@
         <div class="">
           <div class="" align="left">
             <label for="dayname">New Place</label>
-            <input class="amount" type="text" name="" value="" @keyup.enter="addPlace()" v-model="newPlace">
+            <input id="newPlace" class="amount" type="text" @keyup.enter="addPlace()" v-model="newPlace">
           </div>
           <br>
           <div class="purchase_button" @click="addPlace()" style="margin-top: 20px">
@@ -342,7 +361,7 @@
           <span class="purchase_text">Update Filter</span>
         </div>
       </template>
-      <div class="" style="margin-bottom: 200px">
+      <div class="" style="margin-bottom: 100px">
         <div class="box">
           <p class="sign" @click="addFilter()">+</p>
         </div>
@@ -368,11 +387,13 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import db from '@/database.js'
 import moment from 'moment'
+import store from '../store'
+import router from 'vue-router'
 
 export default {
   name: 'Profile',
   created () {
-    this.$store.commit('setPage', 'profile')
+    store.commit('setPage', 'profile')
   },
   data () {
     return {
@@ -390,38 +411,44 @@ export default {
     ...mapState([
       'profileFilters',
       'userData',
-      'defaultData',
       'userAddresses',
       'userEmail',
       'userID',
-      'listMonthsDefault',
       'price'
     ]),
     userEmail: {
       get () {
-        return this.$store.state.userEmail
+        return store.state.userEmail
       },
       set (value) {
-        this.$store.commit('syncUserEmail', value)
+        store.commit('syncUserEmail', value)
       }
     },
     shoppingListLength: {
       get () {
-        return this.$store.state.userData.info.shoppingListLength
+        return store.state.userData.info.shoppingListLength
       },
       set (value) {
-        this.$store.commit('syncShoppingListLength', value)
+        store.commit('syncShoppingListLength', value)
+      }
+    },
+    calories: {
+      get () {
+        return store.state.userData.info.calories
+      },
+      set (value) {
+        store.commit('syncCalories', value)
       }
     }
   },
   methods: {
     ...mapMutations([
       'deleteFilter',
-      'deletePlace',
       'toggleSelected',
       'addMonths',
       'addMonthsToDefault',
-      'setDefault'
+      'setDefault',
+      'deletePlace'
     ]),
     removeFocus () {
       const placesList = document.getElementsByClassName('editPlace')
@@ -500,7 +527,7 @@ export default {
                 .catch(function (error) {
                   console.log('Error getting document:', error)
                 })
-              this.$store.commit('getData')
+              store.commit('getData')
               this.newMember = ''
             }
           })
@@ -545,7 +572,7 @@ export default {
     },
     addPlace () {
       if (this.newPlace !== '') {
-        this.$store.commit('addPlace', this.newPlace, this.currentYear)
+        store.commit('addPlace', this.newPlace, this.currentYear)
         this.newPlace = ''
         document.getElementById('newPlace').focus()
       } else {
@@ -554,7 +581,7 @@ export default {
     },
     addFilter () {
       if (this.newFilter !== '') {
-        this.$store.commit('addFilter', this.newFilter)
+        store.commit('addFilter', this.newFilter)
         this.newFilter = ''
         document.getElementById('newFilter').focus()
       } else {
@@ -563,23 +590,34 @@ export default {
     },
     updatePassword () {
       const user = firebase.auth().currentUser
-      if (this.checkPassword === this.newPassword) {
-        var newPassword = this.newPassword
-      } else {
-        alert('The new password cannot be empty.')
-      }
-      user.updatePassword(newPassword)
+      const credential = firebase.auth.EmailAuthProvider.credential(
+        user.email,
+        this.oldPassword
+      )
+      user.reauthenticateAndRetrieveDataWithCredential(credential)
         .then(function () {
-          // Update successful.
-          console.log('A new password is set.')
+          if (this.checkPassword === this.newPassword) {
+            var newPassword = this.newPassword
+          } else {
+            alert('The new password cannot be empty.')
+          }
+          user.updatePassword(newPassword)
+            .then(function () {
+              // Update successful.
+              console.log('A new password is set.')
+            })
+            .catch(function (error) {
+              // An error happened.
+              console.log(error.message)
+            })
+          this.oldPassword = ''
+          this.newPassword = ''
+          this.checkPassword = ''
         })
         .catch(function (error) {
-          // An error happened.
-          console.log(error.message)
+          alert(error)
+          console.log('Error: ', error)
         })
-      this.oldPassword = ''
-      this.newPassword = ''
-      this.checkPassword = ''
     },
     updateEmail () {
       const user = firebase.auth().currentUser
@@ -625,45 +663,26 @@ export default {
         })
     },
     deleteAccount () {
-      if (this.deleteConfirmation === 'YES') {
-        this.$store.commit('setAuthFlag')
-        const user = firebase.auth().currentUser
-        const obj = JSON.parse(JSON.stringify(user))
-        const collectionRef = db.collection('users').doc(obj.uid).collection('calendar')
-        collectionRef.get()
-          .then(function (querySnapshot) {
-            querySnapshot.forEach(function (doc) {
-              // deletes all the documents in collection calendar
-              collectionRef.doc(doc.id).delete()
-                .then(function () {
-                  console.log('Calendar document successfully deleted.')
-                })
-                .catch(function (error) {
-                  console.error('Error removing document: ', error)
-                })
+      const user = firebase.auth().currentUser
+      const credential = firebase.auth.EmailAuthProvider.credential(
+        user.email,
+        this.deleteConfirmation
+      )
+      user.reauthenticateAndRetrieveDataWithCredential(credential)
+        .then(() => {
+          new Promise(function (resolve, reject) {
+            store.commit('deleteAccount', user)
+            resolve()
+          })
+            .then(function () {
+              router.push('register')
+              store.commit('setPage', 'register')
             })
-          })
-        // deletes the user account in firebase authentication
-        user.delete()
-          .then(function () {
-            console.log('Changed router to register')
-            // User deleted.
-          }).catch(function (error) {
-            // An error happened.
-            console.log(error.message)
-          })
-        // deletes the user data in the main document
-        db.collection('users').doc(obj.uid).delete()
-          .then(function () {
-            console.log('User data successfully deleted.')
-          })
-          .catch(function (error) {
-            console.error('Error removing document: ', error)
-          })
-        this.$router.push('register')
-      } else {
-        alert('Please enter YES before deleting your account.')
-      }
+        })
+        .catch(function (error) {
+          alert(error)
+          console.log('Error: ', error)
+        })
     }
   }
 }

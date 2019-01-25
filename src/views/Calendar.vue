@@ -1,8 +1,8 @@
 <template lang="html">
   <div class="container container_animation">
-    <div class="calendar_navigation_button" @click="previousWeek()"><span class="calendar_navigation_text">Previous Week</span></div>
-    <div class="animated" v-if="userData.months.includes(currentYearMonth)">
-      <template v-for="day in userCalendar">
+    <div class="calendar_navigation_button" @click="previousWeek()" v-if="userID !== 'Default'"><span class="calendar_navigation_text">Previous Week</span></div>
+    <div class="animated">
+      <template v-for="day in userData.calendar">
         <!-- eslint-disable-next-line -->
         <div class="day" v-if="day.date < today">
           <p class="date"> {{ day.day }} </p>
@@ -48,73 +48,7 @@
         </div>
       </template>
     </div>
-    <div class="" v-else>
-      <!-- Adds days for the month ahead to the currently signed in user, also default if not signed in. -->
-      <div class="" style="margin-bottom: 40px">
-        <div class="box">
-          <p class="sign">+</p>
-        </div>
-        <p class="dayname">Add Months</p>
-        <div class="ingredients_break">
-
-        </div>
-        <div class="" style="margin-bottom: 35px">
-          <div class="year_date">
-            <p>{{ currentYear }}</p>
-          </div>
-          <div class="">
-            <div class="block_date">
-              <template v-for="month in listMonths.slice(0,4)">
-                <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
-              </template>
-            </div>
-            <div class="block_date">
-              <template v-for="month in listMonths.slice(4,8)">
-                <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
-              </template>
-            </div>
-            <div class="block_date">
-              <template v-for="month in listMonths.slice(8,12)">
-                <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
-              </template>
-            </div>
-          </div>
-        </div>
-        <div class="">
-          <div class="year_date">
-            <p>{{ Number(currentYear) + 1 }}</p>
-          </div>
-          <div class="">
-            <div class="block_date">
-              <template v-for="month in listMonths.slice(12,16)">
-                <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
-              </template>
-            </div>
-            <div class="block_date">
-              <template v-for="month in listMonths.slice(16,20)">
-                <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
-              </template>
-            </div>
-            <div class="block_date">
-              <template v-for="month in listMonths.slice(20,24)">
-                <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.month.format('MMM') }}</p>
-              </template>
-            </div>
-            <p class="year_date price">{{ price }} CHF</p>
-            <div class="purchase_button" @click="addMonths()">
-              <span class="purchase_text">Purchase Months</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="calendar_navigation_button" style="margin-bottom: 70px" @click="nextWeek()"><span class="calendar_navigation_text">Next Week</span></div>
+    <div class="calendar_navigation_button" style="margin-bottom: 70px" @click="nextWeek()" v-if="userID !== 'Default'"><span class="calendar_navigation_text">Next Week</span></div>
   </div>
 </template>
 
@@ -126,10 +60,7 @@ export default {
   name: 'Calendar',
   created () {
     this.$store.commit('setToday', moment().format('YYYYMMDD'))
-    this.$store.commit('populateMonthList', this.currentYear)
-    if (this.userCalendar.length !== 0) {
-      this.$store.commit('getCalendar')
-    }
+    // this.$store.commit('populateMonthList', this.currentYear)
     this.$store.commit('setPage', 'calendar')
   },
   data () {
@@ -140,13 +71,12 @@ export default {
   },
   computed: {
     ...mapState([
-      'userCalendar',
+      'userID',
+      'userData',
+      'userAddresses',
       'today',
       'menu',
-      'userData',
-      'listMonths',
       'price',
-      'userID',
       'start'
     ])
   },
