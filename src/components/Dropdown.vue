@@ -131,77 +131,57 @@ export default {
     }
   },
   mounted () {
+    for (var i = 0; i < document.getElementsByClassName('dropdown_item_selected').length; i++) {
+      document.getElementsByClassName('dropdown_item_selected')[i].classList.add('dropdown_item')
+      document.getElementsByClassName('dropdown_item_selected')[i].classList.remove('dropdown_item_selected')
+    }
     if (this.currentPage === 'benefits') {
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
       document.getElementById('benefits').classList.remove('dropdown_item')
       document.getElementById('benefits').classList.add('dropdown_item_selected')
     } else if (this.currentPage === 'calendar') {
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
       document.getElementById('calendar').classList.remove('dropdown_item')
       document.getElementById('calendar').classList.add('dropdown_item_selected')
     } else if (this.currentPage === 'menu') {
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
       document.getElementById('menu').classList.remove('dropdown_item')
       document.getElementById('menu').classList.add('dropdown_item_selected')
     } else if (this.currentPage === 'shoppinglist') {
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
       document.getElementById('shoppinglist').classList.remove('dropdown_item')
       document.getElementById('shoppinglist').classList.add('dropdown_item_selected')
     } else if (this.currentPage === 'profile') {
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
       document.getElementById('profile').classList.remove('dropdown_item')
       document.getElementById('profile').classList.add('dropdown_item_selected')
     } else if (this.currentPage === 'register') {
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
       document.getElementById('register').classList.remove('dropdown_item')
       document.getElementById('register').classList.add('dropdown_item_selected')
     } else if (this.currentPage === 'login') {
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
       document.getElementById('login').classList.remove('dropdown_item')
       document.getElementById('login').classList.add('dropdown_item_selected')
     }
   },
   updated () {
+    for (var i = 0; i < document.getElementsByClassName('dropdown_item_selected').length; i++) {
+      document.getElementsByClassName('dropdown_item_selected')[i].classList.add('dropdown_item')
+      document.getElementsByClassName('dropdown_item_selected')[i].classList.remove('dropdown_item_selected')
+    }
     if (this.currentPage === 'benefits') {
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
       document.getElementById('benefits').classList.remove('dropdown_item')
       document.getElementById('benefits').classList.add('dropdown_item_selected')
     } else if (this.currentPage === 'calendar') {
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
       document.getElementById('calendar').classList.remove('dropdown_item')
       document.getElementById('calendar').classList.add('dropdown_item_selected')
     } else if (this.currentPage === 'menu') {
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
       document.getElementById('menu').classList.remove('dropdown_item')
       document.getElementById('menu').classList.add('dropdown_item_selected')
     } else if (this.currentPage === 'shoppinglist') {
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
       document.getElementById('shoppinglist').classList.remove('dropdown_item')
       document.getElementById('shoppinglist').classList.add('dropdown_item_selected')
     } else if (this.currentPage === 'profile') {
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
       document.getElementById('profile').classList.remove('dropdown_item')
       document.getElementById('profile').classList.add('dropdown_item_selected')
     } else if (this.currentPage === 'register') {
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
       document.getElementById('register').classList.remove('dropdown_item')
       document.getElementById('register').classList.add('dropdown_item_selected')
     } else if (this.currentPage === 'login') {
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.add('dropdown_item')
-      document.getElementsByClassName('dropdown_item_selected')[0].classList.remove('dropdown_item_selected')
       document.getElementById('login').classList.remove('dropdown_item')
       document.getElementById('login').classList.add('dropdown_item_selected')
     }

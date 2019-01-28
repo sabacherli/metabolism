@@ -18,7 +18,7 @@ export default {
         store.commit('setUser', user)
       } else {
         // User is signed out.
-        store.dispatch('setDefault')
+        store.commit('setDefaultUser')
       }
     })
     window.onbeforeunload = function () {

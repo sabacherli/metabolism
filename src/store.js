@@ -835,7 +835,7 @@ export default new Vuex.Store({
                           }
                           // Saves the tempArray back into the edited users' document.
                           db.collection('users').doc(state.userAddresses[index].members[m].uid).set(tempData)
-                          // Get new userData and userAddresses
+                          resolve()
                         })
                       } else {
                         // doc.data() will be undefined in this case
@@ -846,10 +846,12 @@ export default new Vuex.Store({
                       console.log('Error getting document:', error)
                     })
                 }
-                resolve()
               })
               promise2.then(function () {
                 // Deletes the address document in addresses collection.
+                var batch = db.batch()
+                var collectionRef = db.collection('addresses').doc(state.userAddresses[index].address).collection('calendar')
+                batch.delete(collectionRef)
                 db.collection('addresses').doc(state.userAddresses[index].address).delete()
                   .then(() => {
                     console.log('Document successfully delete.')
@@ -873,20 +875,22 @@ export default new Vuex.Store({
         promise1.then(function () {
           const obj = JSON.parse(JSON.stringify(user))
           var promise3 = new Promise(function (resolve, reject) {
-            const collectionRef = db.collection('users').doc(obj.uid).collection('calendar')
-            collectionRef.get()
-              .then(function (querySnapshot) {
-                querySnapshot.forEach(function (doc) {
-                  // deletes all the documents in collection calendar
-                  collectionRef.doc(doc.id).delete()
-                    .then(function () {
-                      console.log('Calendar document successfully deleted.')
-                    })
-                    .catch(function (error) {
-                      console.error('Error removing document: ', error)
-                    })
-                })
-              })
+            var batch = db.batch()
+            var collectionRef = db.collection('users').doc(obj.uid).collection('calendar')
+            batch.delete(collectionRef)
+            // collectionRef.get()
+            //   .then(function (querySnapshot) {
+            //     querySnapshot.forEach(function (doc) {
+            //       // deletes all the documents in collection calendar
+            //       collectionRef.doc(doc.id).delete()
+            //         .then(function () {
+            //           console.log('Calendar document successfully deleted.')
+            //         })
+            //         .catch(function (error) {
+            //           console.error('Error removing document: ', error)
+            //         })
+            //     })
+            //   })
             resolve()
           })
           promise3.then(function () {
@@ -1062,288 +1066,233 @@ export default new Vuex.Store({
     setUser (state, user) {
       state.userID = user.uid
       state.userEmail = user.email
-      const docRef = db.collection('users').doc(state.userID)
+      // getData ()
       state.userData = ''
+      const docRef = db.collection('users').doc(state.userID)
       docRef.get()
         .then((doc) => {
-          state.userData = doc.data()
           // eslint-disable-next-line
           new Promise(function (resolve, reject) {
-            // eslint-disable-next-line
-            new Promise(function (resolve, reject) {
-              state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
-              const calRef = db.collection('users').doc(state.userID).collection('calendar')
-              calRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
-                .then(function (querySnapshot) {
-                  querySnapshot.forEach((doc) => {
-                    state.userData.calendar.push(doc.data())
-                  })
-                  // eslint-disable-next-line
-                  new Promise(function (resolve, reject) {
-                    state.userAddresses = []
-                    // goes through addresses of the user
-                    for (let a = 0; a < state.userData.addresses.length; a++) {
-                      const addressRef = db.collection('addresses').doc(state.userData.addresses[a].address)
-                      addressRef.get()
-                        .then((doc) => {
-                          if (doc.exists) {
-                            state.userAddresses.push(doc.data())
+            state.userData = doc.data()
+            resolve()
+          })
+            .then(function () {
+              state.userAddresses = []
+              for (let a = 0; a < state.userData.addresses.length; a++) {
+                const addressRef = db.collection('addresses').doc(state.userData.addresses[a].address)
+                addressRef.get()
+                  .then((doc) => {
+                    if (doc.exists) {
+                      state.userAddresses.push(doc.data())
+                      const today = moment().format('YYYYMM')
+                      for (var month = 0; month < 12; month++) {
+                        if (!state.userData.months.includes((Number(today) + Number(month)).toString())) {
+                          const daysInMonth = moment().add(month, 'months').daysInMonth()
+                          const year = moment().add(month, 'months').format('YYYY')
+                          const mon = moment().add(month, 'months').format('MM')
+                          for (let d = 0; d < daysInMonth; d++) {
+                            const day = moment().year(year).month(mon).subtract(1, 'M')
+                              .startOf('month')
+                              .add(d, 'day')
+                              .format('DD')
+                            const docName = moment().year(year).month(mon).subtract(1, 'M')
+                              .date(day)
+                              .format('YYYYMMDD')
+                            const dayTemplate = {
+                              date: Number(moment().year(year).month(mon).subtract(1, 'M')
+                                .date(day)
+                                .format('YYYYMMDD')),
+                              day,
+                              dayname: moment().isoWeekday(moment().year(year).month(mon).subtract(1, 'M')
+                                .date(day)
+                                .weekday()).format('dddd'),
+                              breakfast: 'Breakfast',
+                              breakfastID: '',
+                              breakfastLocation: 'Home',
+                              breakfastAddress: state.userAddresses[0].address,
+                              breakfastIngredients: [],
+                              lunch: 'Lunch',
+                              lunchID: '',
+                              lunchLocation: 'Home',
+                              lunchAddress: state.userAddresses[0].address,
+                              lunchIngredients: [],
+                              dinner: 'Dinner',
+                              dinnerID: '',
+                              dinnerLocation: 'Home',
+                              dinnerAddress: state.userAddresses[0].address,
+                              dinnerIngredients: []
+                            }
+                            db.collection('users').doc(state.userID).collection('calendar').doc(docName)
+                              .set(dayTemplate)
                           }
-                        })
-                        .catch((error) => {
-                          console.log('Error in getting user addresses: ', error)
-                        })
-                    }
-                    for (let a = 0; a < state.userData.addresses.length; a++) {
+                          state.userData.months.push(moment().add(month, 'months').format('YYYYMM'))
+                        }
+                      }
                       state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
-                      const calRef = db.collection('addresses').doc(state.userData.addresses[a].address).collection('calendar')
+                      const calRef = db.collection('users').doc(state.userID).collection('calendar')
                       calRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
-                        .then((querySnapshot) => {
+                        .then(function (querySnapshot) {
                           querySnapshot.forEach((doc) => {
-                            // doc.data() is never undefined for query doc snapshots
-                            state.userAddresses[a].calendar.push(doc.data())
+                            state.userData.calendar.push(doc.data())
                           })
                         })
-                        .catch((error) => {
-                          console.log('Error getting documents: ', error)
-                        })
                     }
                   })
-                })
-                .catch((error) => {
-                  console.log('Error in getting user calendar: ', error)
-                })
+              }
             })
-          })
-        })
-        .catch((error) => {
-          console.log('Error in getting user data: ', error)
         })
     },
-    async setDefaultUser (state) {
+    setDefaultUser (state) {
+      // saveData ()
+      if (state.userID !== 'default') {
+        for (let d = 0; d < state.userData.calendar.length; d++) {
+          db.collection('users').doc(state.userID).collection('calendar').doc(state.userData.calendar[d].date.toString())
+            .set(state.userData.calendar[d])
+        }
+        state.userData.calendar = []
+        db.collection('users').doc(state.userID).set(state.userData)
+        for (let a = 0; a < state.userAddresses.length; a++) {
+          if (state.userAddresses[a].calendar.length > 0) {
+            for (let d = 0; d < state.userAddresses[a].calendar.length; d++) {
+              db.collection('addresses').doc(state.userAddresses[a].address).collection('calendar').doc(state.userAddresses[a].calendar[d].date.toString())
+                .set(state.userAddresses[a].calendar[d])
+            }
+            state.userAddresses[a].calendar = []
+          }
+          db.collection('addresses').doc(state.userAddresses[a].address).set(state.userAddresses[a])
+        }
+      }
       state.userID = 'default'
       state.userEmail = 'default'
+      // getData ()
+      state.userData = ''
+      const docRef = db.collection('users').doc(state.userID)
+      docRef.get()
+        .then((doc) => {
+          // eslint-disable-next-line
+          new Promise(function (resolve, reject) {
+            state.userData = doc.data()
+            resolve()
+          })
+            .then(function () {
+              state.userAddresses = []
+              for (let a = 0; a < state.userData.addresses.length; a++) {
+                const addressRef = db.collection('addresses').doc(state.userData.addresses[a].address)
+                addressRef.get()
+                  .then((doc) => {
+                    if (doc.exists) {
+                      state.userAddresses.push(doc.data())
+                      const today = moment().format('YYYYMM')
+                      for (var month = 0; month < 12; month++) {
+                        if (!state.userData.months.includes((Number(today) + Number(month)).toString())) {
+                          const daysInMonth = moment().add(month, 'months').daysInMonth()
+                          const year = moment().add(month, 'months').format('YYYY')
+                          const mon = moment().add(month, 'months').format('MM')
+                          for (let d = 0; d < daysInMonth; d++) {
+                            const day = moment().year(year).month(mon).subtract(1, 'M')
+                              .startOf('month')
+                              .add(d, 'day')
+                              .format('DD')
+                            const docName = moment().year(year).month(mon).subtract(1, 'M')
+                              .date(day)
+                              .format('YYYYMMDD')
+                            const dayTemplate = {
+                              date: Number(moment().year(year).month(mon).subtract(1, 'M')
+                                .date(day)
+                                .format('YYYYMMDD')),
+                              day,
+                              dayname: moment().isoWeekday(moment().year(year).month(mon).subtract(1, 'M')
+                                .date(day)
+                                .weekday()).format('dddd'),
+                              breakfast: 'Breakfast',
+                              breakfastID: '',
+                              breakfastLocation: 'Home',
+                              breakfastAddress: state.userAddresses[0].address,
+                              breakfastIngredients: [],
+                              lunch: 'Lunch',
+                              lunchID: '',
+                              lunchLocation: 'Home',
+                              lunchAddress: state.userAddresses[0].address,
+                              lunchIngredients: [],
+                              dinner: 'Dinner',
+                              dinnerID: '',
+                              dinnerLocation: 'Home',
+                              dinnerAddress: state.userAddresses[0].address,
+                              dinnerIngredients: []
+                            }
+                            db.collection('users').doc(state.userID).collection('calendar').doc(docName)
+                              .set(dayTemplate)
+                          }
+                          state.userData.months.push(moment().add(month, 'months').format('YYYYMM'))
+                        }
+                      }
+                      state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
+                      const calRef = db.collection('users').doc(state.userID).collection('calendar')
+                      calRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
+                        .then(function (querySnapshot) {
+                          querySnapshot.forEach((doc) => {
+                            state.userData.calendar.push(doc.data())
+                          })
+                        })
+                    }
+                  })
+              }
+            })
+        })
     },
     getData (state) {
+      // getData without checking userData.months ()
       const docRef = db.collection('users').doc(state.userID)
       state.userData = ''
       docRef.get()
         .then((doc) => {
-          state.userData = doc.data()
           // eslint-disable-next-line
           new Promise(function (resolve, reject) {
-            // eslint-disable-next-line
-            new Promise(function (resolve, reject) {
-              state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
-              const today = moment().format('YYYYMM')
-              for (var month = 0; month < 12; month++) {
-                if (!state.userData.months.includes(today + month)) {
-                  const daysInMonth = moment().add(month, 'months').daysInMonth()
-                  const year = moment().add(month, 'months').format('YYYY')
-                  const mon = moment().add(month, 'months').format('MM')
-                  for (let d = 0; d < daysInMonth; d++) {
-                    const day = moment().year(year).month(mon).subtract(1, 'M')
-                      .startOf('month')
-                      .add(d, 'day')
-                      .format('DD')
-                    const docName = moment().year(year).month(mon).subtract(1, 'M')
-                      .date(day)
-                      .format('YYYYMMDD')
-                    const dayTemplate = {
-                      date: Number(moment().year(year).month(mon).subtract(1, 'M')
-                        .date(day)
-                        .format('YYYYMMDD')),
-                      day,
-                      dayname: moment().isoWeekday(moment().year(year).month(mon).subtract(1, 'M')
-                        .date(day)
-                        .weekday()).format('dddd'),
-                      breakfast: 'Breakfast',
-                      breakfastID: '',
-                      breakfastLocation: 'Home',
-                      breakfastAddress: state.userAddresses[0].address,
-                      breakfastIngredients: [],
-                      lunch: 'Lunch',
-                      lunchID: '',
-                      lunchLocation: 'Home',
-                      lunchAddress: state.userAddresses[0].address,
-                      lunchIngredients: [],
-                      dinner: 'Dinner',
-                      dinnerID: '',
-                      dinnerLocation: 'Home',
-                      dinnerAddress: state.userAddresses[0].address,
-                      dinnerIngredients: []
-                    }
-                    db.collection('users').doc(state.userID).collection('calendar').doc(docName)
-                      .set(dayTemplate)
-                  }
-                  state.userData.months.push(moment().add(month, 'months').format('YYYYMM'))
-                }
-              }
-              const calRef = db.collection('users').doc(state.userID).collection('calendar')
-              calRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
-                .then(function (querySnapshot) {
-                  querySnapshot.forEach((doc) => {
-                    state.userData.calendar.push(doc.data())
-                  })
-                  // eslint-disable-next-line
-                  new Promise(function (resolve, reject) {
-                    state.userAddresses = []
-                    // goes through addresses of the user
-                    for (let a = 0; a < state.userData.addresses.length; a++) {
-                      const addressRef = db.collection('addresses').doc(state.userData.addresses[a].address)
-                      addressRef.get()
-                        .then((doc) => {
-                          if (doc.exists) {
-                            state.userAddresses.push(doc.data())
-                          }
-                        })
-                        .catch((error) => {
-                          console.log('Error in getting user addresses: ', error)
-                        })
-                    }
-                    for (let a = 0; a < state.userData.addresses.length; a++) {
+            state.userData = doc.data()
+            resolve()
+          })
+            .then(function () {
+              state.userAddresses = []
+              for (let a = 0; a < state.userData.addresses.length; a++) {
+                const addressRef = db.collection('addresses').doc(state.userData.addresses[a].address)
+                addressRef.get()
+                  .then((doc) => {
+                    if (doc.exists) {
+                      state.userAddresses.push(doc.data())
                       state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
-                      const calRef = db.collection('addresses').doc(state.userData.addresses[a].address).collection('calendar')
+                      const calRef = db.collection('users').doc(state.userID).collection('calendar')
                       calRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
-                        .then((querySnapshot) => {
+                        .then(function (querySnapshot) {
                           querySnapshot.forEach((doc) => {
-                            // doc.data() is never undefined for query doc snapshots
-                            state.userAddresses[a].calendar.push(doc.data())
+                            state.userData.calendar.push(doc.data())
                           })
                         })
-                        .catch((error) => {
-                          console.log('Error getting documents: ', error)
-                        })
                     }
                   })
-                })
-                .catch((error) => {
-                  console.log('Error in getting user calendar: ', error)
-                })
-            })
-          })
-        })
-        .catch((error) => {
-          console.log('Error in getting user data: ', error)
-        })
-    },
-    async getUserCalendar (state) {
-      console.log('getUserCalendar started')
-      return new Promise(function (resolve, reject) {
-        state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
-        const calRef = db.collection('users').doc(state.userID).collection('calendar')
-        calRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
-          .then(function (querySnapshot) {
-            querySnapshot.forEach((doc) => {
-              state.userData.calendar.push(doc.data())
-            })
-            console.log('successful userCalendar')
-            resolve()
-          })
-          .catch((error) => {
-            console.log('Error in getting user calendar: ', error)
-          })
-        console.log('getUserCalendar finished')
-      })
-    },
-    async getUserAddresses (state) {
-      return new Promise(function (resolve, reject) {
-        console.log('getUserAddresses started')
-        state.userAddresses = []
-        // goes through addresses of the user
-        for (let a = 0; a < state.userData.addresses.length; a++) {
-          const addressRef = db.collection('addresses').doc(state.userData.addresses[a].address)
-          addressRef.get()
-            .then((doc) => {
-              if (doc.exists) {
-                state.userAddresses.push(doc.data())
               }
             })
-            .catch((error) => {
-              console.log('Error in getting user addresses: ', error)
-            })
-        }
-        console.log('successful userAddresses')
-        resolve()
-        console.log('getUserAddresses finished')
-      })
-    },
-    async getUserAddressesCalendar (state) {
-      return new Promise(function (resolve, reject) {
-        console.log('getUserAddressesCalendar started')
-        for (let a = 0; a < state.userData.addresses.length; a++) {
-          state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
-          const calRef = db.collection('addresses').doc(state.userData.addresses[a].address).collection('calendar')
-          calRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
-            .then((querySnapshot) => {
-              querySnapshot.forEach((doc) => {
-                // doc.data() is never undefined for query doc snapshots
-                state.userAddresses[a].calendar.push(doc.data())
-              })
-              console.log('successful getUserAddressesCalendar')
-            })
-            .catch((error) => {
-              console.log('Error getting documents: ', error)
-            })
-        }
-        console.log('getUserAddressesCalendar finsihed')
-      })
-    },
-    async saveData (state) {
-      if (state.userID !== 'default') {
-        new Promise(function (resolve, reject) {
-          for (let d = 0; d < state.userData.calendar.length; d++) {
-            db.collection('users').doc(state.userID).collection('calendar').doc(state.userData.calendar[d].date.toString())
-              .set(state.userData.calendar[d])
-          }
-          state.userData.calendar = []
-          if (state.userData.calendar.length === 0) {
-            resolve()
-          }
         })
-          .then(function () {
-            new Promise(function (resolve, reject) {
-              db.collection('users').doc(state.userID).set(state.userData)
-              resolve()
-            })
-              .then(function () {
-                // db.collection('users').doc(state.defaultID).set(state.defaultData)
-                for (let a = 0; a < state.userAddresses.length; a++) {
-                  new Promise(function (resolve, reject) {
-                    if (state.userAddresses[a].calendar.length > 0) {
-                      for (let d = 0; d < state.userAddresses[a].calendar.length; d++) {
-                        db.collection('addresses').doc(state.userAddresses[a].address).collection('calendar').doc(state.userAddresses[a].calendar[d].date.toString())
-                          .set(state.userAddresses[a].calendar[d])
-                      }
-                      state.userAddresses[a].calendar = []
-                      if (state.userAddresses[a].calendar.length === 0) {
-                        resolve()
-                      }
-                    }
-                  })
-                    .then(function () {
-                      db.collection('addresses').doc(state.userAddresses[a].address).set(state.userAddresses[a])
-                    })
-                }
-              })
-          })
+    },
+    saveData (state) {
+      // saveData ()
+      if (state.userID !== 'default') {
+        for (let d = 0; d < state.userData.calendar.length; d++) {
+          db.collection('users').doc(state.userID).collection('calendar').doc(state.userData.calendar[d].date.toString())
+            .set(state.userData.calendar[d])
+        }
+        state.userData.calendar = []
+        db.collection('users').doc(state.userID).set(state.userData)
+        for (let a = 0; a < state.userAddresses.length; a++) {
+          if (state.userAddresses[a].calendar.length > 0) {
+            for (let d = 0; d < state.userAddresses[a].calendar.length; d++) {
+              db.collection('addresses').doc(state.userAddresses[a].address).collection('calendar').doc(state.userAddresses[a].calendar[d].date.toString())
+                .set(state.userAddresses[a].calendar[d])
+            }
+            state.userAddresses[a].calendar = []
+          }
+          db.collection('addresses').doc(state.userAddresses[a].address).set(state.userAddresses[a])
+        }
       }
-    }
-  },
-  actions: {
-    async getData ({ commit }) {
-      commit('getData')
-    },
-    async commitSaveData ({ commit }) {
-      commit('saveData')
-    },
-    async commitSetDefaultUser ({ commit }) {
-      commit('setDefaultUser')
-    },
-    async setDefault ({ dispatch, commit }) {
-      await dispatch('commitSaveData')
-      await dispatch('commitSetDefaultUser')
-      await dispatch('getData')
     }
   }
 })
