@@ -4,7 +4,7 @@
     <div class="banner">
       <h1 class="brand_large target" @click="goCalendar()">METABOLISM</h1>
       <h1 class="brand_small target" @click="goCalendar()">ME</h1>
-      <dropdownComponent></dropdownComponent>
+      <dropdownComponent :key="rerender"></dropdownComponent>
       <transition name="slide" mode="out-in" appear>
       <component :is="currentPageComponent"></component>
       </transition>
@@ -32,6 +32,11 @@ export default {
     'filters-login': CalendarFilters,
     'dropdownComponent': Dropdown
   },
+  data () {
+    return {
+      rerender: 0
+    }
+  },
   computed: {
     ...mapState([
       'currentPage'
@@ -44,6 +49,7 @@ export default {
     goCalendar () {
       this.$store.commit('setPage', 'calendar')
       this.$router.push('calendar')
+      this.rerender += 1
     }
   }
 }

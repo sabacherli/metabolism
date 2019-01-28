@@ -61,7 +61,6 @@ export default {
     goCalendar () {
       this.$store.commit('setPage', 'calendar')
       this.$router.push('calendar')
-      // this.$store.commit('getCalendar')
       this.$forceUpdate()
     },
     goMenu () {
