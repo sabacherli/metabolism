@@ -162,7 +162,7 @@ export default {
    height: 30px;
    width: 35%;
    text-align: center;
-   color: lightgray;
+   color: darkgray;
    font-size: 14px;
    font-family: Montserrat;
    letter-spacing: .2px;
@@ -203,7 +203,7 @@ input[type=password].register_password:focus {
 ::placeholder {
   font-size: 14px;
   font-family: Montserrat;
-  color: lightgray;
+  color: darkgray;
   letter-spacing: .2px;
 }
 @media (max-width: 700px) {

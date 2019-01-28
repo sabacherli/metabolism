@@ -14,8 +14,9 @@
           <label for="">Recipe Name</label>
           <input id="mealName" class="amount editPlace" type="text" @keyup.enter="removeFocus()" v-model="filteredmeal.name" required>
         </div>
-        <div class="purchase_button" @click="removeFocus()" style="margin-top: 20px">
-          <span class="purchase_text">Update Meal Name</span>
+        <br>
+        <div class="add_button" @click="removeFocus()" style="margin-top: 20px; margin-bottom: 40px">
+          <span class="add_text">Update Meal Name</span>
         </div>
       </div>
       <!-- eslint-disable-next-line -->
@@ -37,8 +38,10 @@
             <label for="">Unit</label>
             <input id="unit" class="amount editPlace" type="text" @keyup.enter="removeFocus" v-model="ingredient.unit" required>
           </div>
-          <div class="purchase_button" @click="removeFocus()" style="margin-top: 20px">
-            <span class="purchase_text">Update Ingredient</span>
+
+          <br>
+          <div class="add_button" @click="removeFocus()" style="margin-top: 20px; margin-bottom: 40px">
+            <span class="add_text">Update Ingredients</span>
           </div>
         </div>
       </template>
@@ -73,8 +76,9 @@
         <label for="">Unit</label>
         <input class="amount" type="text" name="" value="" @keyup.enter="focusIngredient(), addIngredient()" v-model="newUnit" required>
       </div>
-      <div class="purchase_button" @click="focusIngredient(), addIngredient()" style="margin-top: 20px">
-        <span class="purchase_text">Add Ingredient</span>
+      <br>
+      <div class="add_button" @click="removeFocus()" style="margin-top: 20px; margin-bottom: 40px">
+        <span class="add_text">Add Ingredient</span>
       </div>
     </div>
     <div class="save_button" style="margin-bottom: 70px" @click="returnToMenu()">
@@ -195,7 +199,7 @@ export default {
   transition: 0s;
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
 }
-.purchase_button {
+.add_button {
   position: relative;
   display: inline-block;
   margin-top: -20px;
@@ -204,7 +208,7 @@ export default {
   border-radius: 20px 20px;
   padding: 5px 10px 5px 10px;
 }
-.purchase_button:active {
+.add_button:active {
   transition: 0s;
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
 }
@@ -410,7 +414,7 @@ export default {
     box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
     transition: 0s;
   }
-  .purchase_button:hover {
+  .add_button:hover {
     cursor: pointer;
     box-shadow: 1px 1px 1px rgba(0,0,0,0.4);
     transition: .2s;

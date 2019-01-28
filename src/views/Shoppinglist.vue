@@ -20,6 +20,10 @@
                 <p :class="{ strikethrough: item.isActive }" class="meal_location"> {{ item.amount }} {{ item.unit }} </p>
               </div>
             </template>
+            <p class="dayname">Personal List</p>
+            <div class="ingredients_break">
+
+            </div>
             <template v-for="item in place.personalList">
               <!-- eslint-disable-next-line -->
               <div class="container_meal" @click="toggleIsActive(item)">
@@ -46,7 +50,7 @@
           <!-- eslint-disable-next-line  -->
           <div class="add_button" style="margin-bottom: 40px" @click="addItem(userAddresses.indexOf(place))"><span class="add_text">Add Item</span></div>
           <!-- eslint-disable-next-line  -->
-          <div class="confirm_button" style="margin-bottom: 70px" @click="updateShopping(address.address)">
+          <div class="confirm_button" style="margin-bottom: 70px" @click="groceriesDone(address.address)">
             <span class="confirm_text">Done</span>
           </div>
         </div>
@@ -56,12 +60,12 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 export default {
   name: 'Shoppinglist',
   created () {
-    // this.$store.commit('createCalendarList')
+    this.$store.commit('createShoppingList')
     this.$store.commit('setPage', 'shoppinglist')
   },
   computed: {
@@ -104,17 +108,14 @@ export default {
     ...mapMutations([
       'addItem',
       'toggleIsActive',
-      'confirmPurchase'
+      'groceriesDone'
     ]),
     focusAmount () {
       document.getElementById('amount').focus()
     },
     focusUnit () {
       document.getElementById('unit').focus()
-    },
-    ...mapActions([
-      'updateShopping'
-    ])
+    }
   }
 }
 </script>

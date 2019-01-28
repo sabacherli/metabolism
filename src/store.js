@@ -25,7 +25,8 @@ export default new Vuex.Store({
     today: null,
     pointer: {
       doc: '',
-      position: ''
+      position: '',
+      address: ''
     },
     editor: {
       id: null
@@ -64,13 +65,15 @@ export default new Vuex.Store({
       ingredient: null,
       amount: null,
       unit: null,
-      isActive: false
+      isActive: false,
+      isPurchased: false
     },
     ingredientsList: {
       ingredient: null,
       amount: null,
       unit: null,
-      isActive: false
+      isActive: false,
+      isPurchased: false
     },
     // listMonths: [],
     // listMonthsDefault: [],
@@ -171,19 +174,19 @@ export default new Vuex.Store({
                 dayname: moment().isoWeekday(moment().year(year).month(mon).subtract(1, 'M')
                   .date(day)
                   .weekday()).format('dddd'),
-                breakfastID: '',
+                breakfastCaloriesOwner: null,
                 breakfastMembers: [
                   state.userID
                 ],
                 breakfastCalories: state.userData.info.calories,
                 breakfastIngredients: [],
-                lunchID: '',
+                lunchCaloriesOwner: null,
                 lunchMembers: [
                   state.userID
                 ],
                 lunchCalories: state.userData.info.calories,
                 lunchIngredients: [],
-                dinnerID: '',
+                dinnerCaloriesOwner: null,
                 dinnerMembers: [
                   state.userID
                 ],
@@ -201,15 +204,15 @@ export default new Vuex.Store({
                 dayname: moment().isoWeekday(moment().year(year).month(mon).subtract(1, 'M')
                   .date(day)
                   .weekday()).format('dddd'),
-                breakfastID: '',
+                breakfastCaloriesOwner: null,
                 breakfastMembers: [],
                 breakfastCalories: '',
                 breakfastIngredients: [],
-                lunchID: '',
+                lunchCaloriesOwner: null,
                 lunchMembers: [],
                 lunchCalories: '',
                 lunchIngredients: [],
-                dinnerID: '',
+                dinnerCaloriesOwner: null,
                 dinnerMembers: [],
                 dinnerCalories: '',
                 dinnerIngredients: []
@@ -235,9 +238,35 @@ export default new Vuex.Store({
       state.pointer.doc = state.userData.calendar.indexOf(day)
       state.pointer.position = 'breakfast'
       for (let a = 0; a < state.userData.addresses.length; a++) {
+        var alreadyMember = false
         if (state.userData.addresses[a].isActive) {
+          state.pointer.address = a
           day.breakfastLocation = state.userData.addresses[a].name
           day.breakfastAddress = state.userData.addresses[a].address
+          for (let m = 0; m < state.userAddresses[a].calendar[state.pointer.doc].breakfastMembers.length; m++) {
+            if (state.userAddresses[a].calendar[state.pointer.doc].breakfastMembers[m] === state.userID) {
+              alreadyMember = true
+            }
+          }
+          if (alreadyMember === false) {
+            state.userAddresses[a].calendar[state.pointer.doc].breakfastMembers.push(state.userID)
+            state.userAddresses[a].calendar[state.pointer.doc].breakfastCalories += Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
+          }
+        } else {
+          for (let m = 0; m < state.userAddresses[a].calendar[state.pointer.doc].breakfastMembers.length; m++) {
+            if (state.userAddresses[a].calendar[state.pointer.doc].breakfastMembers[m] === state.userID) {
+              alreadyMember = true
+            }
+          }
+          if (alreadyMember === true) {
+            for (var i = state.userAddresses[a].calendar[state.pointer.doc].breakfastMembers.length - 1; i >= 0; i--) {
+              if (state.userAddresses[a].calendar[state.pointer.doc].breakfastMembers[i] === state.userID) {
+                state.userAddresses[a].calendar[state.pointer.doc].breakfastMembers.splice(i, 1)
+                break
+              }
+            }
+            state.userAddresses[a].calendar[state.pointer.doc].breakfastCalories -= Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
+          }
         }
       }
       if (state.menu.isActive) {
@@ -251,9 +280,35 @@ export default new Vuex.Store({
       state.pointer.doc = state.userData.calendar.indexOf(day)
       state.pointer.position = 'lunch'
       for (let a = 0; a < state.userData.addresses.length; a++) {
+        var alreadyMember = false
         if (state.userData.addresses[a].isActive) {
+          state.pointer.address = a
           day.lunchLocation = state.userData.addresses[a].name
           day.lunchAddress = state.userData.addresses[a].address
+          for (let m = 0; m < state.userAddresses[a].calendar[state.pointer.doc].lunchMembers.length; m++) {
+            if (state.userAddresses[a].calendar[state.pointer.doc].lunchMembers[m] === state.userID) {
+              alreadyMember = true
+            }
+          }
+          if (alreadyMember === false) {
+            state.userAddresses[a].calendar[state.pointer.doc].lunchMembers.push(state.userID)
+            state.userAddresses[a].calendar[state.pointer.doc].lunchCalories += Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
+          }
+        } else {
+          for (let m = 0; m < state.userAddresses[a].calendar[state.pointer.doc].lunchMembers.length; m++) {
+            if (state.userAddresses[a].calendar[state.pointer.doc].lunchMembers[m] === state.userID) {
+              alreadyMember = true
+            }
+          }
+          if (alreadyMember === true) {
+            for (var i = state.userAddresses[a].calendar[state.pointer.doc].lunchMembers.length - 1; i >= 0; i--) {
+              if (state.userAddresses[a].calendar[state.pointer.doc].lunchMembers[i] === state.userID) {
+                state.userAddresses[a].calendar[state.pointer.doc].lunchMembers.splice(i, 1)
+                break
+              }
+            }
+            state.userAddresses[a].calendar[state.pointer.doc].lunchCalories -= Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
+          }
         }
       }
       if (state.menu.isActive) {
@@ -267,9 +322,35 @@ export default new Vuex.Store({
       state.pointer.doc = state.userData.calendar.indexOf(day)
       state.pointer.position = 'dinner'
       for (let a = 0; a < state.userData.addresses.length; a++) {
+        var alreadyMember = false
         if (state.userData.addresses[a].isActive) {
+          state.pointer.address = a
           day.dinnerLocation = state.userData.addresses[a].name
           day.dinnerAddress = state.userData.addresses[a].address
+          for (let m = 0; m < state.userAddresses[a].calendar[state.pointer.doc].dinnerMembers.length; m++) {
+            if (state.userAddresses[a].calendar[state.pointer.doc].dinnerMembers[m] === state.userID) {
+              alreadyMember = true
+            }
+          }
+          if (alreadyMember === false) {
+            state.userAddresses[a].calendar[state.pointer.doc].dinnerMembers.push(state.userID)
+            state.userAddresses[a].calendar[state.pointer.doc].dinnerMembers += Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
+          }
+        } else {
+          for (let m = 0; m < state.userAddresses[a].calendar[state.pointer.doc].dinnerMembers.length; m++) {
+            if (state.userAddresses[a].calendar[state.pointer.doc].dinnerMembers[m] === state.userID) {
+              alreadyMember = true
+            }
+          }
+          if (alreadyMember === true) {
+            for (var i = state.userAddresses[a].calendar[state.pointer.doc].dinnerMembers.length - 1; i >= 0; i--) {
+              if (state.userAddresses[a].calendar[state.pointer.doc].dinnerMembers[i] === state.userID) {
+                state.userAddresses[a].calendar[state.pointer.doc].dinnerMembers.splice(i, 1)
+                break
+              }
+            }
+            state.userAddresses[a].calendar[state.pointer.doc].dinnerCalories -= Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
+          }
         }
       }
       if (state.menu.isActive) {
@@ -382,7 +463,8 @@ export default new Vuex.Store({
           ingredient: null,
           amount: null,
           unit: null,
-          isActive: false
+          isActive: false,
+          isPurchased: false
         }
       }
       document.getElementById('ingredient').focus()
@@ -399,7 +481,8 @@ export default new Vuex.Store({
         ingredient: null,
         amount: null,
         unit: null,
-        isActive: false
+        isActive: false,
+        isPurchased: false
       }
       document.getElementById('newIngredient').focus()
     },
@@ -437,34 +520,55 @@ export default new Vuex.Store({
       for (let i = 0; i < meal.ingredients.length; i++) {
         const ingredientObject = JSON.parse(JSON.stringify(meal.ingredients[i]))
         if (state.pointer.position === 'breakfast') {
-          state.userData.calendar[state.pointer.doc].breakfastIngredients.push(ingredientObject)
+          state.userAddresses[state.pointer.address].calendar[state.pointer.doc].breakfastIngredients.push(ingredientObject)
         } else if (state.pointer.position === 'lunch') {
-          state.userData.calendar[state.pointer.doc].lunchIngredients.push(ingredientObject)
+          state.userAddresses[state.pointer.address].calendar[state.pointer.doc].lunchIngredients.push(ingredientObject)
         } else {
-          state.userData.calendar[state.pointer.doc].dinnerIngredients.push(ingredientObject)
+          state.userAddresses[state.pointer.address].calendar[state.pointer.doc].dinnerIngredients.push(ingredientObject)
         }
       }
       if (state.pointer.position === 'breakfast') {
         state.userData.calendar[state.pointer.doc].breakfast = mealName
+        state.userAddresses[state.pointer.address].calendar[state.pointer.doc].breakfast = mealName
         state.userData.calendar[state.pointer.doc].breakfastID = mealID
+        state.userAddresses[state.pointer.address].calendar[state.pointer.doc].breakfastID = mealID
+        Vue.set(state.userAddresses[state.pointer.address].calendar[state.pointer.doc], 'breakfastCaloriesOwner', state.userData.info.calories)
       } else if (state.pointer.position === 'lunch') {
         state.userData.calendar[state.pointer.doc].lunch = mealName
+        state.userAddresses[state.pointer.address].calendar[state.pointer.doc].lunch = mealName
         state.userData.calendar[state.pointer.doc].lunchID = mealID
+        state.userAddresses[state.pointer.address].calendar[state.pointer.doc].lunchID = mealID
+        Vue.set(state.userAddresses[state.pointer.address].calendar[state.pointer.doc], 'lunchCaloriesOwner', state.userData.info.calories)
       } else {
         state.userData.calendar[state.pointer.doc].dinner = mealName
+        state.userAddresses[state.pointer.address].calendar[state.pointer.doc].dinner = mealName
         state.userData.calendar[state.pointer.doc].dinnerID = mealID
+        state.userAddresses[state.pointer.address].calendar[state.pointer.doc].dinnerID = mealID
+        Vue.set(state.userAddresses[state.pointer.address].calendar[state.pointer.doc], 'dinnerCaloriesOwner', state.userData.info.calories)
       }
     },
     removeMeal (state) {
       if (state.pointer.position === 'breakfast') {
         Vue.set(state.userData.calendar[state.pointer.doc], 'breakfast', 'Breakfast')
-        Vue.set(state.userData.calendar[state.pointer.doc], 'breakfastIngredients', [])
+        Vue.set(state.userData.calendar[state.pointer.doc], 'breakfastID', '')
+        Vue.set(state.userAddresses[state.pointer.address].calendar[state.pointer.doc], 'breakfastIngredients', [])
+        Vue.set(state.userAddresses[state.pointer.address].calendar[state.pointer.doc], 'breakfast', 'Breakfast')
+        Vue.set(state.userAddresses[state.pointer.address].calendar[state.pointer.doc], 'breakfastID', '')
+        Vue.set(state.userAddresses[state.pointer.address].calendar[state.pointer.doc], 'dinnerCaloriesOwner', null)
       } else if (state.pointer.position === 'lunch') {
         Vue.set(state.userData.calendar[state.pointer.doc], 'lunch', 'Lunch')
-        Vue.set(state.userData.calendar[state.pointer.doc], 'lunchIngredients', [])
+        Vue.set(state.userData.calendar[state.pointer.doc], 'lunchID', '')
+        Vue.set(state.userAddresses[state.pointer.address].calendar[state.pointer.doc], 'lunchIngredients', [])
+        Vue.set(state.userAddresses[state.pointer.address].calendar[state.pointer.doc], 'lunch', 'Lunch')
+        Vue.set(state.userAddresses[state.pointer.address].calendar[state.pointer.doc], 'lunchID', '')
+        Vue.set(state.userAddresses[state.pointer.address].calendar[state.pointer.doc], 'dinnerCaloriesOwner', null)
       } else {
         Vue.set(state.userData.calendar[state.pointer.doc], 'dinner', 'Dinner')
-        Vue.set(state.userData.calendar[state.pointer.doc], 'dinnerIngredients', [])
+        Vue.set(state.userData.calendar[state.pointer.doc], 'dinnerID', '')
+        Vue.set(state.userAddresses[state.pointer.address].calendar[state.pointer.doc], 'dinnerIngredients', [])
+        Vue.set(state.userAddresses[state.pointer.address].calendar[state.pointer.doc], 'dinner', 'Dinner')
+        Vue.set(state.userAddresses[state.pointer.address].calendar[state.pointer.doc], 'dinnerID', '')
+        Vue.set(state.userAddresses[state.pointer.address].calendar[state.pointer.doc], 'dinnerCaloriesOwner', null)
       }
     },
     addMealName (state) {
@@ -921,7 +1025,79 @@ export default new Vuex.Store({
         })
       }
     },
-    confirmPurchase (state, address) {
+    createShoppingList (state) {
+      console.log('test 0')
+      for (let a = 0; a < state.userAddresses.length; a++) {
+        state.userAddresses[a].shoppingList = []
+        for (let d = 0; d < state.userAddresses[a].calendar; d++) {
+          console.log('test 1')
+          const breakfastRatio = state.userAddresses[a].calendar[d].breakfastCalories / state.userAddresses[a].calendar[d].breakfastCaloriesOwner
+          const lunchRatio = state.userAddresses[a].calendar[d].lunchCalories / state.userAddresses[a].calendar[d].lunchCaloriesOwner
+          const dinnerRatio = state.userAddresses[a].calendar[d].dinnerCalories / state.userAddresses[a].calendar[d].dinnerCaloriesOwner
+          for (let ingredient = 0; ingredient < state.userAddresses[a].calendar[d].breakfastIngredients.length; ingredient++) {
+            console.log('test 2')
+            // needs to check whether the ingredient is already purchased / active
+            if (state.userAddresses[a].calendar[d].breakfastIngredients[ingredient].isActive === false) {
+              // for each ingredient, it checks whether the ingredient is already in the shopping list
+              let check = true
+              for (let item = 0; item < state.userAddresses[a].shoppingList.length; item++) {
+                console.log('test 3')
+                // if it is, it increases the amount
+                if (state.userAddresses[a].shoppingList[item].ingredient === state.userAddresses[a].calendar[d].breakfastIngredients[ingredient].ingredient) {
+                  state.userAddresses[a].shoppingList[item].amount += (state.userAddresses[a].calendar[d].breakfastIngredients[ingredient].amount * breakfastRatio)
+                  check = false
+                }
+              }
+              // if the ingredient isn't already on the list, then it adds it
+              if (check) {
+                console.log('test 4')
+                state.userAddresses[a].shoppingList.push(JSON.parse(JSON.stringify(state.userAddresses[a].calendar[d].breakfastIngredients[ingredient])))
+                state.userAddresses[a].shoppingList[state.userAddresses[a].shoppingList.length - 1].amount *= breakfastRatio
+              }
+            }
+          }
+          for (let ingredient = 0; ingredient < state.userAddresses[a].calendar[d].lunchIngredients.length; ingredient++) {
+            // needs to check whether the ingredient is already purchased / active
+            if (state.userAddresses[a].calendar[d].lunchIngredients[ingredient].isActive === false) {
+              // for each ingredient, it checks whether the ingredient is already in the shopping list
+              let check = true
+              for (let item = 0; item < state.userAddresses[a].shoppingList.length; item++) {
+                // if it is, it increases the amount
+                if (state.userAddresses[a].shoppingList[item].ingredient === state.userAddresses[a].calendar[d].lunchIngredients[ingredient].ingredient) {
+                  state.userAddresses[a].shoppingList[item].amount += (state.userAddresses[a].calendar[d].lunchIngredients[ingredient].amount * lunchRatio)
+                  check = false
+                }
+              }
+              // if the ingredient isn't already on the list, then it adds it
+              if (check) {
+                state.userAddresses[a].shoppingList.push(JSON.parse(JSON.stringify(state.userAddresses[a].calendar[d].lunchIngredients[ingredient])))
+                state.userAddresses[a].shoppingList[state.userAddresses[a].shoppingList.length - 1].amount *= lunchRatio
+              }
+            }
+          }
+          for (let ingredient = 0; ingredient < state.userAddresses[a].calendar[d].dinnerIngredients.length; ingredient++) {
+            // needs to check whether the ingredient is already purchased / active
+            if (state.userAddresses[a].calendar[d].dinnerIngredients[ingredient].isActive === false) {
+              // for each ingredient, it checks whether the ingredient is already in the shopping list
+              let check = true
+              for (let item = 0; item < state.userAddresses[a].shoppingList.length; item++) {
+                // if it is, it increases the amount
+                if (state.userAddresses[a].shoppingList[item].ingredient === state.userAddresses[a].calendar[d].dinnerIngredients[ingredient].ingredient) {
+                  state.userAddresses[a].shoppingList[item].amount += (state.userAddresses[a].calendar[d].dinnerIngredients[ingredient].amount * dinnerRatio)
+                  check = false
+                }
+              }
+              // if the ingredient isn't already on the list, then it adds it
+              if (check) {
+                state.userAddresses[a].shoppingList.push(JSON.parse(JSON.stringify(state.userAddresses[a].calendar[d].dinnerIngredients[ingredient])))
+                state.userAddresses[a].shoppingList[state.userAddresses[a].shoppingList.length - 1].amount *= dinnerRatio
+              }
+            }
+          }
+        }
+      }
+    },
+    groceriesDone (state, address) {
       for (let place in state.userAddresses) {
         if (state.userAddresses[place].address === address) {
           for (let ingredient in state.userAddresses[place].shoppingList) {
@@ -1074,6 +1250,7 @@ export default new Vuex.Store({
           // eslint-disable-next-line
           new Promise(function (resolve, reject) {
             state.userData = doc.data()
+            console.log(state.userData)
             resolve()
           })
             .then(function () {
@@ -1134,6 +1311,14 @@ export default new Vuex.Store({
                         .then(function (querySnapshot) {
                           querySnapshot.forEach((doc) => {
                             state.userData.calendar.push(doc.data())
+                          })
+                        })
+                      state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
+                      const calAddressRef = db.collection('addresses').doc(state.userData.addresses[a].address).collection('calendar')
+                      calAddressRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.userData.info.shoppingListLength, 'days').format('YYYYMMDD'))).orderBy('date').get()
+                        .then(function (querySnapshot) {
+                          querySnapshot.forEach((doc) => {
+                            state.userAddresses[a].calendar.push(doc.data())
                           })
                         })
                     }
@@ -1234,6 +1419,14 @@ export default new Vuex.Store({
                             state.userData.calendar.push(doc.data())
                           })
                         })
+                      state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
+                      const calAddressRef = db.collection('addresses').doc(state.userData.addresses[a].address).collection('calendar')
+                      calAddressRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.userData.info.shoppingListLength, 'days').format('YYYYMMDD'))).orderBy('date').get()
+                        .then(function (querySnapshot) {
+                          querySnapshot.forEach((doc) => {
+                            state.userAddresses[a].calendar.push(doc.data())
+                          })
+                        })
                     }
                   })
               }
@@ -1265,6 +1458,14 @@ export default new Vuex.Store({
                         .then(function (querySnapshot) {
                           querySnapshot.forEach((doc) => {
                             state.userData.calendar.push(doc.data())
+                          })
+                        })
+                      state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
+                      const calAddressRef = db.collection('addresses').doc(state.userData.addresses[a].address).collection('calendar')
+                      calAddressRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.userData.info.shoppingListLength, 'days').format('YYYYMMDD'))).orderBy('date').get()
+                        .then(function (querySnapshot) {
+                          querySnapshot.forEach((doc) => {
+                            state.userAddresses[a].calendar.push(doc.data())
                           })
                         })
                     }

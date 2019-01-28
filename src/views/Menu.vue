@@ -73,7 +73,7 @@
         <input id="newIngredient" class="amount" type="text" @keyup.enter="focusAmount()" v-model="newIngredient">
         <br>
         <label for="">Amount</label>
-        <input id="newAmount" class="amount" type="amount" @keyup.enter="focusUnit()" v-model="newAmount">
+        <input id="newAmount" class="amount" type="number" @keyup.enter="focusUnit()" v-model="newAmount">
         <br>
         <label for="">Unit</label>
         <input id="newUnit" class="amount" type="text" @keyup.enter="addIngredientToMeal()" v-model="newUnit">
