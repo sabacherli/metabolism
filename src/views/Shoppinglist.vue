@@ -20,7 +20,7 @@
                 <p :class="{ strikethrough: item.isActive }" class="meal_location"> {{ item.amount }} {{ item.unit }} </p>
               </div>
             </template>
-            <p class="dayname">Personal List</p>
+            <p class="dayname" style="margin-top: 100px">Personal List</p>
             <div class="ingredients_break">
 
             </div>
