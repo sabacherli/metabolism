@@ -48,6 +48,7 @@ export default {
   methods: {
     goCalendar () {
       this.$store.commit('setPage', 'calendar')
+      this.$store.commit('thisWeek')
       this.$router.push('calendar')
       this.rerender += 1
     }

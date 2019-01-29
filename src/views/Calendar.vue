@@ -2,51 +2,131 @@
   <div class="container container_animation">
     <div class="calendar_navigation_button" @click="previousWeek()" v-if="userID !== 'Default'"><span class="calendar_navigation_text">Previous Week</span></div>
     <div class="animated">
-      <template v-for="day in userData.calendar">
+      <!-- eslint-disable-next-line -->
+      <div v-for="(place, index) in userData.addresses">
         <!-- eslint-disable-next-line -->
-        <div class="day" v-if="day.date < today">
-          <p class="date"> {{ day.day }} </p>
-          <div class="past">
+        <div v-for="month in userAddresses[index].months">
+          <!-- eslint-disable-next-line -->
+          <template v-if="place.isActive && month.month === currentYearMonth && month.isPurchased" v-for="day in userData.calendar">
+            <!-- eslint-disable-next-line -->
+            <div class="day" v-if="day.date < today">
+              <p class="date"> {{ day.day }} </p>
+              <div class="past">
 
-          </div>
-          <p class="dayname"> {{ day.dayname }} </p>
-          <div class="ingredients_break">
+              </div>
+              <p class="dayname"> {{ day.dayname }} </p>
+              <div class="ingredients_break">
 
-          </div>
-          <div class="">
-            <p class="meal"> {{ day.breakfast }} </p>
-            <p class="meal_location"> {{ day.breakfastLocation }} </p>
-          </div>
-          <div class="">
-            <p class="meal"> {{ day.lunch }} </p>
-            <p class="meal_location"> {{ day.lunchLocation }} </p>
-          </div>
-          <div class="">
-            <p class="meal"> {{ day.dinner }} </p>
-            <p class="meal_location"> {{ day.dinnerLocation }} </p>
+              </div>
+              <div class="">
+                <p class="meal"> {{ day.breakfast }} </p>
+                <p class="meal_location"> {{ day.breakfastLocation }} </p>
+              </div>
+              <div class="">
+                <p class="meal"> {{ day.lunch }} </p>
+                <p class="meal_location"> {{ day.lunchLocation }} </p>
+              </div>
+              <div class="">
+                <p class="meal"> {{ day.dinner }} </p>
+                <p class="meal_location"> {{ day.dinnerLocation }} </p>
+              </div>
+            </div>
+            <!-- eslint-disable-next-line -->
+            <div class="day" v-if="day.date >= today">
+              <p class="date"> {{ day.day }} </p>
+              <p class="dayname"> {{ day.dayname }} </p>
+              <div class="ingredients_break">
+
+              </div>
+              <div class="container_meal" @click="setBreakfast(day); openMenu()">
+                <p class="meal"> {{ day.breakfast }} </p>
+                <p class="meal_location"> {{ day.breakfastLocation }} </p>
+              </div>
+              <div class="container_meal" @click="setLunch(day); openMenu()">
+                <p class="meal"> {{ day.lunch }} </p>
+                <p class="meal_location"> {{ day.lunchLocation }} </p>
+              </div>
+              <div class="container_meal" @click="setDinner(day); openMenu()">
+                <p class="meal"> {{ day.dinner }} </p>
+                <p class="meal_location"> {{ day.dinnerLocation }} </p>
+              </div>
+            </div>
+          </template>
+          <div v-if="place.isActive && month.month === currentYearMonth && month.isPurchased === false">
+            <div class="box" @click="addMonths(index)">
+              <p class="sign">+</p>
+            </div>
+            <!-- eslint-disable-next-line -->
+            <div class="set_default" @click="setDefault(index)">
+              <!-- eslint-disable-next-line -->
+              <p class="dayname"> {{ place.name }} </p>
+            </div>
+            <!-- eslint-disable-next-line -->
+            <div class="ingredients_break">
+
+            </div>
+            <!-- Adds days for the month ahead to the currently signed in user, also default if not signed in. -->
+            <!-- eslint-disable-next-line -->
+            <div class="" style="margin-bottom: 35px">
+              <!-- eslint-disable-next-line -->
+              <div class="year_date">
+                <p>{{ currentYear }}</p>
+              </div>
+              <div class="">
+                <div class="block_date">
+                  <template v-for="month in userAddresses[index].months.slice(0,4)">
+                    <!-- eslint-disable-next-line -->
+                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
+                  </template>
+                </div>
+                <div class="block_date">
+                  <template v-for="month in userAddresses[index].months.slice(4,8)">
+                    <!-- eslint-disable-next-line -->
+                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
+                  </template>
+                </div>
+                <div class="block_date">
+                  <template v-for="month in userAddresses[index].months.slice(8,12)">
+                    <!-- eslint-disable-next-line -->
+                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
+                  </template>
+                </div>
+              </div>
+            </div>
+            <!-- eslint-disable-next-line -->
+            <div class="">
+              <!-- eslint-disable-next-line -->
+              <div class="year_date">
+                <p>{{ Number(currentYear) + 1 }}</p>
+              </div>
+              <div class="">
+                <div class="block_date">
+                  <template v-for="month in userAddresses[index].months.slice(12,16)">
+                    <!-- eslint-disable-next-line -->
+                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
+                  </template>
+                </div>
+                <div class="block_date">
+                  <template v-for="month in userAddresses[index].months.slice(16,20)">
+                    <!-- eslint-disable-next-line -->
+                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
+                  </template>
+                </div>
+                <div class="block_date">
+                  <template v-for="month in userAddresses[index].months.slice(20,24)">
+                    <!-- eslint-disable-next-line -->
+                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
+                  </template>
+                </div>
+                <p class="year_date price">{{ price }} CHF</p>
+                <div class="purchase_button" @click="addMonths(index)">
+                  <span class="purchase_text">Purchase Months</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <!-- eslint-disable-next-line -->
-        <div class="day" v-if="day.date >= today">
-          <p class="date"> {{ day.day }} </p>
-          <p class="dayname"> {{ day.dayname }} </p>
-          <div class="ingredients_break">
-
-          </div>
-          <div class="container_meal" @click="setBreakfast(day); openMenu()">
-            <p class="meal"> {{ day.breakfast }} </p>
-            <p class="meal_location"> {{ day.breakfastLocation }} </p>
-          </div>
-          <div class="container_meal" @click="setLunch(day); openMenu()">
-            <p class="meal"> {{ day.lunch }} </p>
-            <p class="meal_location"> {{ day.lunchLocation }} </p>
-          </div>
-          <div class="container_meal" @click="setDinner(day); openMenu()">
-            <p class="meal"> {{ day.dinner }} </p>
-            <p class="meal_location"> {{ day.dinnerLocation }} </p>
-          </div>
-        </div>
-      </template>
+      </div>
     </div>
     <div class="calendar_navigation_button" style="margin-bottom: 70px" @click="nextWeek()" v-if="userID !== 'Default'"><span class="calendar_navigation_text">Next Week</span></div>
   </div>
@@ -60,14 +140,7 @@ export default {
   name: 'Calendar',
   created () {
     this.$store.commit('setToday', moment().format('YYYYMMDD'))
-    // this.$store.commit('populateMonthList', this.currentYear)
     this.$store.commit('setPage', 'calendar')
-  },
-  data () {
-    return {
-      currentYearMonth: moment().format('YYYYMM'),
-      currentYear: moment().format('YYYY')
-    }
   },
   computed: {
     ...mapState([
@@ -77,7 +150,9 @@ export default {
       'today',
       'menu',
       'price',
-      'start'
+      'start',
+      'currentYear',
+      'currentYearMonth'
     ])
   },
   methods: {

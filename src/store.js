@@ -23,6 +23,9 @@ export default new Vuex.Store({
     currentPage: 'calendar',
     price: 0,
     today: null,
+    start: null,
+    currentYear: null,
+    currentYearMonth: null,
     pointer: {
       doc: '',
       position: '',
@@ -100,6 +103,9 @@ export default new Vuex.Store({
     },
     syncCalories (state, calories) {
       state.userData.info.calories = calories
+    },
+    syncCurrentYearMonth (state, calories) {
+      state.currentYearMonth = calories
     },
     setEditor (state, meal) {
       state.editor.id = meal.id
@@ -395,6 +401,8 @@ export default new Vuex.Store({
       const calendarRef = db.collection('users').doc(state.userID).collection('calendar')
       state.userData.calendar = []
       state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
+      state.currentYearMonth = moment(state.start).format('YYYYMM')
+      state.currentYear = moment(state.start).format('YYYY')
       calendarRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
@@ -416,6 +424,8 @@ export default new Vuex.Store({
         }
         const calendarRef = db.collection('users').doc(state.userID).collection('calendar')
         state.userData.calendar = []
+        state.currentYearMonth = moment(state.start).format('YYYYMM')
+        state.currentYear = moment(state.start).format('YYYY')
         calendarRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
           .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
@@ -438,6 +448,8 @@ export default new Vuex.Store({
         const calendarRef = db.collection('users').doc(state.userID).collection('calendar')
         state.userData.calendar = []
         state.start = state.start.subtract(state.displayAmount, 'days')
+        state.currentYearMonth = moment(state.start).format('YYYYMM')
+        state.currentYear = moment(state.start).format('YYYY')
         calendarRef.where('date', '>=', Number(state.start.subtract(state.displayAmount, 'days').format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
           .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
@@ -1162,20 +1174,14 @@ export default new Vuex.Store({
                                 .date(day)
                                 .weekday()).format('dddd'),
                               breakfast: 'Breakfast',
-                              breakfastID: '',
                               breakfastLocation: 'Home',
                               breakfastAddress: state.userAddresses[0].address,
-                              breakfastIngredients: [],
                               lunch: 'Lunch',
-                              lunchID: '',
                               lunchLocation: 'Home',
                               lunchAddress: state.userAddresses[0].address,
-                              lunchIngredients: [],
                               dinner: 'Dinner',
-                              dinnerID: '',
                               dinnerLocation: 'Home',
-                              dinnerAddress: state.userAddresses[0].address,
-                              dinnerIngredients: []
+                              dinnerAddress: state.userAddresses[0].address
                             }
                             db.collection('users').doc(state.userID).collection('calendar').doc(docName)
                               .set(dayTemplate)
@@ -1332,6 +1338,41 @@ export default new Vuex.Store({
           db.collection('addresses').doc(docRef.id).update({
             address: docRef.id
           })
+          for (var month = 0; month < 12; month++) {
+          // adds days to user data
+            const daysInMonth = moment().add(month, 'months').daysInMonth()
+            const year = moment().add(month, 'months').format('YYYY')
+            const mon = moment().add(month, 'months').format('MM')
+            for (let d = 0; d < daysInMonth; d++) {
+              const day = moment().year(year).month(mon).subtract(1, 'M')
+                .startOf('month')
+                .add(d, 'day')
+                .format('DD')
+              const docName = moment().year(year).month(mon).subtract(1, 'M')
+                .date(day)
+                .format('YYYYMMDD')
+              const dayTemplate = {
+                date: Number(moment().year(year).month(mon).subtract(1, 'M')
+                  .date(day)
+                  .format('YYYYMMDD')),
+                day,
+                dayname: moment().isoWeekday(moment().year(year).month(mon).subtract(1, 'M')
+                  .date(day)
+                  .weekday()).format('dddd'),
+                breakfast: 'Breakfast',
+                breakfastLocation: 'Home',
+                breakfastAddress: docRef.id,
+                lunch: 'Lunch',
+                lunchLocation: 'Home',
+                lunchAddress: docRef.id,
+                dinner: 'Dinner',
+                dinnerLocation: 'Home',
+                dinnerAddress: docRef.id
+              }
+              db.collection('users').doc(state.userID).collection('calendar').doc(docName)
+                .set(dayTemplate)
+            }
+          }
           firebase.auth().useDeviceLanguage()
           firebase.auth().currentUser.sendEmailVerification()
             .then(function () {
@@ -1369,6 +1410,14 @@ export default new Vuex.Store({
           })
             .then(function () {
               state.userAddresses = []
+              const calRef = db.collection('users').doc(state.userID).collection('calendar')
+              state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
+              calRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
+                .then(function (querySnapshot) {
+                  querySnapshot.forEach((doc) => {
+                    state.userData.calendar.push(doc.data())
+                  })
+                })
               for (let a = 0; a < state.userData.addresses.length; a++) {
                 const addressRef = db.collection('addresses').doc(state.userData.addresses[a].address)
                 addressRef.get()
@@ -1399,20 +1448,14 @@ export default new Vuex.Store({
                                 .date(day)
                                 .weekday()).format('dddd'),
                               breakfast: 'Breakfast',
-                              breakfastID: '',
                               breakfastLocation: 'Home',
                               breakfastAddress: state.userAddresses[0].address,
-                              breakfastIngredients: [],
                               lunch: 'Lunch',
-                              lunchID: '',
                               lunchLocation: 'Home',
                               lunchAddress: state.userAddresses[0].address,
-                              lunchIngredients: [],
                               dinner: 'Dinner',
-                              dinnerID: '',
                               dinnerLocation: 'Home',
-                              dinnerAddress: state.userAddresses[0].address,
-                              dinnerIngredients: []
+                              dinnerAddress: state.userAddresses[0].address
                             }
                             db.collection('users').doc(state.userID).collection('calendar').doc(docName)
                               .set(dayTemplate)
@@ -1437,13 +1480,6 @@ export default new Vuex.Store({
                             .set(state.userAddresses[a])
                         }
                       }
-                      const calRef = db.collection('users').doc(state.userID).collection('calendar')
-                      calRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
-                        .then(function (querySnapshot) {
-                          querySnapshot.forEach((doc) => {
-                            state.userData.calendar.push(doc.data())
-                          })
-                        })
                       state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
                       const calAddressRef = db.collection('addresses').doc(state.userData.addresses[a].address).collection('calendar')
                       calAddressRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.userData.info.shoppingListLength, 'days').format('YYYYMMDD'))).orderBy('date').get()
@@ -1526,20 +1562,14 @@ export default new Vuex.Store({
                                 .date(day)
                                 .weekday()).format('dddd'),
                               breakfast: 'Breakfast',
-                              breakfastID: '',
                               breakfastLocation: 'Home',
                               breakfastAddress: state.userAddresses[0].address,
-                              breakfastIngredients: [],
                               lunch: 'Lunch',
-                              lunchID: '',
                               lunchLocation: 'Home',
                               lunchAddress: state.userAddresses[0].address,
-                              lunchIngredients: [],
                               dinner: 'Dinner',
-                              dinnerID: '',
                               dinnerLocation: 'Home',
-                              dinnerAddress: state.userAddresses[0].address,
-                              dinnerIngredients: []
+                              dinnerAddress: state.userAddresses[0].address
                             }
                             db.collection('users').doc(state.userID).collection('calendar').doc(docName)
                               .set(dayTemplate)
