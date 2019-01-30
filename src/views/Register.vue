@@ -5,23 +5,27 @@
         SIGN UP
       </div>
       <div class="container_costs">
-        <p class="costs_explanation">Months are purchased in the app after the account is created and cost CHF 5</p>
+        <p class="costs_explanation">One address costs 5 CHF per month and are purchased in the app</p>
         <!-- <p class="cost_icon">5.- Fr</p> -->
         <!-- <p> For the price of a <u><a id="loaf_of_bread" href="https://produkte.migros.ch/pain-creation-knusperbrot-111471500500">loaf of bread</a></u>  a month </p> -->
         <!-- <div class="cost_explanation">The price of metabolism probably amortises itself on average through cost savings due to reduced waste.</div> -->
+      </div>
+      <div class="container_icons">
+        <img src="../assets/icons8-email.png" alt="Email" class="icon" @click="focusEmailInput()">
+        <img src="../assets/icons8-google.png" alt="Google" class="icon" @click="createUserWithGoogle()">
+        <!-- <img src="../assets/icons8-twitter.png" alt="Twitter" class="icon" @click="createUserWithTwitter()"> -->
       </div>
       <div class="container_register">
         <!-- <a><img id="link_email" style="transform: translateX(100%)" :src="require('@/assets/icons8-new-post-filled-100.png')" alt="Email"></a> -->
         <!-- <a><img id="link_google" :src="require('@/assets/icons8-google-plus-96.png')" alt="Google"></a> -->
         <form id="" action="" method="">
-          <input class="register_email" type="email" name="email" value="" v-model="email" placeholder="Email" autocomplete="email" required>
+          <input id="emailInput" class="register_email" type="email" name="email" value="" v-model="email" placeholder="Email" autocomplete="email" required>
           <br>
           <input class="register_password" type="password" name="password" value="" v-model="password" placeholder="Password" autocomplete="current-password" style="margin-top: 10px" @keyup.enter="createUser()" required>
           <br>
           <button id="resend_button" class="register_email" style="margin-top: 10px; height: auto; width: 120px; font-size: 0.65em; text-algin: center; color: darkgrey; padding: 5px" type="button" name="button" @click="resendVerification()">Resend Verification</button>
           <!-- <input class="register" id="register_email" required>
           <input class="register" id="register_password" required> -->
-
         </form>
         <div class="register_button" @click="createUser()">Register</div>
       </div>
@@ -56,6 +60,9 @@ export default {
     ])
   },
   methods: {
+    focusEmailInput () {
+      document.getElementById('emailInput').focus()
+    },
     createUser () {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
         .then(user => {
@@ -68,6 +75,32 @@ export default {
           console.log(error.code)
         })
     },
+    createUserWithGoogle () {
+      var provider = new firebase.auth.GoogleAuthProvider()
+      firebase.auth().signInWithPopup(provider)
+        .then(function (result) {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          // var token = result.credential.accessToken
+          // The signed-in user info.
+          // var user = result.user
+          this.$router.push('calendar')
+          // ...
+        })
+        .catch(function (error) {
+          // Handle Errors here.
+          // var errorCode = error.code
+          // var errorMessage = error.message
+          // The email of the user's account used.
+          // var email = error.email
+          // The firebase.auth.AuthCredential type that was used.
+          // var credential = error.credential
+          // ...
+          console.log('Error: ', error)
+        })
+    },
+    // createUserWithTwitter () {
+    //
+    // },
     resendVerification () {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password)
         .then(user => {
@@ -121,14 +154,14 @@ export default {
   color: white;
   width: 100%;
   position: relative;
-  top: 200px;
+  top: 150px;
   opacity: 0;
   transform: translateY(-150%);
   animation: slideInLeft .8s 1.2s forwards;
 }
 .container_costs {
   position: relative;
-  top: 225px;
+  top: 175px;
   left: 50%;
   transform: translateX(-50%);
   width: 50%;
@@ -144,13 +177,29 @@ export default {
   margin-bottom: -20px;
   color: white;
 }
+.container_icons {
+  position: relative;
+  top: 260px;
+  width: 100%;
+  text-align: center;
+  opacity: 0;
+  animation: fadeIn .8s;
+  animation-delay: 3s;
+  animation-fill-mode: forwards;
+}
+.icon {
+  display: inline-block;
+  height: 40px;
+  width: 40px;
+  margin: 0px 20px 0 20px;
+}
 .container_register {
    position: relative;
-   top: 350px;
+   top: 300px;
    width: 100%;
    opacity: 0;
    animation: fadeIn .8s;
-   animation-delay: 2s;
+   animation-delay: 3s;
    animation-fill-mode: forwards;
 }
 .register_email,
@@ -248,6 +297,9 @@ input[type=password].register_password:focus {
     background: white;
     transition: .4s ease-in-out;
     outline: none;
+  }
+  .icon:hover {
+    cursor: pointer;
   }
 }
 </style>
