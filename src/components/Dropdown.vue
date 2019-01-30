@@ -15,7 +15,7 @@
       <div class="dropdown_item_break">
 
       </div>
-      <span id="menu" class="dropdown_item" v-on:click='goMenu()'>MENU</span>
+      <span id="menu" class="dropdown_item" v-on:click='goMenu()'>RECIPIES</span>
       <div class="dropdown_item_break">
 
       </div>

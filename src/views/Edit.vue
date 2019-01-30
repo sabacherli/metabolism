@@ -297,7 +297,7 @@ export default {
     position: relative;
     display: block;
     text-align: left;
-    top: 36px;
+    top: 30.5pt;
     width: 100%;
     left: 50%;
     transform: translateX(-60px);
@@ -395,7 +395,7 @@ export default {
     position: relative;
     display: inline-block;
     text-align: left;
-    top: 42px;
+    top: 36.5pt;
     width: 100%;
     margin-right: auto;
     font-size: 10px;

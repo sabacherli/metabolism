@@ -105,6 +105,7 @@ export default {
   position: fixed;
   display: block;
   overflow: scroll;
+  -webkit-overflow-scrolling: touch;
   top: 0;
   left: 0;
   width: 100%;

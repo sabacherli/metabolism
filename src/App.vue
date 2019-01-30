@@ -10,6 +10,7 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import store from './store'
 import 'typeface-montserrat'
+import { mapState } from 'vuex'
 
 export default {
   created () {
@@ -24,6 +25,40 @@ export default {
     window.onbeforeunload = function () {
       store.commit('saveData')
     }
+    window.onload = function () {
+      store.commit('thisWeek')
+      for (var i = 0; i < document.getElementsByClassName('dropdown_item_selected').length; i++) {
+        document.getElementsByClassName('dropdown_item_selected')[i].classList.add('dropdown_item')
+        document.getElementsByClassName('dropdown_item_selected')[i].classList.remove('dropdown_item_selected')
+      }
+      if (this.currentPage === 'benefits') {
+        document.getElementById('benefits').classList.remove('dropdown_item')
+        document.getElementById('benefits').classList.add('dropdown_item_selected')
+      } else if (this.currentPage === 'calendar') {
+        document.getElementById('calendar').classList.remove('dropdown_item')
+        document.getElementById('calendar').classList.add('dropdown_item_selected')
+      } else if (this.currentPage === 'menu') {
+        document.getElementById('menu').classList.remove('dropdown_item')
+        document.getElementById('menu').classList.add('dropdown_item_selected')
+      } else if (this.currentPage === 'shoppinglist') {
+        document.getElementById('shoppinglist').classList.remove('dropdown_item')
+        document.getElementById('shoppinglist').classList.add('dropdown_item_selected')
+      } else if (this.currentPage === 'profile') {
+        document.getElementById('profile').classList.remove('dropdown_item')
+        document.getElementById('profile').classList.add('dropdown_item_selected')
+      } else if (this.currentPage === 'register') {
+        document.getElementById('register').classList.remove('dropdown_item')
+        document.getElementById('register').classList.add('dropdown_item_selected')
+      } else if (this.currentPage === 'login') {
+        document.getElementById('login').classList.remove('dropdown_item')
+        document.getElementById('login').classList.add('dropdown_item_selected')
+      }
+    }
+  },
+  computed: {
+    ...mapState([
+      'currentPage'
+    ])
   }
 }
 </script>

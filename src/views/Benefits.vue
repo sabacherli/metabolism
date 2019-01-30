@@ -43,6 +43,7 @@ export default {
       document.getElementById('cover_page').classList.add('slideOutUp')
       setTimeout(function () {
         this.$router.push('calendar')
+        this.$store.commit('nextWeek')
       }.bind(this), 800)
     }
   }
@@ -67,6 +68,7 @@ export default {
   display: block;
   overflow: scroll;
   scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
   top: 0;
   left: 0;
   width: 100%;

@@ -48,8 +48,10 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#ffc0b8",
+    "theme_color": "#ffc1b8",
     "background_color": "#ffffff",
     "start_url": "/calendar",
-    "display": "standalone"
+    "display": "standalone",
+    "orientation": "portrait",
+    "description": "Meal Planner & Shopping List",
 }

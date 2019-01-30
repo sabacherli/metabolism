@@ -358,7 +358,7 @@ label {
   color: black;
   display: block;
   text-align: left;
-  top: 36px;
+  top: 30.5pt;
   width: 100px;
   left: 50%;
   transform: translateX(-60px);
