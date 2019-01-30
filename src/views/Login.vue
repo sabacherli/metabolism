@@ -7,9 +7,14 @@
       <div class="brand_small">
         <img class="brand_img" src="../assets/logo.png" alt="Logo">
       </div>
+      <div class="container_icons">
+        <img src="../assets/icons8-email.png" alt="Email" class="icon" @click="focusEmailInput()">
+        <img src="../assets/icons8-google.png" alt="Google" class="icon" @click="signInWithGoogle()">
+        <img src="../assets/icons8-twitter.png" alt="Twitter" class="icon" @click="signInWithTwitter()">
+      </div>
       <div class="container_login">
         <form class="" action="index.html" method="post">
-          <input class="login_email" type="email" name="email" value="" v-model="email" placeholder="Email" autocomplete="email" required>
+          <input id="emailInput" class="login_email" type="email" name="email" value="" v-model="email" placeholder="Email" autocomplete="email" required>
           <br>
           <input class="login_password" type="password" name="password" value="" @keyup.enter="login()" v-model="password" placeholder="Password" autocomplete="current-password" style="margin-top: 10px" required>
           <br>
@@ -46,6 +51,9 @@ export default {
     ])
   },
   methods: {
+    focusEmailInput () {
+      document.getElementById('emailInput').focus()
+    },
     login () {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password)
         .then(user => {
@@ -58,6 +66,53 @@ export default {
         .catch(error => {
           alert(error.message)
           console.log(error.code)
+        })
+    },
+    signInWithGoogle () {
+      var provider = new firebase.auth.GoogleAuthProvider()
+      firebase.auth().signInWithPopup(provider)
+        .then(function (result) {
+          // This gives you a Google Access Token. You can use it to access the Google API.
+          // var token = result.credential.accessToken
+          // The signed-in user info.
+          // var user = result.user
+          this.$router.push('calendar')
+          // ...
+        })
+        .catch(function (error) {
+          // Handle Errors here.
+          // var errorCode = error.code
+          // var errorMessage = error.message
+          // The email of the user's account used.
+          // var email = error.email
+          // The firebase.auth.AuthCredential type that was used.
+          // var credential = error.credential
+          // ...
+          console.log('Error: ', error)
+        })
+    },
+    signInWithTwitter () {
+      var provider = new firebase.auth.TwitterAuthProvider()
+      firebase.auth().signInWithPopup(provider)
+        .then(function (result) {
+          // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
+          // You can use these server side with your app's credentials to access the Twitter API.
+          // var token = result.credential.accessToken
+          // var secret = result.credential.secret
+          // The signed-in user info.
+          // var user = result.user
+          // ...
+        })
+        .catch(function (error) {
+          // Handle Errors here.
+          // var errorCode = error.code
+          // var errorMessage = error.message
+          // The email of the user's account used.
+          // var email = error.email
+          // The firebase.auth.AuthCredential type that was used.
+          // var credential = error.credential
+          // ...
+          console.log('Error: ', error)
         })
     },
     resetPassword () {
@@ -97,6 +152,22 @@ export default {
   height: 100%;
   background: linear-gradient(to bottom right, lightpink, #ffdfa0);
   animation: slideInDown 1.2s;
+}
+.container_icons {
+  position: relative;
+  top: 260px;
+  width: 100%;
+  text-align: center;
+  opacity: 0;
+  animation: fadeIn .8s;
+  animation-delay: 3s;
+  animation-fill-mode: forwards;
+}
+.icon {
+  display: inline-block;
+  height: 40px;
+  width: 40px;
+  margin: 0px 20px 0 20px;
 }
 .container_login {
    position: absolute;
@@ -213,6 +284,9 @@ input[type=password].login_password:focus {
     background: white;
     transition: .4s ease-in-out;
     outline: none;
+  }
+  .icon:hover {
+    cursor: pointer;
   }
 }
 </style>

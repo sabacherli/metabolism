@@ -13,7 +13,7 @@
       <div class="container_icons">
         <img src="../assets/icons8-email.png" alt="Email" class="icon" @click="focusEmailInput()">
         <img src="../assets/icons8-google.png" alt="Google" class="icon" @click="createUserWithGoogle()">
-        <!-- <img src="../assets/icons8-twitter.png" alt="Twitter" class="icon" @click="createUserWithTwitter()"> -->
+        <img src="../assets/icons8-twitter.png" alt="Twitter" class="icon" @click="createUserWithTwitter()">
       </div>
       <div class="container_register">
         <!-- <a><img id="link_email" style="transform: translateX(100%)" :src="require('@/assets/icons8-new-post-filled-100.png')" alt="Email"></a> -->
@@ -98,9 +98,30 @@ export default {
           console.log('Error: ', error)
         })
     },
-    // createUserWithTwitter () {
-    //
-    // },
+    createUserWithTwitter () {
+      var provider = new firebase.auth.TwitterAuthProvider()
+      firebase.auth().signInWithPopup(provider)
+        .then(function (result) {
+          // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
+          // You can use these server side with your app's credentials to access the Twitter API.
+          // var token = result.credential.accessToken
+          // var secret = result.credential.secret
+          // The signed-in user info.
+          // var user = result.user
+          // ...
+        })
+        .catch(function (error) {
+          // Handle Errors here.
+          // var errorCode = error.code
+          // var errorMessage = error.message
+          // The email of the user's account used.
+          // var email = error.email
+          // The firebase.auth.AuthCredential type that was used.
+          // var credential = error.credential
+          // ...
+          console.log('Error: ', error)
+        })
+    },
     resendVerification () {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password)
         .then(user => {

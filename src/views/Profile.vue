@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="container">
-    <div class="animated" v-if="profileFilters[0].isActive">
+    <div class="animated" v-if="profileFilters[0].isActive" style="padding-bottom: 100px">
       <div class="">
         <div class="box" @click="removeFocus()">
           <img class="edit_icon" src="../assets/icon-edit.png" alt="Edit">
@@ -111,7 +111,7 @@
         </div>
       </div>
     </div>
-    <div class="animated" v-if="profileFilters[1].isActive" style="margin-bottom: 100px">
+    <div class="animated" v-if="profileFilters[1].isActive" style="padding-bottom: 100px">
       <template v-for="(place, index) in userData.addresses">
         <!-- eslint-disable-next-line -->
         <div class="box" @click="addMonths(index)">
@@ -187,7 +187,7 @@
         </div>
       </template>
     </div>
-    <div class="animated" v-if="profileFilters[2].isActive">
+    <div class="animated" v-if="profileFilters[2].isActive" style="padding-bottom: 100px">
       <template v-for="(place, index) in userData.addresses">
         <!-- eslint-disable-next-line -->
         <div class="box" @click="deletePlace(place)">
@@ -272,7 +272,7 @@
         </div>
       </div>
     </div>
-    <div class="animated" v-if="profileFilters[3].isActive">
+    <div class="animated" v-if="profileFilters[3].isActive" style="padding-bottom: 100px">
       <template v-for="tag in userData.tagList">
         <!-- eslint-disable-next-line -->
         <div class="box" @click="deleteFilter(tag)">
