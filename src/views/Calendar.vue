@@ -152,7 +152,8 @@ export default {
       'price',
       'start',
       'currentYear',
-      'currentYearMonth'
+      'currentYearMonth',
+      'pointer'
     ])
   },
   methods: {

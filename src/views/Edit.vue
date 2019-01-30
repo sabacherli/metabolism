@@ -77,9 +77,7 @@
         <input class="amount" type="text" name="" value="" @keyup.enter="focusIngredient(), addIngredient()" v-model="newUnit" required>
       </div>
       <br>
-      <div class="add_button" @click="removeFocus()" style="margin-top: 20px; margin-bottom: 40px">
-        <span class="add_text">Add Ingredient</span>
-      </div>
+      <div class="add_button" @click="focusIngredient(), addIngredient()" style="margin-top: 20px; margin-bottom: 40px"><span class="add_text">Add Ingredient</span></div>
     </div>
     <div class="save_button" style="margin-bottom: 70px" @click="returnToMenu()">
       <span class="save_text">Save & Return</span>
@@ -206,11 +204,14 @@ export default {
   font-size: .714em;
   border: 1.2px solid black;
   border-radius: 20px 20px;
-  padding: 5px 10px 5px 10px;
+  padding: 2px 10px 5px 10px;
 }
 .add_button:active {
   transition: 0s;
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+}
+.add_text {
+  font-size: 10px;
 }
 @media (max-width: 850px) and (min-height: 400px) {
   .container_recipies {

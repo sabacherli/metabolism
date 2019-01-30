@@ -260,19 +260,21 @@ export default new Vuex.Store({
             state.userAddresses[a].calendar[state.pointer.doc].breakfastCalories += Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
           }
         } else {
-          for (let m = 0; m < state.userAddresses[a].calendar[state.pointer.doc].breakfastMembers.length; m++) {
-            if (state.userAddresses[a].calendar[state.pointer.doc].breakfastMembers[m] === state.userID) {
-              alreadyMember = true
-            }
-          }
-          if (alreadyMember === true) {
-            for (var i = state.userAddresses[a].calendar[state.pointer.doc].breakfastMembers.length - 1; i >= 0; i--) {
-              if (state.userAddresses[a].calendar[state.pointer.doc].breakfastMembers[i] === state.userID) {
-                state.userAddresses[a].calendar[state.pointer.doc].breakfastMembers.splice(i, 1)
-                break
+          if (state.userAddresses[a].calendar.length > 0) {
+            for (let m = 0; m < state.userAddresses[a].calendar[state.pointer.doc].breakfastMembers.length; m++) {
+              if (state.userAddresses[a].calendar[state.pointer.doc].breakfastMembers[m] === state.userID) {
+                alreadyMember = true
               }
             }
-            state.userAddresses[a].calendar[state.pointer.doc].breakfastCalories -= Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
+            if (alreadyMember === true) {
+              for (var i = state.userAddresses[a].calendar[state.pointer.doc].breakfastMembers.length - 1; i >= 0; i--) {
+                if (state.userAddresses[a].calendar[state.pointer.doc].breakfastMembers[i] === state.userID) {
+                  state.userAddresses[a].calendar[state.pointer.doc].breakfastMembers.splice(i, 1)
+                  break
+                }
+              }
+              state.userAddresses[a].calendar[state.pointer.doc].breakfastCalories -= Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
+            }
           }
         }
       }
@@ -302,19 +304,21 @@ export default new Vuex.Store({
             state.userAddresses[a].calendar[state.pointer.doc].lunchCalories += Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
           }
         } else {
-          for (let m = 0; m < state.userAddresses[a].calendar[state.pointer.doc].lunchMembers.length; m++) {
-            if (state.userAddresses[a].calendar[state.pointer.doc].lunchMembers[m] === state.userID) {
-              alreadyMember = true
-            }
-          }
-          if (alreadyMember === true) {
-            for (var i = state.userAddresses[a].calendar[state.pointer.doc].lunchMembers.length - 1; i >= 0; i--) {
-              if (state.userAddresses[a].calendar[state.pointer.doc].lunchMembers[i] === state.userID) {
-                state.userAddresses[a].calendar[state.pointer.doc].lunchMembers.splice(i, 1)
-                break
+          if (state.userAddresses[a].calendar.length > 0) {
+            for (let m = 0; m < state.userAddresses[a].calendar[state.pointer.doc].lunchMembers.length; m++) {
+              if (state.userAddresses[a].calendar[state.pointer.doc].lunchMembers[m] === state.userID) {
+                alreadyMember = true
               }
             }
-            state.userAddresses[a].calendar[state.pointer.doc].lunchCalories -= Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
+            if (alreadyMember === true) {
+              for (var i = state.userAddresses[a].calendar[state.pointer.doc].lunchMembers.length - 1; i >= 0; i--) {
+                if (state.userAddresses[a].calendar[state.pointer.doc].lunchMembers[i] === state.userID) {
+                  state.userAddresses[a].calendar[state.pointer.doc].lunchMembers.splice(i, 1)
+                  break
+                }
+              }
+              state.userAddresses[a].calendar[state.pointer.doc].lunchCalories -= Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
+            }
           }
         }
       }
@@ -344,19 +348,21 @@ export default new Vuex.Store({
             state.userAddresses[a].calendar[state.pointer.doc].dinnerMembers += Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
           }
         } else {
-          for (let m = 0; m < state.userAddresses[a].calendar[state.pointer.doc].dinnerMembers.length; m++) {
-            if (state.userAddresses[a].calendar[state.pointer.doc].dinnerMembers[m] === state.userID) {
-              alreadyMember = true
-            }
-          }
-          if (alreadyMember === true) {
-            for (var i = state.userAddresses[a].calendar[state.pointer.doc].dinnerMembers.length - 1; i >= 0; i--) {
-              if (state.userAddresses[a].calendar[state.pointer.doc].dinnerMembers[i] === state.userID) {
-                state.userAddresses[a].calendar[state.pointer.doc].dinnerMembers.splice(i, 1)
-                break
+          if (state.userAddresses[a].calendar.length > 0) {
+            for (let m = 0; m < state.userAddresses[a].calendar[state.pointer.doc].dinnerMembers.length; m++) {
+              if (state.userAddresses[a].calendar[state.pointer.doc].dinnerMembers[m] === state.userID) {
+                alreadyMember = true
               }
             }
-            state.userAddresses[a].calendar[state.pointer.doc].dinnerCalories -= Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
+            if (alreadyMember === true) {
+              for (var i = state.userAddresses[a].calendar[state.pointer.doc].dinnerMembers.length - 1; i >= 0; i--) {
+                if (state.userAddresses[a].calendar[state.pointer.doc].dinnerMembers[i] === state.userID) {
+                  state.userAddresses[a].calendar[state.pointer.doc].dinnerMembers.splice(i, 1)
+                  break
+                }
+              }
+              state.userAddresses[a].calendar[state.pointer.doc].dinnerCalories -= Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
+            }
           }
         }
       }
@@ -665,7 +671,7 @@ export default new Vuex.Store({
         address: '',
         members: [{
           email: state.userEmail,
-          role: 'owner',
+          role: 'Owner',
           uid: state.userID
         }],
         personalList: [],
@@ -740,13 +746,13 @@ export default new Vuex.Store({
       if (confirm('Are you sure you want to remove this place?')) {
         const index = state.userData.addresses.indexOf(place)
         const doc = state.userAddresses[index].address
-        var owner = false
+        var Owner = false
         for (let member = 0; member < state.userAddresses[index].members.length; member++) {
-          if (state.userAddresses[index].members[member].role === 'owner' && state.userAddresses[index].members[member].uid === state.userID) {
-            owner = true
+          if (state.userAddresses[index].members[member].role === 'Owner' && state.userAddresses[index].members[member].uid === state.userID) {
+            Owner = true
           }
         }
-        if (owner) {
+        if (Owner) {
           // eslint-disable-next-line
           new Promise(function (resolve, reject) {
             for (let m = 0; m < state.userAddresses[index].members.length; m++) {
@@ -903,13 +909,13 @@ export default new Vuex.Store({
       if (confirm('Are you sure you want to delete your account permanenently? All owned places will also be deleted.')) {
         var promise1 = new Promise(function (resolve, reject) {
           for (let index = 0; index < state.userAddresses.length; index++) {
-            var owner = false
+            var Owner = false
             for (let member = 0; member < state.userAddresses[index].members.length; member++) {
-              if (state.userAddresses[index].members[member].role === 'owner' && state.userAddresses[index].members[member].uid === state.userID) {
-                owner = true
+              if (state.userAddresses[index].members[member].role === 'Owner' && state.userAddresses[index].members[member].uid === state.userID) {
+                Owner = true
               }
             }
-            if (owner) {
+            if (Owner) {
               var promise2 = new Promise(function (resolve, reject) {
                 for (let m = 0; m < state.userAddresses[index].members.length; m++) {
                   // Gets the user data of each member and saves it into tempArray.
@@ -1292,7 +1298,7 @@ export default new Vuex.Store({
       db.collection('addresses').add({
         members: [{
           email: obj.user.email,
-          role: 'owner',
+          role: 'Owner',
           uid: obj.user.uid
         }],
         personalList: [],
