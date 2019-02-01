@@ -216,6 +216,10 @@
           <br>
         </div>
         <!-- eslint-disable-next-line -->
+        <div class="purchase_button" @click="removeFocus()" style="margin-top: 20px; margin-bottom: 40px">
+          <span class="purchase_text">Edit Place</span>
+        </div>
+        <!-- eslint-disable-next-line -->
         <div class="" v-if="checkOwner(index)">
           <template v-for="member in userAddresses[index].members">
             <!-- eslint-disable-next-line -->
@@ -399,76 +403,54 @@ export default {
     },
     addMember (place) {
       const collectionRef = db.collection('users')
+      const userEmail = this.userEmail
+      const localMember = this.newMember
       collectionRef.where('info.email', '==', this.newMember).get()
         .then(snapshot => {
           snapshot.forEach(doc => {
             if (doc.exists) {
-              const docRef = doc.id
-              // Adds place to addresses array of new member.
-              const localEmail = this.userEmail
-              var memberData = ''
-              db.collection('users').doc(docRef).get()
-                .then(function (doc) {
-                  if (doc.exists) {
-                    memberData = doc.data()
-                    // Adds the new place to addresses
-                    memberData.addresses.push({
-                      address: place.address,
-                      isActive: false,
-                      name: 'Invited by ' + localEmail
-                    })
-                    // Saves the new  data to the user's document.
-                    db.collection('users').doc(docRef).set(memberData)
-                      .then(function () {
-                        console.log('Users document successfully written!')
+              new Promise(function (resolve, reject) {
+                const docRef = doc.id
+                // Adds place to addresses array of new member.
+                const localEmail = userEmail
+                var memberData = ''
+                db.collection('users').doc(docRef).get()
+                  .then(function (doc) {
+                    if (doc.exists) {
+                      memberData = doc.data()
+                      // Adds the new place to addresses
+                      memberData.addresses.push({
+                        address: place.address,
+                        isActive: false,
+                        isDefault: false,
+                        name: 'Invited by ' + localEmail
                       })
-                      .catch(function (error) {
-                        console.error('Error writing document: ', error)
+                      // Saves the new  data to the user's document.
+                      db.collection('users').doc(docRef).set(memberData)
+                    }
+                  })
+                // Adds new member to members array of address with role and uid.
+                db.collection('addresses').doc(place.address).get()
+                  .then(function (doc) {
+                    if (doc.exists) {
+                      const addressData = doc.data()
+                      addressData.members.push({
+                        email: localMember,
+                        role: 'Member',
+                        uid: memberData.info.uid
                       })
-                  } else {
-                    // doc.data() will be undefined in this case
-                    console.log('No such document.')
-                  }
+                      db.collection('addresses').doc(place.address).set(addressData)
+                      resolve()
+                    }
+                  })
+              })
+                .then(function () {
+                  store.commit('getData')
                 })
-                .catch(function (error) {
-                  console.log('Error getting document:', error)
-                })
-              // Adds new member to members array of address with role and uid.
-              const localMember = this.newMember
-              db.collection('addresses').doc(place.address).get()
-                .then(function (doc) {
-                  if (doc.exists) {
-                    const addressData = doc.data()
-                    console.log('Adding new data to members array.')
-                    addressData.members.push({
-                      email: localMember,
-                      role: 'Member',
-                      uid: memberData.info.uid
-                    })
-                    console.log('Saving new address document')
-                    db.collection('addresses').doc(place.address).set(addressData)
-                      .then(function () {
-                        console.log('Addresses document successfully written!')
-                      })
-                      .catch(function (error) {
-                        console.error('Error writing document: ', error)
-                      })
-                  } else {
-                  // doc.data() will be undefined in this case
-                    console.log('No such document.')
-                  }
-                })
-                .catch(function (error) {
-                  console.log('Error getting document:', error)
-                })
-              store.commit('getData')
-              this.newMember = ''
             }
           })
         })
-        .catch(err => {
-          console.log('Error getting documents', err)
-        })
+      this.newMember = ''
     },
     removeMember (member, index) {
       if (confirm('Are you sure you want to remove this member?')) {

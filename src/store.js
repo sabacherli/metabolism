@@ -655,7 +655,8 @@ export default new Vuex.Store({
         }
       }
     },
-    addPlace (state, newPlace, currentYear) {
+    addPlace (state, newPlace) {
+      const currentYear = moment().format('YYYY')
       const twoYears = []
       for (let y = 0; y < 2; y++) {
         for (let month = 0; month < 12; month++) {
@@ -742,243 +743,103 @@ export default new Vuex.Store({
             })
         })
     },
-    deletePlace2 (state, place) {
+    deletePlace (state, place) {
       if (confirm('Are you sure you want to remove this place?')) {
-        const index = state.userData.address.indexOf(place)
+        const index = state.userData.addresses.indexOf(place)
         const address = state.userAddresses[index].address
         var Owner = false
-        for (let member = 0; member < state.userAddresses[index].members.length; member++) {
-          if (state.userAddresses[index].members[member].role === 'Owner' && state.userAddresses[index].members[member].uid === state.userID) {
+        for (let m = 0; m < state.userAddresses[index].members.length; m++) {
+          if (state.userAddresses[index].members[m].role === 'Owner' && state.userAddresses[index].members[m].uid === state.userID) {
             Owner = true
           }
         }
         if (Owner) {
-          for (let member = 0; member < state.userAddresses[index].members.length; member++) {
-            const docRef = db.collection('users').doc(state.userAddresses[index].members[m].uid)
-            var tempData = ''
-            docRef.get()
-              .then((doc) => {
-                if (doc.exists) {
-                  tempData = doc.data()
-                  // Deletes the address out of the addressess record.
-                  for (let a = 0; a < tempData.addresses.length; a++) {
-                    if (tempData.addresses[a].address === state.userAddresses[index].address) {
-                      tempData.addresses.splice(a, 1)
-                    }
-                  }
-                  db.collection('users').doc(state.userAddresses[index].members[m].uid).set(tempData)
-                }
-              })
-          }
-          db.collection('addresses').doc(address).delete()
-          state.userAddresses.splice(index, 1)
-          state.userData.addresses.splice(index, 1)
-        } else {
-          state.userData.addresses.splice(index, 1)
-          for (let member = 0; member < state.userAddresses[index].members.length; member++) {
-            if (state.userAddresses[index].members[member].uid === state.userID) {
-              state.userAddresses[index].members.splice(member, 1)
-            }
-          }
-        }
-      }
-    },
-    // deletePlace (state, place) {
-    //   if (confirm('Are you sure you want to remove this place?')) {
-    //     const index = state.userData.addresses.indexOf(place)
-    //     const doc = state.userAddresses[index].address
-    //     var Owner = false
-    //     for (let member = 0; member < state.userAddresses[index].members.length; member++) {
-    //       if (state.userAddresses[index].members[member].role === 'Owner' && state.userAddresses[index].members[member].uid === state.userID) {
-    //         Owner = true
-    //       }
-    //     }
-    //     if (Owner) {
-    //       // eslint-disable-next-line
-    //       new Promise(function (resolve, reject) {
-    //         for (let m = 0; m < state.userAddresses[index].members.length; m++) {
-    //           // Gets the user data of each member and saves it into tempArray.
-    //           const docRef = db.collection('users').doc(state.userAddresses[index].members[m].uid)
-    //           var tempData = ''
-    //           docRef.get()
-    //             .then((doc) => {
-    //               if (doc.exists) {
-    //                 // eslint-disable-next-line
-    //                 new Promise(function (resolve, reject) {
-    //                   tempData = doc.data()
-    //                   resolve()
-    //                 })
-    //                   .then(function () {
-    //                   // Deletes the address out of the addressess record.
-    //                     for (let a = 0; a < tempData.addresses.length; a++) {
-    //                       if (tempData.addresses[a].address === state.userAddresses[index].address) {
-    //                         tempData.addresses.splice(a, 1)
-    //                       }
-    //                     }
-    //                     // Saves the tempArray back into the edited users' document.
-    //                     db.collection('users').doc(state.userAddresses[index].members[m].uid).set(tempData)
-    //                     resolve()
-    //                   })
-    //               } else {
-    //                 // doc.data() will be undefined in this case
-    //                 console.log('doc.exists is false')
-    //               }
-    //             })
-    //             .catch((error) => {
-    //               console.log('Error getting document:', error)
-    //             })
-    //         }
-    //       })
-    //         .then(function () {
-    //         // Deletes the address document in addresses collection.
-    //           db.collection('addresses').doc(doc).delete()
-    //             .then(() => {
-    //               const docRef = db.collection('users').doc(state.userID)
-    //               state.userData = ''
-    //               docRef.get()
-    //                 .then((doc) => {
-    //                   state.userData = doc.data()
-    //                   // eslint-disable-next-line
-    //                   new Promise(function (resolve, reject) {
-    //                     // eslint-disable-next-line
-    //                     new Promise(function (resolve, reject) {
-    //                       state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
-    //                       const calRef = db.collection('users').doc(state.userID).collection('calendar')
-    //                       calRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
-    //                         .then(function (querySnapshot) {
-    //                           querySnapshot.forEach((doc) => {
-    //                             state.userData.calendar.push(doc.data())
-    //                           })
-    //                           // eslint-disable-next-line
-    //                           new Promise(function (resolve, reject) {
-    //                             state.userAddresses = []
-    //                             // goes through addresses of the user
-    //                             for (let a = 0; a < state.userData.addresses.length; a++) {
-    //                               const addressRef = db.collection('addresses').doc(state.userData.addresses[a].address)
-    //                               addressRef.get()
-    //                                 .then((doc) => {
-    //                                   if (doc.exists) {
-    //                                     state.userAddresses.push(doc.data())
-    //                                   }
-    //                                 })
-    //                                 .catch((error) => {
-    //                                   console.log('Error in getting user addresses: ', error)
-    //                                 })
-    //                             }
-    //                             for (let a = 0; a < state.userData.addresses.length; a++) {
-    //                               state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
-    //                               const calRef = db.collection('addresses').doc(state.userData.addresses[a].address).collection('calendar')
-    //                               calRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
-    //                                 .then((querySnapshot) => {
-    //                                   querySnapshot.forEach((doc) => {
-    //                                     // doc.data() is never undefined for query doc snapshots
-    //                                     state.userAddresses[a].calendar.push(doc.data())
-    //                                   })
-    //                                 })
-    //                                 .catch((error) => {
-    //                                   console.log('Error getting documents: ', error)
-    //                                 })
-    //                             }
-    //                           })
-    //                         })
-    //                         .catch((error) => {
-    //                           console.log('Error in getting user calendar: ', error)
-    //                         })
-    //                     })
-    //                   })
-    //                 })
-    //                 .catch((error) => {
-    //                   console.log('Error in getting user data: ', error)
-    //                 })
-    //             })
-    //             .catch((error) => {
-    //               console.log('Error removing document: ', error)
-    //             })
-    //         })
-    //         .catch((error) => {
-    //           console.log('Error: ', error)
-    //         })
-    //     } else {
-    //       for (let m = 0; m < state.userAddresses[index].members.length; m++) {
-    //         if (state.userAddresses[index].members[m].uid === state.userID) {
-    //           state.userAddresses[index].members.splice(m, 1)
-    //         }
-    //       }
-    //       state.userData.addresses.splice(index, 1)
-    //       if (state.userID !== 'default') {
-    //         new Promise(function (resolve, reject) {
-    //           for (let d = 0; d < state.userData.calendar.length; d++) {
-    //             db.collection('users').doc(state.userID).collection('calendar').doc(state.userData.calendar[d].date.toString())
-    //               .set(state.userData.calendar[d])
-    //           }
-    //           state.userData.calendar = []
-    //           if (state.userData.calendar.length === 0) {
-    //             resolve()
-    //           }
-    //         })
-    //           .then(function () {
-    //             new Promise(function (resolve, reject) {
-    //               db.collection('users').doc(state.userID).set(state.userData)
-    //               resolve()
-    //             })
-    //               .then(function () {
-    //                 // db.collection('users').doc(state.defaultID).set(state.defaultData)
-    //                 for (let a = 0; a < state.userAddresses.length; a++) {
-    //                   new Promise(function (resolve, reject) {
-    //                     if (state.userAddresses[a].calendar.length > 0) {
-    //                       for (let d = 0; d < state.userAddresses[a].calendar.length; d++) {
-    //                         db.collection('addresses').doc(state.userAddresses[a].address).collection('calendar').doc(state.userAddresses[a].calendar[d].date.toString())
-    //                           .set(state.userAddresses[a].calendar[d])
-    //                       }
-    //                       state.userAddresses[a].calendar = []
-    //                       if (state.userAddresses[a].calendar.length === 0) {
-    //                         resolve()
-    //                       }
-    //                     }
-    //                   })
-    //                     .then(function () {
-    //                       db.collection('addresses').doc(state.userAddresses[a].address).set(state.userAddresses[a])
-    //                     })
-    //                 }
-    //               })
-    //           })
-    //       }
-    //     }
-    //   }
-    // },
-    deteletAccount2 (state, user) {
-      if (confirm('Are you sure you want to delete your account permanenently? All owned places will also be deleted.')) {
-        for (let index = 0; index < state.userData.addresses.length; index++) {
-          const address = state.userAddresses[index].address
-          var Owner = false
-          for (let member = 0; member < state.userAddresses[index].members.length; member++) {
-            if (state.userAddresses[index].members[member].role === 'Owner' && state.userAddresses[index].members[member].uid === state.userID) {
-              Owner = true
-            }
-          }
-          if (Owner) {
-            for (let member = 0; member < state.userAddresses[index].members.length; member++) {
+          new Promise(function (resolve, reject) {
+            for (let m = 0; m < state.userAddresses[index].members.length; m++) {
               const docRef = db.collection('users').doc(state.userAddresses[index].members[m].uid)
               var tempData = ''
               docRef.get()
                 .then((doc) => {
                   if (doc.exists) {
-                    tempData = doc.data()
-                    // Deletes the address out of the addressess record.
-                    for (let a = 0; a < tempData.addresses.length; a++) {
-                      if (tempData.addresses[a].address === state.userAddresses[index].address) {
-                        tempData.addresses.splice(a, 1)
-                      }
-                    }
-                    db.collection('users').doc(state.userAddresses[index].members[m].uid).set(tempData)
+                    new Promise(function (resolve, reject) {
+                      tempData = doc.data()
+                      resolve()
+                    })
+                      .then(function () {
+                        // Deletes the address out of the addressess record.
+                        for (let a = 0; a < tempData.addresses.length; a++) {
+                          if (tempData.addresses[a].address === address) {
+                            tempData.addresses.splice(a, 1)
+                          }
+                        }
+                        docRef.set(tempData)
+                      })
                   }
                 })
             }
-            db.collection('addresses').doc(address).delete()
+            resolve()
+          })
+            .then(function () {
+              db.collection('addresses').doc(address).delete()
+              state.userAddresses.splice(index, 1)
+              state.userData.addresses.splice(index, 1)
+            })
+        } else {
+          state.userData.addresses.splice(index, 1)
+          for (let m = 0; m < state.userAddresses[index].members.length; m++) {
+            if (state.userAddresses[index].members[m].uid === state.userID) {
+              state.userAddresses[index].members.splice(m, 1)
+            }
+          }
+        }
+      }
+    },
+    deleteAccount (state, user) {
+      if (confirm('Are you sure you want to delete your account permanenently? All owned places will also be deleted.')) {
+        for (let index = 0; index < state.userData.addresses.length; index++) {
+          const address = state.userAddresses[index].address
+          var Owner = false
+          for (let m = 0; m < state.userAddresses[index].members.length; m++) {
+            if (state.userAddresses[index].members[m].role === 'Owner' && state.userAddresses[index].members[m].uid === state.userID) {
+              Owner = true
+            }
+          }
+          if (Owner) {
+            new Promise(function (resolve, reject) {
+              for (let m = 0; m < state.userAddresses[index].members.length; m++) {
+                const docRef = db.collection('users').doc(state.userAddresses[index].members[m].uid)
+                var tempData = ''
+                docRef.get()
+                  .then((doc) => {
+                    if (doc.exists) {
+                      new Promise(function (resolve, reject) {
+                        tempData = doc.data()
+                        resolve()
+                      })
+                        .then(function () {
+                          // Deletes the address out of the addressess record.
+                          for (let a = 0; a < tempData.addresses.length; a++) {
+                            if (tempData.addresses[a].address === address) {
+                              tempData.addresses.splice(a, 1)
+                            }
+                          }
+                          docRef.set(tempData)
+                        })
+                    }
+                  })
+              }
+              resolve()
+            })
+              .then(function () {
+                db.collection('addresses').doc(address).delete()
+                state.userAddresses.splice(index, 1)
+                state.userData.addresses.splice(index, 1)
+              })
           } else {
-            for (let member = 0; member < state.userAddresses[index].members.length; member++) {
-              if (state.userAddresses[index].members[member].uid === state.userID) {
-                state.userAddresses[index].members.splice(member, 1)
+            state.userData.addresses.splice(index, 1)
+            for (let m = 0; m < state.userAddresses[index].members.length; m++) {
+              if (state.userAddresses[index].members[m].uid === state.userID) {
+                state.userAddresses[index].members.splice(m, 1)
               }
             }
           }
@@ -988,108 +849,6 @@ export default new Vuex.Store({
         user.delete()
       }
     },
-    // deleteAccount (state, user) {
-    //   if (confirm('Are you sure you want to delete your account permanenently? All owned places will also be deleted.')) {
-    //     var promise1 = new Promise(function (resolve, reject) {
-    //       for (let index = 0; index < state.userAddresses.length; index++) {
-    //         var Owner = false
-    //         for (let member = 0; member < state.userAddresses[index].members.length; member++) {
-    //           if (state.userAddresses[index].members[member].role === 'Owner' && state.userAddresses[index].members[member].uid === state.userID) {
-    //             Owner = true
-    //           }
-    //         }
-    //         if (Owner) {
-    //           for (let m = 0; m < state.userAddresses[index].members.length; m++) {
-    //             // Gets the user data of each member and saves it into tempArray.
-    //             const docRef = db.collection('users').doc(state.userAddresses[index].members[m].uid)
-    //             var tempData = ''
-    //             docRef.get()
-    //               .then((doc) => {
-    //                 if (doc.exists) {
-    //                   var promise5 = new Promise(function (resolve, reject) {
-    //                     tempData = doc.data()
-    //                     resolve()
-    //                   })
-    //                   promise5.then(function () {
-    //                     // Deletes the address out of the addressess record.
-    //                     for (let a = 0; a < tempData.addresses.length; a++) {
-    //                       if (tempData.addresses[a].address === state.userAddresses[index].address) {
-    //                         tempData.addresses.splice(a, 1)
-    //                       }
-    //                     }
-    //                     // Saves the tempArray back into the edited users' document.
-    //                     db.collection('users').doc(state.userAddresses[index].members[m].uid).set(tempData)
-    //                     resolve()
-    //                   })
-    //               })
-    //           }
-    //           // Deletes the address document in addresses collection.
-    //           var batch = db.batch()
-    //           var collectionRef = db.collection('addresses').doc(state.userAddresses[index].address).collection('calendar')
-    //           batch.delete(collectionRef)
-    //           db.collection('addresses').doc(state.userAddresses[index].address).delete()
-    //             .then(() => {
-    //               console.log('Document successfully delete.')
-    //             })
-    //         } else {
-    //           for (let m = 0; m < state.userAddresses[index].members.length; m++) {
-    //             if (state.userAddresses[index].members[m].uid === state.userID) {
-    //               state.userAddresses[index].members.splice(m, 1)
-    //             }
-    //           }
-    //           state.userData.addresses.splice(index, 1)
-    //         }
-    //       }
-    //     })
-    //     promise1.then(function () {
-    //       const obj = JSON.parse(JSON.stringify(user))
-    //       var promise3 = new Promise(function (resolve, reject) {
-    //         var batch = db.batch()
-    //         var collectionRef = db.collection('users').doc(obj.uid).collection('calendar')
-    //         batch.delete(collectionRef)
-    //         // collectionRef.get()
-    //         //   .then(function (querySnapshot) {
-    //         //     querySnapshot.forEach(function (doc) {
-    //         //       // deletes all the documents in collection calendar
-    //         //       collectionRef.doc(doc.id).delete()
-    //         //         .then(function () {
-    //         //           console.log('Calendar document successfully deleted.')
-    //         //         })
-    //         //         .catch(function (error) {
-    //         //           console.error('Error removing document: ', error)
-    //         //         })
-    //         //     })
-    //         //   })
-    //         resolve()
-    //       })
-    //       promise3.then(function () {
-    //         var promise4 = new Promise(function (resolve, reject) {
-    //           // deletes the user data in the main document
-    //           db.collection('users').doc(obj.uid).delete()
-    //             .then(function () {
-    //               console.log('User data successfully deleted.')
-    //             })
-    //             .catch(function (error) {
-    //               console.error('Error removing document: ', error)
-    //             })
-    //           resolve()
-    //         })
-    //         promise4.then(function () {
-    //           state.userID = 'default'
-    //           state.userEmail = 'default'
-    //           // deletes the user account in firebase authentication
-    //           user.delete()
-    //             .then(function () {
-    //               // User deleted.
-    //             }).catch(function (error) {
-    //               // An error happened.
-    //               console.log(error.message)
-    //             })
-    //         })
-    //       })
-    //     })
-    //   }
-    // },
     createShoppingList (state) {
       for (let a = 0; a < state.userAddresses.length; a++) {
         state.userAddresses[a].shoppingList = []
@@ -1497,7 +1256,7 @@ export default new Vuex.Store({
                   .then((doc) => {
                     if (doc.exists) {
                       state.userAddresses.push(doc.data())
-                      const today = moment().format('YYYYMM')
+                      var today = moment().format('YYYYMM')
                       for (var month = 0; month < 12; month++) {
                         // adds days to user data
                         if (!state.userData.months.includes((Number(today) + Number(month)).toString())) {
@@ -1536,21 +1295,24 @@ export default new Vuex.Store({
                           state.userData.months.push(moment().add(month, 'months').format('YYYYMM'))
                         }
                       }
+                      var currentYear = moment().format('YYYY')
                       var months = []
                       for (let m = 0; m < state.userAddresses[a].months.length; m++) {
                         months.push(state.userAddresses[a].months[m].month)
                       }
-                      for (var month2 = 0; month2 < 24; month2++) {
-                        // adds months to user address
-                        if (!months.includes((Number(today) + Number(month2)).toString())) {
-                          state.userAddresses[a].months.push({
-                            month: (Number(today) + Number(month2)).toString(),
-                            display: moment((Number(today) + Number(month2)).toString(), 'YYYYMM').format('MMM'),
-                            isActive: false,
-                            isPurchased: false
-                          })
-                          db.collection('addresses').doc(state.userAddresses[a].address)
-                            .set(state.userAddresses[a])
+                      for (let y = 0; y < 2; y++) {
+                        for (let month2 = 0; month2 < 12; month2++) {
+                          // adds months to user address
+                          if (!months.includes(moment().year(Number(currentYear)).month(month2).add(y, 'years').format('YYYYMM'))) {
+                            state.userAddresses[a].months.push({
+                              month: moment().year(Number(currentYear)).month(month2).add(y, 'years').format('YYYYMM'),
+                              display: moment().year(Number(currentYear)).month(month2).add(y, 'years').format('MMM'),
+                              isActive: false,
+                              isPurchased: false
+                            })
+                            db.collection('addresses').doc(state.userAddresses[a].address)
+                              .set(state.userAddresses[a])
+                          }
                         }
                       }
                       state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
