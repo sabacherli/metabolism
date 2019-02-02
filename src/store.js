@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import moment from 'moment'
 import db from './database'
+import router from './router'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 
@@ -1205,23 +1206,129 @@ export default new Vuex.Store({
                 .set(dayTemplate)
             }
           }
-          firebase.auth().useDeviceLanguage()
-          firebase.auth().currentUser.sendEmailVerification()
-            .then(function () {
-              // Email sent.
-              alert('Verification email sent. Please verify your email address and then log in.')
-              firebase.auth().signOut()
-                .then(function () {
-                // Sign-out successful.
-                }).catch(function (error) {
-                  // An error happened.
-                  console.log(error.code)
+          if (obj.user.emailVerified === false) {
+            firebase.auth().useDeviceLanguage()
+            firebase.auth().currentUser.sendEmailVerification()
+              .then(function () {
+                // Email sent.
+                alert('Verification email sent. Please verify your email address and then log in.')
+                firebase.auth().signOut()
+                  .then(function () {
+                    // Sign-out successful.
+                    router.push('/login')
+                  }).catch(function (error) {
+                    // An error happened.
+                    console.log(error.code)
+                  })
+              })
+              .catch(function (error) {
+                // An error happened.
+                console.log(error.message)
+              })
+          } else {
+            var user = firebase.auth().currentUser
+            state.userID = user.uid
+            state.userEmail = user.email
+            // getData ()
+            state.userData = ''
+            const docRef = db.collection('users').doc(state.userID)
+            docRef.get()
+              .then((doc) => {
+                // eslint-disable-next-line
+                new Promise(function (resolve, reject) {
+                  state.userData = doc.data()
+                  resolve()
                 })
-            })
-            .catch(function (error) {
-              // An error happened.
-              console.log(error.message)
-            })
+                  .then(function () {
+                    state.userAddresses = []
+                    const calRef = db.collection('users').doc(state.userID).collection('calendar')
+                    state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
+                    calRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
+                      .then(function (querySnapshot) {
+                        querySnapshot.forEach((doc) => {
+                          state.userData.calendar.push(doc.data())
+                        })
+                      })
+                    for (let a = 0; a < state.userData.addresses.length; a++) {
+                      const addressRef = db.collection('addresses').doc(state.userData.addresses[a].address)
+                      addressRef.get()
+                        .then((doc) => {
+                          if (doc.exists) {
+                            state.userAddresses.push(doc.data())
+                            var today = moment().format('YYYYMM')
+                            for (var month = 0; month < 12; month++) {
+                              // adds days to user data
+                              if (!state.userData.months.includes((Number(today) + Number(month)).toString())) {
+                                const daysInMonth = moment().add(month, 'months').daysInMonth()
+                                const year = moment().add(month, 'months').format('YYYY')
+                                const mon = moment().add(month, 'months').format('MM')
+                                for (let d = 0; d < daysInMonth; d++) {
+                                  const day = moment().year(year).month(mon).subtract(1, 'M')
+                                    .startOf('month')
+                                    .add(d, 'day')
+                                    .format('DD')
+                                  const docName = moment().year(year).month(mon).subtract(1, 'M')
+                                    .date(day)
+                                    .format('YYYYMMDD')
+                                  const dayTemplate = {
+                                    date: Number(moment().year(year).month(mon).subtract(1, 'M')
+                                      .date(day)
+                                      .format('YYYYMMDD')),
+                                    day,
+                                    dayname: moment().isoWeekday(moment().year(year).month(mon).subtract(1, 'M')
+                                      .date(day)
+                                      .weekday()).format('dddd'),
+                                    breakfast: 'Breakfast',
+                                    breakfastLocation: 'Home',
+                                    breakfastAddress: state.userAddresses[0].address,
+                                    lunch: 'Lunch',
+                                    lunchLocation: 'Home',
+                                    lunchAddress: state.userAddresses[0].address,
+                                    dinner: 'Dinner',
+                                    dinnerLocation: 'Home',
+                                    dinnerAddress: state.userAddresses[0].address
+                                  }
+                                  db.collection('users').doc(state.userID).collection('calendar').doc(docName)
+                                    .set(dayTemplate)
+                                }
+                                state.userData.months.push(moment().add(month, 'months').format('YYYYMM'))
+                              }
+                            }
+                            var currentYear = moment().format('YYYY')
+                            var months = []
+                            for (let m = 0; m < state.userAddresses[a].months.length; m++) {
+                              months.push(state.userAddresses[a].months[m].month)
+                            }
+                            for (let y = 0; y < 2; y++) {
+                              for (let month2 = 0; month2 < 12; month2++) {
+                                // adds months to user address
+                                if (!months.includes(moment().year(Number(currentYear)).month(month2).add(y, 'years').format('YYYYMM'))) {
+                                  state.userAddresses[a].months.push({
+                                    month: moment().year(Number(currentYear)).month(month2).add(y, 'years').format('YYYYMM'),
+                                    display: moment().year(Number(currentYear)).month(month2).add(y, 'years').format('MMM'),
+                                    isActive: false,
+                                    isPurchased: false
+                                  })
+                                  db.collection('addresses').doc(state.userAddresses[a].address)
+                                    .set(state.userAddresses[a])
+                                }
+                              }
+                            }
+                            state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
+                            const calAddressRef = db.collection('addresses').doc(state.userData.addresses[a].address).collection('calendar')
+                            calAddressRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.userData.info.shoppingListLength, 'days').format('YYYYMMDD'))).orderBy('date').get()
+                              .then(function (querySnapshot) {
+                                querySnapshot.forEach((doc) => {
+                                  state.userAddresses[a].calendar.push(doc.data())
+                                })
+                              })
+                          }
+                        })
+                    }
+                  })
+              })
+            router.push('/calendar')
+          }
         })
         .catch(function (error) {
           console.log(error.code)

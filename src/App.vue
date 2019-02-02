@@ -14,8 +14,8 @@ import { mapState } from 'vuex'
 
 export default {
   created () {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user && user.emailVerified) {
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user && user.emailVerified & user.metadata.creationTime !== user.metadata.lastSignInTime) {
         store.commit('setUser', user)
       } else {
         // User is signed out.

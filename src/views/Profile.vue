@@ -326,7 +326,7 @@ import 'firebase/auth'
 import db from '@/database.js'
 import moment from 'moment'
 import store from '../store'
-import router from 'vue-router'
+import router from '../router'
 
 export default {
   name: 'Profile',
@@ -591,7 +591,7 @@ export default {
             resolve()
           })
             .then(function () {
-              router.push('register')
+              router.push('/register')
               store.commit('setPage', 'register')
             })
         })

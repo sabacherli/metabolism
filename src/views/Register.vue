@@ -13,7 +13,7 @@
       <div class="container_icons">
         <img src="../assets/icons8-email.png" alt="Email" class="icon" @click="focusEmailInput()">
         <img src="../assets/icons8-google.png" alt="Google" class="icon" @click="createUserWithGoogle()">
-        <img src="../assets/icons8-twitter.png" alt="Twitter" class="icon" @click="createUserWithTwitter()">
+        <!-- <img src="../assets/icons8-twitter.png" alt="Twitter" class="icon" @click="createUserWithTwitter()"> -->
       </div>
       <div class="container_register">
         <!-- <a><img id="link_email" style="transform: translateX(100%)" :src="require('@/assets/icons8-new-post-filled-100.png')" alt="Email"></a> -->
@@ -37,7 +37,9 @@
 import { mapState } from 'vuex'
 import firebase from 'firebase/app'
 import 'firebase/auth'
+import store from '../store'
 import moment from 'moment'
+import router from '../router'
 
 export default {
   name: 'Register',
@@ -49,10 +51,10 @@ export default {
     }
   },
   created () {
-    // this.$store.commit('populateMonthList', this.currentYear)
+    // store.commit('populateMonthList', this.currentYear)
   },
   beforeMount () {
-    this.$store.commit('setPage', 'register')
+    store.commit('setPage', 'register')
   },
   computed: {
     ...mapState([
@@ -66,9 +68,7 @@ export default {
     createUser () {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
         .then(user => {
-          this.$store.commit('createUser', user)
-          // still requires the verification of the email before the user can log in
-          this.$router.push('/login')
+          store.commit('createUser', user)
         })
         .catch(function (error) {
           alert(error)
@@ -79,22 +79,11 @@ export default {
       var provider = new firebase.auth.GoogleAuthProvider()
       firebase.auth().signInWithPopup(provider)
         .then(function (result) {
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          // var token = result.credential.accessToken
-          // The signed-in user info.
-          // var user = result.user
-          this.$router.push('calendar')
-          // ...
+          if (result.additionalUserInfo.isNewUser) {
+            store.commit('createUser', result)
+          }
         })
         .catch(function (error) {
-          // Handle Errors here.
-          // var errorCode = error.code
-          // var errorMessage = error.message
-          // The email of the user's account used.
-          // var email = error.email
-          // The firebase.auth.AuthCredential type that was used.
-          // var credential = error.credential
-          // ...
           console.log('Error: ', error)
         })
     },
@@ -102,12 +91,13 @@ export default {
       var provider = new firebase.auth.TwitterAuthProvider()
       firebase.auth().signInWithPopup(provider)
         .then(function (result) {
+          // The signed-in user info.
+          store.commit('createUser', result)
+          router.push('/calendar')
           // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
           // You can use these server side with your app's credentials to access the Twitter API.
           // var token = result.credential.accessToken
           // var secret = result.credential.secret
-          // The signed-in user info.
-          // var user = result.user
           // ...
         })
         .catch(function (error) {

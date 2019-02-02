@@ -10,7 +10,7 @@
       <div class="container_icons">
         <img src="../assets/icons8-email.png" alt="Email" class="icon" @click="focusEmailInput()">
         <img src="../assets/icons8-google.png" alt="Google" class="icon" @click="signInWithGoogle()">
-        <img src="../assets/icons8-twitter.png" alt="Twitter" class="icon" @click="signInWithTwitter()">
+        <!-- <img src="../assets/icons8-twitter.png" alt="Twitter" class="icon" @click="signInWithTwitter()"> -->
       </div>
       <div class="container_login">
         <form class="" action="index.html" method="post">
@@ -30,11 +30,13 @@
 import { mapState } from 'vuex'
 import firebase from 'firebase/app'
 import 'firebase/auth'
+import store from '../store'
+import router from '../router'
 
 export default {
   name: 'Login',
   created () {
-    this.$store.commit('setPage', 'login')
+    store.commit('setPage', 'login')
   },
   data () {
     return {
@@ -58,13 +60,12 @@ export default {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password)
         .then(user => {
           if (firebase.auth().currentUser.emailVerified) {
-            this.$router.push('calendar')
+            router.push('/calendar')
           } else {
             alert('You need to verify your email before you can log in.')
           }
         })
         .catch(error => {
-          alert(error.message)
           console.log(error.code)
         })
     },
@@ -72,22 +73,9 @@ export default {
       var provider = new firebase.auth.GoogleAuthProvider()
       firebase.auth().signInWithPopup(provider)
         .then(function (result) {
-          // This gives you a Google Access Token. You can use it to access the Google API.
-          // var token = result.credential.accessToken
-          // The signed-in user info.
-          // var user = result.user
-          this.$router.push('calendar')
-          // ...
+          router.push('/calendar')
         })
         .catch(function (error) {
-          // Handle Errors here.
-          // var errorCode = error.code
-          // var errorMessage = error.message
-          // The email of the user's account used.
-          // var email = error.email
-          // The firebase.auth.AuthCredential type that was used.
-          // var credential = error.credential
-          // ...
           console.log('Error: ', error)
         })
     },
@@ -95,23 +83,9 @@ export default {
       var provider = new firebase.auth.TwitterAuthProvider()
       firebase.auth().signInWithPopup(provider)
         .then(function (result) {
-          // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
-          // You can use these server side with your app's credentials to access the Twitter API.
-          // var token = result.credential.accessToken
-          // var secret = result.credential.secret
-          // The signed-in user info.
-          // var user = result.user
-          // ...
+          router.push('/calendar')
         })
         .catch(function (error) {
-          // Handle Errors here.
-          // var errorCode = error.code
-          // var errorMessage = error.message
-          // The email of the user's account used.
-          // var email = error.email
-          // The firebase.auth.AuthCredential type that was used.
-          // var credential = error.credential
-          // ...
           console.log('Error: ', error)
         })
     },
