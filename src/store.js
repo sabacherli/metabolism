@@ -375,10 +375,130 @@ export default new Vuex.Store({
       }
     },
     setDefault (state, index) {
+      // change default isActive
+      var oldDefault = null
       for (var i = 0; i < state.userData.addresses.length; i++) {
-        Vue.set(state.userData.addresses[i], 'isDefault', false)
+        if (state.userData.addresses[i].isDefault) {
+          oldDefault = state.userData.addresses[i].address
+          Vue.set(state.userData.addresses[i], 'isDefault', false)
+        }
       }
       Vue.set(state.userData.addresses[index], 'isDefault', true)
+      // edit user calendar
+      var changeBreakfastAddress = []
+      var changeLunchAddress = []
+      var changeDinnerAddress = []
+      var tempUserCal = []
+      const userCalRef = db.collection('users').doc(state.userID).collection('calendar')
+      userCalRef.where('date', '>=', Number(moment().format('YYYYMMDD'))).get()
+        .then((querySnapshot) => {
+          new Promise(function (resolve, reject) {
+            querySnapshot.forEach((doc) => {
+              // doc.data() is never undefined for query doc snapshots
+              tempUserCal.push(doc.data())
+            })
+            resolve()
+          })
+            .then(function () {
+              new Promise(function (resolve, reject) {
+                for (let d = 0; d < tempUserCal.length; d++) {
+                  if (tempUserCal[d].breakfastAddress === oldDefault) {
+                    changeBreakfastAddress.push(tempUserCal[d].date)
+                    Vue.set(tempUserCal[d], 'breakfastAddress', state.userData.addresses[index].address)
+                    Vue.set(tempUserCal[d], 'breakfastLocation', state.userData.addresses[index].name)
+                  }
+                  if (tempUserCal[d].lunchAddress === oldDefault) {
+                    changeLunchAddress.push(tempUserCal[d].date)
+                    Vue.set(tempUserCal[d], 'lunchAddress', state.userData.addresses[index].address)
+                    Vue.set(tempUserCal[d], 'lunchLocation', state.userData.addresses[index].name)
+                  }
+                  if (tempUserCal[d].dinnerAddress === oldDefault) {
+                    changeDinnerAddress.push(tempUserCal[d].date)
+                    Vue.set(tempUserCal[d], 'dinnerAddress', state.userData.addresses[index].address)
+                    Vue.set(tempUserCal[d], 'dinnerLocation', state.userData.addresses[index].name)
+                  }
+                  db.collection('users').doc(state.userID).collection('calendar').doc(tempUserCal[d].date.toString()).set(tempUserCal[d])
+                }
+                resolve()
+              })
+                .then(function () {
+                  // remove user from address calendar
+                  const calOldDefaultRef = db.collection('addresses').doc(oldDefault).collection('calendar')
+                  var tempOldDefaultAddressCal = []
+                  calOldDefaultRef.where('date', '>=', Number(moment().format('YYYYMMDD'))).get()
+                    .then(function (querySnapshot) {
+                      new Promise(function (resolve, reject) {
+                        querySnapshot.forEach((doc) => {
+                          tempOldDefaultAddressCal.push(doc.data())
+                        })
+                        resolve()
+                      })
+                        .then(function () {
+                          for (let d = 0; d < tempOldDefaultAddressCal.length; d++) {
+                            if (changeBreakfastAddress.includes(tempOldDefaultAddressCal[d].date)) {
+                              for (let i = tempOldDefaultAddressCal[d].breakfastMembers.length - 1; i >= 0; i--) {
+                                if (tempOldDefaultAddressCal[d].breakfastMembers[i] === state.userID) {
+                                  tempOldDefaultAddressCal[d].breakfastMembers.splice(i, 1)
+                                  break
+                                }
+                              }
+                              tempOldDefaultAddressCal[d].breakfastCalories -= Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
+                            }
+                            if (changeLunchAddress.includes(tempOldDefaultAddressCal[d].date)) {
+                              for (let i = tempOldDefaultAddressCal[d].lunchMembers.length - 1; i >= 0; i--) {
+                                if (tempOldDefaultAddressCal[d].lunchMembers[i] === state.userID) {
+                                  tempOldDefaultAddressCal[d].lunchMembers.splice(i, 1)
+                                  break
+                                }
+                              }
+                              tempOldDefaultAddressCal[d].lunchCalories -= Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
+                            }
+                            if (changeDinnerAddress.includes(tempOldDefaultAddressCal[d].date)) {
+                              for (let i = tempOldDefaultAddressCal[d].dinnerMembers.length - 1; i >= 0; i--) {
+                                if (tempOldDefaultAddressCal[d].dinnerMembers[i] === state.userID) {
+                                  tempOldDefaultAddressCal[d].dinnerMembers.splice(i, 1)
+                                  break
+                                }
+                              }
+                              tempOldDefaultAddressCal[d].dinnerCalories -= Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
+                            }
+                            db.collection('addresses').doc(oldDefault).collection('calendar').doc(tempOldDefaultAddressCal[d].date.toString()).set(tempOldDefaultAddressCal[d])
+                          }
+                        })
+                    })
+                  // Add user to default address calendar
+                  const newDefault = state.userData.addresses[index].address
+                  var tempNewDefaultAddressCal = []
+                  const calNewDefaultRef = db.collection('addresses').doc(newDefault).collection('calendar')
+                  calNewDefaultRef.where('date', '>=', Number(moment().format('YYYYMMDD'))).get()
+                    .then(function (querySnapshot) {
+                      new Promise(function (resolve, reject) {
+                        querySnapshot.forEach((doc) => {
+                          tempNewDefaultAddressCal.push(doc.data())
+                        })
+                        resolve()
+                      })
+                        .then(function () {
+                          for (let d = 0; d < tempNewDefaultAddressCal.length; d++) {
+                            if (changeBreakfastAddress.includes(tempNewDefaultAddressCal[d].date)) {
+                              tempNewDefaultAddressCal[d].breakfastMembers.push(state.userID)
+                              tempNewDefaultAddressCal[d].breakfastCalories += Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
+                            }
+                            if (changeLunchAddress.includes(tempNewDefaultAddressCal[d].date)) {
+                              tempNewDefaultAddressCal[d].lunchMembers.push(state.userID)
+                              tempNewDefaultAddressCal[d].lunchCalories += Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
+                            }
+                            if (changeDinnerAddress.includes(tempNewDefaultAddressCal[d].date)) {
+                              tempNewDefaultAddressCal[d].dinnerMembers.push(state.userID)
+                              tempNewDefaultAddressCal[d].dinnerCalories += Number(JSON.parse(JSON.stringify(state.userData.info.calories)))
+                            }
+                            db.collection('addresses').doc(newDefault).collection('calendar').doc(tempNewDefaultAddressCal[d].date.toString()).set(tempNewDefaultAddressCal[d])
+                          }
+                        })
+                    })
+                })
+            })
+        })
     },
     toggleLocation (state, address) {
       for (let a = 0; a < state.userData.addresses.length; a++) {
@@ -984,9 +1104,8 @@ export default new Vuex.Store({
                   .then((doc) => {
                     if (doc.exists) {
                       state.userAddresses.push(doc.data())
-                      const today = moment().format('YYYYMM')
                       for (var month = 0; month < 12; month++) {
-                        if (!state.userData.months.includes((Number(today) + Number(month)).toString())) {
+                        if (!state.userData.months.includes(moment().add(month, 'months').format('YYYYMM'))) {
                           const daysInMonth = moment().add(month, 'months').daysInMonth()
                           const year = moment().add(month, 'months').format('YYYY')
                           const mon = moment().add(month, 'months').format('MM')
@@ -1255,10 +1374,9 @@ export default new Vuex.Store({
                         .then((doc) => {
                           if (doc.exists) {
                             state.userAddresses.push(doc.data())
-                            var today = moment().format('YYYYMM')
                             for (var month = 0; month < 12; month++) {
                               // adds days to user data
-                              if (!state.userData.months.includes((Number(today) + Number(month)).toString())) {
+                              if (!state.userData.months.includes(moment().add(month, 'months').format('YYYYMM'))) {
                                 const daysInMonth = moment().add(month, 'months').daysInMonth()
                                 const year = moment().add(month, 'months').format('YYYY')
                                 const mon = moment().add(month, 'months').format('MM')
@@ -1363,10 +1481,9 @@ export default new Vuex.Store({
                   .then((doc) => {
                     if (doc.exists) {
                       state.userAddresses.push(doc.data())
-                      var today = moment().format('YYYYMM')
                       for (var month = 0; month < 12; month++) {
                         // adds days to user data
-                        if (!state.userData.months.includes((Number(today) + Number(month)).toString())) {
+                        if (!state.userData.months.includes(moment().add(month, 'months').format('YYYYMM'))) {
                           const daysInMonth = moment().add(month, 'months').daysInMonth()
                           const year = moment().add(month, 'months').format('YYYY')
                           const mon = moment().add(month, 'months').format('MM')
@@ -1476,14 +1593,13 @@ export default new Vuex.Store({
                   .then((doc) => {
                     if (doc.exists) {
                       state.userAddresses.push(doc.data())
-                      const today = moment().format('YYYYMM')
                       var months = []
                       for (let m = 0; m < state.userAddresses[a].months.length; m++) {
                         months.push(state.userAddresses[a].months[m].month)
                       }
                       for (var month = 0; month < 12; month++) {
                         // adds days to default user calendar
-                        if (!state.userData.months.includes((Number(today) + Number(month)).toString())) {
+                        if (!state.userData.months.includes(moment().add(month, 'months').format('YYYYMM'))) {
                           const daysInMonth = moment().add(month, 'months').daysInMonth()
                           const year = moment().add(month, 'months').format('YYYY')
                           const mon = moment().add(month, 'months').format('MM')
@@ -1521,10 +1637,10 @@ export default new Vuex.Store({
                             .set(state.userData)
                         }
                         // adds months to default address
-                        if (!months.includes((Number(today) + Number(month)).toString())) {
+                        if (!months.includes(moment().add(month, 'months').format('YYYYMM'))) {
                           state.userAddresses[a].months.push({
-                            month: (Number(today) + Number(month)).toString(),
-                            display: moment((Number(today) + Number(month)).toString(), 'YYYYMM').format('MMM'),
+                            month: moment().add(month, 'months').format('YYYYMM'),
+                            display: moment(moment().add(month, 'months').format('YYYYMM'), 'YYYYMM').format('MMM'),
                             isActive: true,
                             isPurchased: false
                           })
