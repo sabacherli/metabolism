@@ -137,19 +137,19 @@
             <div class="block_date">
               <template v-for="month in userAddresses[index].months.slice(0,4)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in userAddresses[index].months.slice(4,8)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in userAddresses[index].months.slice(8,12)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
               </template>
             </div>
           </div>
@@ -164,19 +164,19 @@
             <div class="block_date">
               <template v-for="month in userAddresses[index].months.slice(12,16)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in userAddresses[index].months.slice(16,20)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in userAddresses[index].months.slice(20,24)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month)">{{ month.display }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
               </template>
             </div>
             <p class="year_date price">{{ price }} CHF</p>
@@ -383,8 +383,8 @@ export default {
     ...mapMutations([
       'deleteFilter',
       'toggleSelected',
+      'calcPrice',
       'addMonths',
-      'addMonthsToDefault',
       'setDefault',
       'deletePlace'
     ]),

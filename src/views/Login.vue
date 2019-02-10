@@ -71,7 +71,8 @@ export default {
     },
     signInWithGoogle () {
       var provider = new firebase.auth.GoogleAuthProvider()
-      firebase.auth().signInWithPopup(provider)
+      firebase.auth().signInWithRedirect(provider)
+      firebase.auth().getRedirectResult()
         .then(function (result) {
           router.push('/calendar')
         })
@@ -81,7 +82,8 @@ export default {
     },
     signInWithTwitter () {
       var provider = new firebase.auth.TwitterAuthProvider()
-      firebase.auth().signInWithPopup(provider)
+      firebase.auth().signInWithRedirect(provider)
+      firebase.auth().getRedirectResult()
         .then(function (result) {
           router.push('/calendar')
         })

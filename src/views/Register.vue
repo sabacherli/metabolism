@@ -50,9 +50,6 @@ export default {
       currentYear: moment().format('YYYY')
     }
   },
-  created () {
-    // store.commit('populateMonthList', this.currentYear)
-  },
   beforeMount () {
     store.commit('setPage', 'register')
   },
@@ -77,7 +74,8 @@ export default {
     },
     createUserWithGoogle () {
       var provider = new firebase.auth.GoogleAuthProvider()
-      firebase.auth().signInWithPopup(provider)
+      firebase.auth().signInWithRedirect(provider)
+      firebase.auth().getRedirectResult()
         .then(function (result) {
           if (result.additionalUserInfo.isNewUser) {
             store.commit('createUser', result)
@@ -88,8 +86,9 @@ export default {
         })
     },
     createUserWithTwitter () {
-      var provider = new firebase.auth.TwitterAuthProvider()
-      firebase.auth().signInWithPopup(provider)
+      var provider = new firebase.auth.GoogleAuthProvider()
+      firebase.auth().signInWithRedirect(provider)
+      firebase.auth().getRedirectResult()
         .then(function (result) {
           // The signed-in user info.
           store.commit('createUser', result)

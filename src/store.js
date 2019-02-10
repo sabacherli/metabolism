@@ -23,6 +23,8 @@ export default new Vuex.Store({
     newUnit: null,
     currentPage: 'calendar',
     price: 0,
+    index: null,
+    pricePerMonth: 5,
     today: null,
     start: null,
     currentYear: null,
@@ -151,10 +153,13 @@ export default new Vuex.Store({
     toggleSelected (state, month) {
       if (month.isPurchased === false) {
         month.isActive = !month.isActive
-        if (month.isActive === true) {
-          state.price += 5
-        } else {
-          state.price -= 5
+      }
+    },
+    calcPrice (state, index) {
+      state.price = 0
+      for (var i = 0; i < state.userAddresses[index].months.length; i++) {
+        if (state.userAddresses[index].months[i].isActive) {
+          state.price += state.pricePerMonth
         }
       }
     },
@@ -232,9 +237,30 @@ export default new Vuex.Store({
           state.userAddresses[index].months[month].isPurchased = true
           Vue.set(state.userAddresses[index].months[month], 'isActive', false)
         }
-        state.price = 0
       }
+      var stripe = Stripe('pk_test_eOIPf7mHX035HASoi8LrghW5', {
+        betas: ['checkout_beta_4']
+      })
+      stripe.redirectToCheckout({
+        items: [{
+          sku: 'sku_ETuovBIeaLjPou', quantity: state.price / 5
+        }],
+        // Note that it is not guaranteed your customers will be redirected to this
+        // URL *100%* of the time, it's possible that they could e.g. close the
+        // tab between form submission and the redirect.
+        successUrl: 'https://metabolism-salo.firebaseapp.com/profile',
+        cancelUrl: 'https://metabolism-salo.firebaseapp.com/profile'
+      })
+        .then(function (result) {
+          if (result.error) {
+            // If `redirectToCheckout` fails due to a browser or network
+            // error, display the localized error message to your customer.
+            alert(result.error.message)
+          }
+        })
     },
+    // addMonthsToFirebase (state) {
+    // },
     setPage (state, page) {
       state.currentPage = page
     },
