@@ -136,7 +136,7 @@ export default {
   text-align: center;
   opacity: 0;
   animation: fadeIn .8s;
-  animation-delay: 3s;
+  animation-delay: 2s;
   animation-fill-mode: forwards;
 }
 .icon {
@@ -146,8 +146,8 @@ export default {
   margin: 0px 20px 0 20px;
 }
 .container_login {
-   position: absolute;
-   top: 60vh;
+   position: relative;
+   top: 300px;
    width: 100%;
    opacity: 0;
    animation: fadeIn .8s;
@@ -214,7 +214,7 @@ input[type=password].login_password:focus {
   }
   .brand_small {
     position: relative;
-    top: 20vh;
+    top: 150px;
     text-align: center;
     opacity: 0;
     animation: slideInLeft .8s 1.2s forwards;
@@ -230,7 +230,7 @@ input[type=password].login_password:focus {
 @media (min-width: 850px) {
   .brand_large {
     position: relative;
-    top: 25vh;
+    top: 150px;
     width: 100%;
     text-align: center;
     color: white;

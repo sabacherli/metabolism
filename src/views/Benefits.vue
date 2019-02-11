@@ -37,13 +37,13 @@ export default {
   name: 'Landing',
   created () {
     this.$store.commit('setPage', 'benefits')
+    this.$store.commit('setDefaultUser')
   },
   methods: {
     scrollCalendar () {
       document.getElementById('cover_page').classList.add('slideOutUp')
       setTimeout(function () {
         this.$router.push('calendar')
-        this.$store.commit('nextWeek')
       }.bind(this), 800)
     }
   }

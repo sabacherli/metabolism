@@ -140,6 +140,7 @@ export default {
   name: 'Calendar',
   created () {
     this.$store.commit('setToday', moment().format('YYYYMMDD'))
+    this.$store.commit('thisWeek')
     this.$store.commit('setPage', 'calendar')
   },
   computed: {

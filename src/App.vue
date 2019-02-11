@@ -26,7 +26,6 @@ export default {
       store.commit('saveData')
     }
     window.onload = function () {
-      store.commit('thisWeek')
       for (var i = 0; i < document.getElementsByClassName('dropdown_item_selected').length; i++) {
         document.getElementsByClassName('dropdown_item_selected')[i].classList.add('dropdown_item')
         document.getElementsByClassName('dropdown_item_selected')[i].classList.remove('dropdown_item_selected')
