@@ -90,6 +90,7 @@ export default {
       this.$forceUpdate()
     },
     logout () {
+      this.$store.commit('saveData')
       firebase.auth().signOut()
         .then(success => {
           this.$store.commit('setPage', 'login')
