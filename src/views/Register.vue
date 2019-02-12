@@ -65,7 +65,7 @@ export default {
     createUser () {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
         .then(user => {
-          store.commit('createUser', user)
+          store.commit('createUser2', user)
         })
         .catch(function (error) {
           alert(error)
@@ -76,9 +76,9 @@ export default {
       var provider = new firebase.auth.GoogleAuthProvider()
       firebase.auth().signInWithRedirect(provider)
       firebase.auth().getRedirectResult()
-        .then(function (result) {
-          if (result.additionalUserInfo.isNewUser) {
-            store.commit('createUser', result)
+        .then(function (user) {
+          if (user.additionalUserInfo.isNewUser) {
+            store.commit('createUser2', user)
           }
         })
         .catch(function (error) {

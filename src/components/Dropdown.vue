@@ -3,8 +3,8 @@
     <img id="dropdown_icon" class="dropdown_icon_t dropdown_icon_p" src="../assets/icon-menu-dropdown.png" alt="Menu" @click="touchCome()">
     <div id="dropdown_nav" class="dropdown_nav_p dropdown_nav_t">
       <img id="dropdown_close" class="dropdown_close_t dropdown_close_p" src="../assets/icons8-delete-50.png" alt="Close" @click="touchLeave()">
-      <span id="benefits" class="dropdown_item" v-if="userID === 'default'" v-on:click='goBenefits(); thisWeek()'>BENEFITS</span>
-      <div class="dropdown_item_break" v-if="userID === 'default'">
+      <span id="benefits" class="dropdown_item" v-if="userData.uid === 'default'" v-on:click='goBenefits(); thisWeek()'>BENEFITS</span>
+      <div class="dropdown_item_break" v-if="userData.uid === 'default'">
 
       </div>
       <span id="calendar" class="dropdown_item_selected" v-on:click='goCalendar()'>CALENDAR</span>
@@ -19,16 +19,16 @@
       <div class="dropdown_item_break">
 
       </div>
-      <span id="profile" class="dropdown_item" v-if="userID !== 'default'" v-on:click='goProfile()'>PROFILE</span>
-      <div class="dropdown_item_break" v-if="userID !== 'default'">
+      <span id="profile" class="dropdown_item" v-if="userData.uid !== 'default'" v-on:click='goProfile()'>PROFILE</span>
+      <div class="dropdown_item_break" v-if="userData.uid !== 'default'">
 
       </div>
-      <span id="register" class="dropdown_item" v-if="userID === 'default'" v-on:click='goRegister()'>REGISTER</span>
-      <div class="dropdown_item_break" v-if="userID === 'default'">
+      <span id="register" class="dropdown_item" v-if="userData.uid === 'default'" v-on:click='goRegister()'>REGISTER</span>
+      <div class="dropdown_item_break" v-if="userData.uid === 'default'">
 
       </div>
-      <span id="login" class="dropdown_item" v-if="userID === 'default'" v-on:click='goLogin()'>LOGIN</span>
-      <span class="dropdown_item" v-if="userID !== 'default'" v-on:click='logout()'>LOGOUT</span>
+      <span id="login" class="dropdown_item" v-if="userData.uid === 'default'" v-on:click='goLogin()'>LOGIN</span>
+      <span class="dropdown_item" v-if="userData.uid !== 'default'" v-on:click='logout()'>LOGOUT</span>
     </div>
     <div id="background" class="" @click="touchLeave()">
 
@@ -46,7 +46,8 @@ export default {
   computed: {
     ...mapState([
       'currentPage',
-      'userID'
+      'userID',
+      'userData'
     ])
   },
   methods: {

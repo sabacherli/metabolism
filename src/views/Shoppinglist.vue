@@ -7,7 +7,7 @@
           <!-- eslint-disable-next-line -->
           <div class="day">
             <div class="date">
-              {{ userData.info.shoppingListLength }}
+              {{ userData.shoppingListLength }}
             </div>
             <p class="dayname">Shopping List</p>
             <div class="ingredients_break">

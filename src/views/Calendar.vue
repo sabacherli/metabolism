@@ -57,7 +57,7 @@
               <p class="sign">+</p>
             </div>
             <!-- eslint-disable-next-line -->
-            <div class="set_default" @click="setDefault(index)">
+            <div>
               <!-- eslint-disable-next-line -->
               <p class="dayname"> {{ place.name }} </p>
             </div>
@@ -134,14 +134,18 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
+import store from '../store'
 import moment from 'moment'
 
 export default {
   name: 'Calendar',
   created () {
-    this.$store.commit('setToday', moment().format('YYYYMMDD'))
-    this.$store.commit('thisWeek')
-    this.$store.commit('setPage', 'calendar')
+    store.commit('setToday', moment().format('YYYYMMDD'))
+    store.commit('thisWeek')
+    store.commit('setPage', 'calendar')
+    window.onload = function () {
+      store.commit('thisWeek')
+    }
   },
   computed: {
     ...mapState([
@@ -170,7 +174,7 @@ export default {
     ]),
     openMenu () {
       if (this.menu.isActive) {
-        this.$router.push('menu')
+        this.$router.push('/menu')
       }
     }
   }

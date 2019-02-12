@@ -66,7 +66,7 @@ export default {
           }
         })
         .catch(error => {
-          console.log(error.code)
+          alert(error.code, ': ', error)
         })
     },
     signInWithGoogle () {

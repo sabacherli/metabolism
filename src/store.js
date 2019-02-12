@@ -10,6 +10,7 @@ Vue.use(Vuex, moment)
 
 export default new Vuex.Store({
   state: {
+    test: null,
     userID: 'default',
     userEmail: 'default',
     userData: {
@@ -99,7 +100,7 @@ export default new Vuex.Store({
       state.newUnit = unit
     },
     syncUserEmail (state, email) {
-      state.userEmail = email
+      state.userData.email = email
     },
     syncShoppingListLength (state, days) {
       state.userData.info.shoppingListLength = days
@@ -270,6 +271,7 @@ export default new Vuex.Store({
       state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
     },
     setBreakfast (state, day) {
+      console.log(day.date)
       state.pointer.doc = state.userData.calendar.indexOf(day)
       state.pointer.position = 'breakfast'
       for (let a = 0; a < state.userData.addresses.length; a++) {
@@ -557,15 +559,12 @@ export default new Vuex.Store({
       state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
       state.currentYearMonth = moment(state.start).format('YYYYMM')
       state.currentYear = moment(state.start).format('YYYY')
-      calendarRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
-        .then((querySnapshot) => {
+      calendarRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
+        .onSnapshot(function (querySnapshot) {
           querySnapshot.forEach((doc) => {
             // doc.data() is never undefined for query doc snapshots
             state.userData.calendar.push(doc.data())
           })
-        })
-        .catch((error) => {
-          console.log('Error getting documents: ', error)
         })
     },
     nextWeek (state) {
@@ -819,7 +818,7 @@ export default new Vuex.Store({
       db.collection('addresses').add({
         address: '',
         members: [{
-          email: state.userEmail,
+          email: state.userData.email,
           role: 'Owner',
           uid: state.userID
         }],
@@ -1374,7 +1373,7 @@ export default new Vuex.Store({
           } else {
             var user = firebase.auth().currentUser
             state.userID = user.uid
-            state.userEmail = user.email
+            state.userData.email = user.email
             // getData ()
             state.userData = ''
             const docRef = db.collection('users').doc(state.userID)
@@ -1479,9 +1478,208 @@ export default new Vuex.Store({
           console.log(error.code)
         })
     },
+    createUser2 (state, user) {
+      const object = JSON.parse(JSON.stringify(user))
+      db.collection('addresses').add({
+        address: '',
+        personalList: [],
+        shoppingList: [],
+        calendar: [],
+        members: [],
+        months: []
+      })
+        .then(function (address) {
+          db.collection('addresses').doc(address.id).update({
+            address: address.id
+          })
+          db.collection('addresses').doc(address.id).collection('members').doc(object.user.uid).set({
+            email: object.user.email,
+            role: 'Owner',
+            uid: object.user.uid
+          })
+          db.collection('addresses').doc(address.id).collection('calendar').doc('default').set({
+            placeholder: 'default'
+          })
+          var batchAddress = db.batch()
+          for (let y = 0; y < 2; y++) {
+            for (let m = 0; m < 12; m++) {
+              var yearCurrent = moment().format('YYYY')
+              var monthVar = moment().year(Number(yearCurrent)).month(m).add(y, 'years').format('YYYYMM')
+              var monthTemplate = {
+                month: moment().year(Number(yearCurrent)).month(m).add(y, 'years').format('YYYYMM'),
+                display: moment().year(Number(yearCurrent)).month(m).add(y, 'years').format('MMM'),
+                isActive: false,
+                isPurchased: false
+              }
+              const docRef = db.collection('addresses').doc(address.id).collection('months').doc(monthVar)
+              batchAddress.set(docRef, monthTemplate)
+            }
+          }
+          batchAddress.commit()
+          db.collection('users').doc(object.user.uid).set({
+            email: object.user.email,
+            uid: object.user.uid,
+            shoppingListLength: 7,
+            calories: 2000,
+            role: 'customer',
+            months: [],
+            calendar: [],
+            addresses: [],
+            recipies: [],
+            tagList: [
+              {
+                text: 'Breakfast',
+                isActive: true
+              },
+              {
+                text: 'Lunch',
+                isActive: true
+              },
+              {
+                text: 'Dinner',
+                isActive: true
+              }
+            ]
+          })
+          db.collection('users').doc(object.user.uid).collection('addresses').doc(address.id).set({
+            name: 'Home',
+            isActive: true,
+            isDefault: true,
+            address: address.id
+          })
+          var uniqueID = new Date().getTime().toString() + (Math.floor((Math.random() * 10000000) + 1)).toString()
+          db.collection('users').doc(object.user.uid).collection('recipies').doc(uniqueID).set({
+            name: 'Banana Smoothie',
+            ingredients: [
+              {
+                ingredient: 'Banana',
+                amount: 1,
+                unit: 'medium',
+                isActive: false,
+                isPurchased: false
+              },
+              {
+                ingredient: 'Milk',
+                amount: 200,
+                unit: 'ml',
+                isActive: false,
+                isPurchased: false
+              }
+            ],
+            uniqueID: uniqueID,
+            tags: [
+              'Breakfast'
+            ]
+          })
+          var months = []
+          var batchUser = db.batch()
+          for (var month = 0; month < 12; month++) {
+            const daysInMonth = moment().add(month, 'months').daysInMonth()
+            const year = moment().add(month, 'months').format('YYYY')
+            const mon = moment().add(month, 'months').format('MM')
+            for (let d = 0; d < daysInMonth; d++) {
+              const day = moment().year(year).month(mon).subtract(1, 'M')
+                .startOf('month')
+                .add(d, 'day')
+                .format('DD')
+              const docName = moment().year(year).month(mon).subtract(1, 'M')
+                .date(day)
+                .format('YYYYMMDD')
+              const dayTemplate = {
+                date: Number(moment().year(year).month(mon).subtract(1, 'M')
+                  .date(day)
+                  .format('YYYYMMDD')),
+                day: moment().year(year).month(mon).subtract(1, 'M')
+                  .startOf('month')
+                  .add(d, 'day')
+                  .format('DD'),
+                dayname: moment().isoWeekday(moment().year(year).month(mon).subtract(1, 'M')
+                  .date(day)
+                  .weekday()).format('dddd'),
+                breakfast: 'Breakfast',
+                breakfastLocation: 'Home',
+                breakfastAddress: address.id,
+                lunch: 'Lunch',
+                lunchLocation: 'Home',
+                lunchAddress: address.id,
+                dinner: 'Dinner',
+                dinnerLocation: 'Home',
+                dinnerAddress: address.id
+              }
+              const docRef = db.collection('users').doc(object.user.uid).collection('calendar').doc(docName)
+              batchUser.set(docRef, dayTemplate)
+            }
+            months.push(moment().year(year).month(mon).subtract(1, 'M').format('YYYYMM'))
+          }
+          batchUser.commit()
+          db.collection('users').doc(object.user.uid).update({
+            months: months
+          })
+          if (object.user.emailVerified === false) {
+            firebase.auth().useDeviceLanguage()
+            firebase.auth().currentUser.sendEmailVerification()
+              .then(function () {
+                alert('Verification email sent. Please verify your email address and then log in.')
+                firebase.auth().signOut()
+                  .then(function () {
+                    // Sign-out successful.
+                    router.push('/login')
+                  })
+                  .catch(function (error) {
+                    // An error happened.
+                    alert(error.code, ': ', error)
+                  })
+              })
+          } else {
+            router.push('/calendar')
+          }
+        })
+    },
+    emptyUserData2 (state) {
+      state.userData = []
+    },
+    getUserData2 (state, data) {
+      state.userData = data
+    },
+    getUserAddresses2 (state, addresses) {
+      state.userData.addresses.push(addresses)
+    },
+    getUserRecipies2 (state, recipe) {
+      state.userData.recipies.push(recipe)
+    },
+    getUserCalendar2 (state, addresses) {
+
+    },
+    emptyAddresses2 (state) {
+      state.userAddresses = []
+    },
+    getAddresses2 (state, data) {
+      state.userAddresses.push(data)
+    },
+    getAddressCalendar2 (state, { calendar, addressID }) {
+      for (var address in state.userAddresses) {
+        if (state.userAddresses[address].address === addressID) {
+          state.userAddresses[address].calendar.push(calendar)
+        }
+      }
+    },
+    getAddressMember2 (state, { member, addressID }) {
+      for (var address in state.userAddresses) {
+        if (state.userAddresses[address].address === addressID) {
+          state.userAddresses[address].members.push(member)
+        }
+      }
+    },
+    getAddressMonths2 (state, { month, addressID }) {
+      for (var address in state.userAddresses) {
+        if (state.userAddresses[address].address === addressID) {
+          state.userAddresses[address].months.push(month)
+        }
+      }
+    },
     setUser (state, user) {
       state.userID = user.uid
-      state.userEmail = user.email
+      state.userData.email = user.email
       // getData ()
       state.userData = ''
       const docRef = db.collection('users').doc(state.userID)
@@ -1607,7 +1805,7 @@ export default new Vuex.Store({
       }
       // setData ()
       state.userID = 'default'
-      state.userEmail = 'default'
+      state.userData.email = 'default'
       // getData ()
       state.userData = ''
       const docRef = db.collection('users').doc(state.userID)

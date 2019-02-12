@@ -160,10 +160,10 @@ export default {
           activeTags.push(userData.tagList[t].text)
         }
       }
-      for (let f = 0; f < userData.foods.length; f++) {
-        for (let t = 0; t < userData.foods[f].tags.length; t++) {
-          if ((activeTags.includes(userData.foods[f].tags[t])) && (!filteredMeals.includes(userData.foods[f]))) {
-            filteredMeals.push(userData.foods[f])
+      for (let f = 0; f < userData.recipies.length; f++) {
+        for (let t = 0; t < userData.recipies[f].tags.length; t++) {
+          if ((activeTags.includes(userData.recipies[f].tags[t])) && (!filteredMeals.includes(userData.recipies[f]))) {
+            filteredMeals.push(userData.recipies[f])
           }
         }
       }

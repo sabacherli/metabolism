@@ -7,16 +7,66 @@
 
 <script type="text/javascript">
 import firebase from 'firebase/app'
-import 'firebase/auth'
+import moment from 'moment'
 import store from './store'
-import 'typeface-montserrat'
+import db from './database'
 import { mapState } from 'vuex'
+import 'firebase/auth'
+import 'typeface-montserrat'
 
 export default {
   created () {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user && user.emailVerified & user.metadata.creationTime !== user.metadata.lastSignInTime) {
-        store.commit('setUser', user)
+        store.commit('emptyUserData2')
+        db.collection('users').doc(user.uid)
+          .onSnapshot(function (doc) {
+            let data = doc.data()
+            store.commit('getUserData2', data)
+            db.collection('users').doc(user.uid).collection('addresses')
+              .onSnapshot(function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+                  let addressData = doc.data()
+                  var addressID = addressData.address
+                  store.commit('getUserAddresses2', addressData)
+                  store.commit('emptyAddresses2')
+                  db.collection('addresses').doc(addressID)
+                    .onSnapshot(function (doc) {
+                      let address = doc.data()
+                      store.commit('getAddresses2', address)
+                      db.collection('addresses').doc(addressID).collection('members')
+                        .onSnapshot(function (querySnapshot) {
+                          querySnapshot.forEach(function (doc) {
+                            let member = doc.data()
+                            store.commit('getAddressMember2', { member, addressID })
+                          })
+                        })
+                      db.collection('addresses').doc(addressID).collection('months')
+                        .onSnapshot(function (querySnapshot) {
+                          querySnapshot.forEach(function (doc) {
+                            let month = doc.data()
+                            store.commit('getAddressMonths2', { month, addressID })
+                          })
+                        })
+                      let start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
+                      db.collection('addresses').doc(addressID).collection('months').where('date', '>=', Number(start.format('YYYYMMDD'))).where('date', '<', Number(start.add(data.shoppingListLength, 'days').format('YYYYMMDD'))).orderBy('date')
+                        .onSnapshot(function (querySnapshot) {
+                          querySnapshot.forEach(function (doc) {
+                            let day = doc.data()
+                            store.commit('getAddressCalendar2', { day, addressID })
+                          })
+                        })
+                    })
+                })
+              })
+            db.collection('users').doc(user.uid).collection('recipies')
+              .onSnapshot(function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+                  let recipe = doc.data()
+                  store.commit('getUserRecipies2', recipe)
+                })
+              })
+          })
       } else {
         // User is signed out.
         store.commit('setDefaultUser')
@@ -56,7 +106,9 @@ export default {
   },
   computed: {
     ...mapState([
-      'currentPage'
+      'currentPage',
+      'userData',
+      'userID'
     ])
   }
 }

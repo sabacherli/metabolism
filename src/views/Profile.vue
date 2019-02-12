@@ -11,7 +11,7 @@
         </div>
         <div class="" align="left">
           <label for="">Kcal</label>
-          <input class="amount" type="number" min="1" max="20000" autocomplete="off" v-model="userData.info.calories" @keyup.enter="removeFocus()">
+          <input class="amount" type="number" min="1" max="20000" autocomplete="off" v-model="userData.calories" @keyup.enter="removeFocus()">
           <br>
         </div>
         <div class="purchase_button" @click="removeFocus()" style="margin-top: 20px">
@@ -28,7 +28,7 @@
         </div>
         <div class="" align="left">
           <label for="">Days</label>
-          <input class="amount" type="number" min="1" max="365" autocomplete="off" v-model="userData.info.shoppingListLength" @keyup.enter="removeFocus()">
+          <input class="amount" type="number" min="1" max="365" autocomplete="off" v-model="userData.shoppingListLength" @keyup.enter="removeFocus()">
           <br>
         </div>
         <div class="purchase_button" @click="removeFocus()" style="margin-top: 20px">
@@ -45,7 +45,7 @@
         </div>
         <div class="" align="left">
           <label for="">New Email</label>
-          <input class="amount" type="text" name="" value="" v-model="userEmail" @keyup.enter="updateEmail()">
+          <input class="amount" type="text" name="" value="" v-model="userData.email" @keyup.enter="updateEmail()">
           <br>
         </div>
         <div class="purchase_button" @click="updateEmail()" style="margin-top: 20px">
@@ -350,13 +350,12 @@ export default {
       'profileFilters',
       'userData',
       'userAddresses',
-      'userEmail',
       'userID',
       'price'
     ]),
     userEmail: {
       get () {
-        return store.state.userEmail
+        return store.state.userData.email
       },
       set (value) {
         store.commit('syncUserEmail', value)
@@ -364,7 +363,7 @@ export default {
     },
     shoppingListLength: {
       get () {
-        return store.state.userData.info.shoppingListLength
+        return store.state.userData.shoppingListLength
       },
       set (value) {
         store.commit('syncShoppingListLength', value)
@@ -372,7 +371,7 @@ export default {
     },
     calories: {
       get () {
-        return store.state.userData.info.calories
+        return store.state.userData.calories
       },
       set (value) {
         store.commit('syncCalories', value)
@@ -405,7 +404,7 @@ export default {
       const collectionRef = db.collection('users')
       const userEmail = this.userEmail
       const localMember = this.newMember
-      collectionRef.where('info.email', '==', this.newMember).get()
+      collectionRef.where('email', '==', this.newMember).get()
         .then(snapshot => {
           snapshot.forEach(doc => {
             if (doc.exists) {
@@ -437,7 +436,7 @@ export default {
                       addressData.members.push({
                         email: localMember,
                         role: 'Member',
-                        uid: memberData.info.uid
+                        uid: memberData.uid
                       })
                       db.collection('addresses').doc(place.address).set(addressData)
                       resolve()
@@ -537,19 +536,13 @@ export default {
     },
     updateEmail () {
       const user = firebase.auth().currentUser
-      db.collection('users').doc(user.uid).update({
-        'info.email': this.userEmail
+      db.collection('users').doc(this.userData.uid).update({
+        'email': this.userData.email
       })
-        .then(function () {
-          console.log('1/2 email successfully updated!')
-        })
-        .catch(function (error) {
-          console.log('Error: ', error)
-        })
-      user.updateEmail(this.userEmail)
+      user.updateEmail(this.userData.email)
         .then(function () {
           // Update successful.
-          console.log('2/2 email successfully updated!')
+          console.log('Email successfully updated!')
         })
         .catch(function (error) {
           // An error happened.
@@ -563,10 +556,10 @@ export default {
           user.reauthenticateAndRetrieveDataWithCredential(credential)
             .then(function () {
               // User re-authenticated.
-              user.updateEmail(this.userEmail)
+              user.updateEmail(this.userData.email)
                 .then(function () {
                   // Update successful.
-                  console.log('2/2 email successfully updated!')
+                  console.log('Email successfully updated!')
                 })
                 .catch(function (error) {
                   console.log('There is still an error occuring.', error)
