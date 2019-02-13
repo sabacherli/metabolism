@@ -174,7 +174,7 @@ export default {
     ]),
     openMenu () {
       if (this.menu.isActive) {
-        this.$router.push('/menu')
+        this.$router.push('/recipies')
       }
     }
   }

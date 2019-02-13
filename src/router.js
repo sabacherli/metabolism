@@ -56,13 +56,13 @@ const router = new Router({
       }
     },
     {
-      path: '/menu',
-      name: 'menu',
+      path: '/recipies',
+      name: 'recipies',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       components: {
-        default: () => import(/* webpackChunkName: "menu" */ './views/Menu.vue'),
+        default: () => import(/* webpackChunkName: "recipies" */ './views/Menu.vue'),
         banner: () => import(/* webpackChunkName: "banner" */ './components/Banner.vue')
       },
       meta: {

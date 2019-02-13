@@ -90,9 +90,9 @@
 import { mapState, mapMutations } from 'vuex'
 
 export default {
-  name: 'Menu',
+  name: 'Recipies',
   created () {
-    this.$store.commit('setPage', 'menu')
+    this.$store.commit('setPage', 'recipies')
   },
   computed: {
     ...mapState([

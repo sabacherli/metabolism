@@ -2,7 +2,7 @@
   <div class="container">
     <div class="animated" v-if="profileFilters[0].isActive" style="padding-bottom: 100px">
       <div class="">
-        <div class="box" @click="removeFocus()">
+        <div class="box" @click="updateCalories(); removeFocus()">
           <img class="edit_icon" src="../assets/icon-edit.png" alt="Edit">
         </div>
         <p class="dayname">Daily Calorie Intake</p>
@@ -11,15 +11,15 @@
         </div>
         <div class="" align="left">
           <label for="">Kcal</label>
-          <input class="amount" type="number" min="1" max="20000" autocomplete="off" v-model="userData.calories" @keyup.enter="removeFocus()">
+          <input class="amount" type="number" min="1" max="20000" autocomplete="off" v-model="userData.calories" @keyup.enter="updateCalories(); removeFocus()">
           <br>
         </div>
-        <div class="purchase_button" @click="removeFocus()" style="margin-top: 20px">
+        <div class="purchase_button" @click="updateCalories(); removeFocus()" style="margin-top: 20px">
           <span class="purchase_text">Update Calories</span>
         </div>
       </div>
       <div class="">
-        <div class="box" @click="removeFocus()">
+        <div class="box" @click="updateLength(); removeFocus()">
           <img class="edit_icon" src="../assets/icon-edit.png" alt="Edit">
         </div>
         <p class="dayname">Shopping List Length</p>
@@ -28,15 +28,15 @@
         </div>
         <div class="" align="left">
           <label for="">Days</label>
-          <input class="amount" type="number" min="1" max="365" autocomplete="off" v-model="userData.shoppingListLength" @keyup.enter="removeFocus()">
+          <input class="amount" type="number" min="1" max="365" autocomplete="off" v-model="userData.shoppingListLength" @keyup.enter="updateLength(); removeFocus()">
           <br>
         </div>
-        <div class="purchase_button" @click="removeFocus()" style="margin-top: 20px">
+        <div class="purchase_button" @click="updateLength(); removeFocus()" style="margin-top: 20px">
           <span class="purchase_text">Update Length</span>
         </div>
       </div>
       <div class="">
-        <div class="box" @click="updateEmail()">
+        <div class="box" @click="updateEmail(); removeFocus()">
           <img class="edit_icon" src="../assets/icon-edit.png" alt="Edit">
         </div>
         <p class="dayname">Email</p>
@@ -45,10 +45,10 @@
         </div>
         <div class="" align="left">
           <label for="">New Email</label>
-          <input class="amount" type="text" name="" value="" v-model="userData.email" @keyup.enter="updateEmail()">
+          <input class="amount" type="text" name="" value="" v-model="userData.email" @keyup.enter="updateEmail(); removeFocus()">
           <br>
         </div>
-        <div class="purchase_button" @click="updateEmail()" style="margin-top: 20px">
+        <div class="purchase_button" @click="updateEmail(); removeFocus()" style="margin-top: 20px">
           <span class="purchase_text">Update Email</span>
         </div>
       </div>
@@ -83,16 +83,16 @@
             <label for="">Confirm Password</label>
             <!-- Email input field required for accessibility reasons -->
             <input style="display: none" autocomplete="username" type="text" required>
-            <input class="amount" type="password" v-model="checkPassword" @keyup.enter="updatePassword()" autocomplete="new-password" required>
+            <input class="amount" type="password" v-model="checkPassword" @keyup.enter="updatePassword(); removeFocus()" autocomplete="new-password" required>
           </form>
           <br>
         </div>
-        <div class="purchase_button" @click="updatePassword()" style="margin-top: 20px">
+        <div class="purchase_button" @click="updatePassword(); removeFocus()" style="margin-top: 20px">
           <span class="purchase_text">Update Password</span>
         </div>
       </div>
       <div class="" style="margin-bottom: 100px">
-        <div class="box" @click="deleteAccount()">
+        <div class="box" @click="deleteAccount(); removeFocus()">
           <p class="sign" style="transform: rotate(45deg)">+</p>
         </div>
         <p class="dayname">Delete Account</p>
@@ -106,7 +106,7 @@
             <br>
           </form>
         </div>
-        <div class="purchase_button" @click="deleteAccount()" style="margin-top: 20px">
+        <div class="purchase_button" @click="deleteAccount(); removeFocus()" style="margin-top: 20px">
           <span class="purchase_text">Confirm</span>
         </div>
       </div>
@@ -118,7 +118,7 @@
           <p class="sign">+</p>
         </div>
         <!-- eslint-disable-next-line -->
-        <div class="set_default" @click="setDefault(index)">
+        <div>
           <!-- eslint-disable-next-line -->
           <p class="dayname"> {{ place.name }} </p>
         </div>
@@ -190,7 +190,7 @@
     <div class="animated" v-if="profileFilters[2].isActive" style="padding-bottom: 100px">
       <template v-for="(place, index) in userData.addresses">
         <!-- eslint-disable-next-line -->
-        <div class="box" @click="deletePlace(place)">
+        <div class="box" @click="removePlace(place, index)">
           <p class="sign" style="transform: rotate(45deg)">+</p>
         </div>
         <!-- eslint-disable-next-line -->
@@ -211,13 +211,13 @@
         </div>
         <!-- eslint-disable-next-line -->
         <div class="" align="left">
-          <label for="">Edit Place</label>
-          <input class="amount" type="text" name="" value="" v-model="place.name" @keyup.enter="removeFocus()" required>
+          <label for="">Edit Name</label>
+          <input class="amount" type="text" name="" value="" v-model="place.name" @keyup.enter="updatePlace(place); removeFocus()" required>
           <br>
         </div>
         <!-- eslint-disable-next-line -->
-        <div class="purchase_button" @click="removeFocus()" style="margin-top: 20px; margin-bottom: 40px">
-          <span class="purchase_text">Edit Place</span>
+        <div class="purchase_button" @click="updatePlace(place); removeFocus()" style="margin-top: 20px; margin-bottom: 40px">
+          <span class="purchase_text">Edit Name</span>
         </div>
         <!-- eslint-disable-next-line -->
         <div class="" v-if="checkOwner(index)">
@@ -225,12 +225,12 @@
             <!-- eslint-disable-next-line -->
             <div class="" align="left">
               <div v-if="member.role != 'Owner'">
-                <span class="sign_remove" @click="removeMember(member, index)">+</span>
+                <span class="sign_remove" @click="removeMember(member, place)">+</span>
               </div>
               <!-- eslint-disable-next-line -->
               <label>{{ member.role }}</label>
               <!-- eslint-disable-next-line -->
-              <input class="amount" type="text" @keyup.enter="removeFocus()" v-model="member.email" required>
+              <input class="amount" type="text" @keyup.enter="removeFocus()" v-model="member.email" readonly required>
               <!-- eslint-disable-next-line -->
               <br>
             </div>
@@ -277,13 +277,13 @@
       </div>
     </div>
     <div class="animated" v-if="profileFilters[3].isActive" style="padding-bottom: 100px">
-      <template v-for="tag in userData.tagList">
+      <template v-for="filter in userData.filters">
         <!-- eslint-disable-next-line -->
-        <div class="box" @click="deleteFilter(tag)">
+        <div class="box" @click="removeFilter(filter)">
           <p class="sign" style="transform: rotate(45deg)">+</p>
         </div>
         <!-- eslint-disable-next-line -->
-        <p class="dayname"> {{ tag.text }} </p>
+        <p class="dayname"> {{ filter.text }} </p>
         <!-- eslint-disable-next-line -->
         <div class="ingredients_break">
 
@@ -291,17 +291,17 @@
         <!-- eslint-disable-next-line -->
         <div class="" align="left">
           <label for="">Edit Filter</label>
-          <input class="amount" type="text" name="" value="" @keyup.enter="removeFocus()" v-model="tag.text" required>
+          <input class="amount" type="text" name="" value="" @keyup.enter="updateFilter(filter)" v-model="filter.text" required>
           <br>
         </div>
         <!-- eslint-disable-next-line -->
-        <div class="purchase_button" @click="removeFocus()" style="margin-top: 20px">
+        <div class="purchase_button" @click="updateFilter(filter)" style="margin-top: 20px">
           <span class="purchase_text">Update Filter</span>
         </div>
       </template>
       <div class="" style="margin-bottom: 100px">
         <div class="box">
-          <p class="sign" @click="addFilter()">+</p>
+          <p class="sign" @click="addFilter(newFilter)">+</p>
         </div>
         <p class="dayname">New Filter</p>
         <div class="ingredients_break">
@@ -309,9 +309,9 @@
         </div>
         <div class="" align="left">
           <label for="">New Filter</label>
-          <input class="amount" id="newFilter" type="text" name="" value="" @keyup.enter="addFilter()" v-model="newFilter" required>
+          <input class="amount" id="newFilter" type="text" name="" value="" @keyup.enter="addFilter(newFilter)" v-model="newFilter" required>
         </div>
-        <div class="purchase_button" @click="addFilter()" style="margin-top: 40px">
+        <div class="purchase_button" @click="addFilter(newFilter)" style="margin-top: 40px">
           <span class="purchase_text">Add Filter</span>
         </div>
       </div>
@@ -350,7 +350,6 @@ export default {
       'profileFilters',
       'userData',
       'userAddresses',
-      'userID',
       'price'
     ]),
     userEmail: {
@@ -380,128 +379,63 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'deleteFilter',
       'toggleSelected',
       'calcPrice',
       'addMonths',
-      'setDefault',
-      'deletePlace'
+      'setDefault'
     ]),
-    removeFocus () {
-      const placesList = document.getElementsByClassName('editPlace')
-      for (let p = 0; p < placesList.length; p++) {
-        placesList[p].blur()
-      }
+    updateCalories () {
+      db.collection('users').doc(this.userData.uid).update({
+        calories: Number(this.userData.calories)
+      })
     },
-    checkOwner (index) {
-      for (let role = 0; role < this.userAddresses[index].members.length; role++) {
-        if (this.userAddresses[index].members[role].role === 'Owner' && this.userAddresses[index].members[role].uid === this.userID) {
-          return true
-        }
-      }
+    updateLength () {
+      db.collection('users').doc(this.userData.uid).update({
+        shoppingListLength: Number(this.userData.shoppingListLength)
+      })
     },
-    addMember (place) {
-      const collectionRef = db.collection('users')
-      const userEmail = this.userEmail
-      const localMember = this.newMember
-      collectionRef.where('email', '==', this.newMember).get()
-        .then(snapshot => {
-          snapshot.forEach(doc => {
-            if (doc.exists) {
-              new Promise(function (resolve, reject) {
-                const docRef = doc.id
-                // Adds place to addresses array of new member.
-                const localEmail = userEmail
-                var memberData = ''
-                db.collection('users').doc(docRef).get()
-                  .then(function (doc) {
-                    if (doc.exists) {
-                      memberData = doc.data()
-                      // Adds the new place to addresses
-                      memberData.addresses.push({
-                        address: place.address,
-                        isActive: false,
-                        isDefault: false,
-                        name: 'Invited by ' + localEmail
-                      })
-                      // Saves the new  data to the user's document.
-                      db.collection('users').doc(docRef).set(memberData)
-                    }
-                  })
-                // Adds new member to members array of address with role and uid.
-                db.collection('addresses').doc(place.address).get()
-                  .then(function (doc) {
-                    if (doc.exists) {
-                      const addressData = doc.data()
-                      addressData.members.push({
-                        email: localMember,
-                        role: 'Member',
-                        uid: memberData.uid
-                      })
-                      db.collection('addresses').doc(place.address).set(addressData)
-                      resolve()
-                    }
-                  })
-              })
-                .then(function () {
-                  store.commit('getData')
-                })
-            }
-          })
+    updateEmail () {
+      const user = firebase.auth().currentUser
+      db.collection('users').doc(this.userData.uid).update({
+        'email': this.userData.email
+      })
+      for (let a in this.userAddresses) {
+        db.collection('addresses').doc(this.userAddresses[a].address).collection('members').doc(this.userData.uid).update({
+          'email': this.userData.email
         })
-      this.newMember = ''
-    },
-    removeMember (member, index) {
-      if (confirm('Are you sure you want to remove this member?')) {
-        // Removes the address from the users addresses' array.
-        const localUserAddresses = this.userAddresses
-        this.userAddresses[index].members.splice(this.userAddresses[index].members.indexOf(member), 1)
-        db.collection('addresses').doc(localUserAddresses[index].address).set(this.userAddresses[index])
-
-        // Removes the user in the members array of the address.
-        db.collection('users').doc(member.uid).get()
-          .then(function (doc) {
-            if (doc.exists) {
-              const memberData = doc.data()
-              for (let a = 0; a < memberData.addresses.length; a++) {
-                if (localUserAddresses[index].address === memberData.addresses[a].address) {
-                  memberData.addresses.splice(a, 1)
-                }
-              }
-              // Saves the array with removed data to the user's document.
-              db.collection('users').doc(member.uid).set(memberData)
+      }
+      var email = this.userData.email
+      user.updateEmail(this.userData.email)
+        .then(function () {
+          // Update successful.
+          console.log('Email successfully updated!')
+        })
+        .catch(function (error) {
+          // An error happened.
+          console.log('Error: ', error)
+          // Prompt the user to re-provide their sign-in credentials
+          var password = prompt('Please reauthenticate before we can update your email.', 'Password')
+          const credential = firebase.auth.EmailAuthProvider.credential(
+            user.email,
+            password
+          )
+          user.reauthenticateAndRetrieveDataWithCredential(credential)
+            .then(function () {
+              // User re-authenticated.
+              user.updateEmail(email)
                 .then(function () {
-                  console.log("Address successfully removed in member's documents!")
+                  // Update successful.
+                  console.log('Email successfully updated!')
                 })
                 .catch(function (error) {
-                  console.error('Error writing document: ', error)
+                  console.log('There is still an error occuring.', error)
                 })
-            } else {
-              // doc.data() will be undefined in this case
-              console.log('No such document.')
-            }
-          }).catch(function (error) {
-            console.log('Error getting document:', error)
-          })
-      }
-    },
-    addPlace () {
-      if (this.newPlace !== '') {
-        store.commit('addPlace', this.newPlace, this.currentYear)
-        this.newPlace = ''
-        document.getElementById('newPlace').focus()
-      } else {
-        alert('Add a place first.')
-      }
-    },
-    addFilter () {
-      if (this.newFilter !== '') {
-        store.commit('addFilter', this.newFilter)
-        this.newFilter = ''
-        document.getElementById('newFilter').focus()
-      } else {
-        alert('Add a filter first.')
-      }
+            })
+            .catch(function (error) {
+              // An error happened.
+              console.log('Error: ', error)
+            })
+        })
     },
     updatePassword () {
       const user = firebase.auth().currentUser
@@ -534,43 +468,6 @@ export default {
           console.log('Error: ', error)
         })
     },
-    updateEmail () {
-      const user = firebase.auth().currentUser
-      db.collection('users').doc(this.userData.uid).update({
-        'email': this.userData.email
-      })
-      user.updateEmail(this.userData.email)
-        .then(function () {
-          // Update successful.
-          console.log('Email successfully updated!')
-        })
-        .catch(function (error) {
-          // An error happened.
-          console.log('Error: ', error)
-          // Prompt the user to re-provide their sign-in credentials
-          var password = prompt('Please reauthenticate before we can update your email.', 'Password')
-          const credential = firebase.auth.EmailAuthProvider.credential(
-            user.email,
-            password
-          )
-          user.reauthenticateAndRetrieveDataWithCredential(credential)
-            .then(function () {
-              // User re-authenticated.
-              user.updateEmail(this.userData.email)
-                .then(function () {
-                  // Update successful.
-                  console.log('Email successfully updated!')
-                })
-                .catch(function (error) {
-                  console.log('There is still an error occuring.', error)
-                })
-            })
-            .catch(function (error) {
-              // An error happened.
-              console.log('Error: ', error)
-            })
-        })
-    },
     deleteAccount () {
       const user = firebase.auth().currentUser
       const credential = firebase.auth.EmailAuthProvider.credential(
@@ -592,6 +489,159 @@ export default {
           alert(error)
           console.log('Error: ', error)
         })
+    },
+    updatePlace (place) {
+      db.collection('users').doc(this.userData.uid).collection('addresses').doc(place.address).update({
+        name: place.name
+      })
+    },
+    removeFocus () {
+      const placesList = document.getElementsByClassName('editPlace')
+      for (let p = 0; p < placesList.length; p++) {
+        placesList[p].blur()
+      }
+    },
+    checkOwner (index) {
+      for (let role = 0; role < this.userAddresses[index].members.length; role++) {
+        if (this.userAddresses[index].members[role].role === 'Owner' && this.userAddresses[index].members[role].uid === this.userData.uid) {
+          return true
+        }
+      }
+    },
+    addMember (place) {
+      const ownerEmail = this.userData.email
+      const memberEmail = this.newMember
+      db.collection('users').where('email', '==', this.newMember)
+        .onSnapshot(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            var memberID = doc.id
+            db.collection('users').doc(doc.id).collection('addresses').doc(place.address).set({
+              address: place.address,
+              isActive: false,
+              isDefault: false,
+              name: 'Invited by ' + ownerEmail
+            })
+            db.collection('addresses').doc(place.address).collection('members').doc(memberID).set({
+              email: memberEmail,
+              role: 'Member',
+              uid: memberID
+            })
+          })
+        })
+      this.newMember = ''
+    },
+    removeMember (member, place) {
+      if (confirm('Are you sure you wan to remove this member?')) {
+        db.collection('addresses').doc(place.address).collection('members').doc(member.uid).delete()
+        db.collection('users').doc(member.uid).collection('addresses').doc(place.address).delete()
+      }
+    },
+    addPlace () {
+      if (this.newPlace !== '') {
+        var userData = this.userData
+        var newPlace = this.newPlace
+        db.collection('addresses').add({
+          address: '',
+          personalList: [],
+          shoppingList: [],
+          calendar: [],
+          members: [],
+          months: []
+        })
+          .then(function (address) {
+            db.collection('addresses').doc(address.id).update({
+              address: address.id
+            })
+            db.collection('addresses').doc(address.id).collection('members').doc(userData.uid).set({
+              email: userData.email,
+              role: 'Owner',
+              uid: userData.uid
+            })
+            db.collection('addresses').doc(address.id).collection('calendar').doc('default').set({
+              placeholder: 'default'
+            })
+            var batchAddress = db.batch()
+            for (let y = 0; y < 2; y++) {
+              for (let m = 0; m < 12; m++) {
+                var yearCurrent = moment().format('YYYY')
+                var monthVar = moment().year(Number(yearCurrent)).month(m).add(y, 'years').format('YYYYMM')
+                var monthTemplate = {
+                  month: moment().year(Number(yearCurrent)).month(m).add(y, 'years').format('YYYYMM'),
+                  display: moment().year(Number(yearCurrent)).month(m).add(y, 'years').format('MMM'),
+                  isActive: false,
+                  isPurchased: false
+                }
+                const docRef = db.collection('addresses').doc(address.id).collection('months').doc(monthVar)
+                batchAddress.set(docRef, monthTemplate)
+              }
+            }
+            batchAddress.commit()
+            db.collection('users').doc(userData.uid).collection('addresses').doc(address.id).set({
+              name: newPlace,
+              isActive: false,
+              isDefault: false,
+              address: address.id
+            })
+          })
+      }
+    },
+    addPlace2 () {
+      if (this.newPlace !== '') {
+        store.commit('addPlace', this.newPlace, this.currentYear)
+        this.newPlace = ''
+        document.getElementById('newPlace').focus()
+      } else {
+        alert('Add a place first.')
+      }
+    },
+    removePlace (place, index) {
+      if (confirm('Are you sure you want to remove this place?')) {
+        var userData = this.userData
+        var userAddresses = this.userAddresses
+        var isOwner = false
+        for (let member in userAddresses[index].members) {
+          if (userAddresses[index].members[member].role === 'Owner' && userAddresses[index].members[member].uid === userData.uid) {
+            isOwner = true
+          }
+        }
+        if (isOwner) {
+          for (let member in userAddresses[index].members) {
+            db.collection('users').doc(userAddresses[index].members[member].uid).collection('addresses').doc(place.address).delete()
+          }
+          db.collection('addresses').doc(place.address).delete()
+        } else {
+          db.collection('addresses').doc(place.address).collection('members').doc(userData.uid).delete()
+          db.collection('users').doc(userData.uid).collection('addresses').doc(place.address).delete()
+        }
+      }
+    },
+    addFilter (newFilter) {
+      if (this.newFilter !== '') {
+        var userData = this.userData
+        db.collection('users').doc(userData.uid).collection('filters').add({
+          text: newFilter,
+          isActive: false,
+          uid: ''
+        })
+          .then(function (filter) {
+            db.collection('users').doc(userData.uid).collection('filters').doc(filter.id).update({
+              uid: filter.id
+            })
+          })
+        this.newFilter = ''
+        document.getElementById('newFilter').focus()
+      } else {
+        alert('Add a filter first.')
+      }
+    },
+    updateFilter (filter) {
+      db.collection('users').doc(userData.uid).collection('filters').doc(filter.uid).update({
+        text: filter.text
+      })
+    },
+    removeFilter (filter) {
+      var userData = this.userData
+      db.collection('users').doc(userData.uid).collection('filters').doc(filter.uid).delete()
     }
   }
 }

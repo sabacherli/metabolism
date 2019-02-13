@@ -65,7 +65,7 @@ export default {
     createUser () {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
         .then(user => {
-          store.commit('createUser2', user)
+          store.commit('createUser', user)
         })
         .catch(function (error) {
           alert(error)

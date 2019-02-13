@@ -18,42 +18,45 @@ export default {
   created () {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user && user.emailVerified & user.metadata.creationTime !== user.metadata.lastSignInTime) {
-        store.commit('emptyUserData2')
         db.collection('users').doc(user.uid)
           .onSnapshot(function (doc) {
             let data = doc.data()
-            store.commit('getUserData2', data)
+            store.commit('getUser', data)
             db.collection('users').doc(user.uid).collection('addresses')
               .onSnapshot(function (querySnapshot) {
+                store.commit('emptyUserAddresses')
+                store.commit('emptyAddresses')
                 querySnapshot.forEach(function (doc) {
-                  let addressData = doc.data()
-                  var addressID = addressData.address
-                  store.commit('getUserAddresses2', addressData)
-                  store.commit('emptyAddresses2')
+                  let userAddress = doc.data()
+                  var addressID = userAddress.address
+                  store.commit('getUserAddress', userAddress)
                   db.collection('addresses').doc(addressID)
                     .onSnapshot(function (doc) {
                       let address = doc.data()
-                      store.commit('getAddresses2', address)
+                      store.commit('getAddress', address)
                       db.collection('addresses').doc(addressID).collection('members')
                         .onSnapshot(function (querySnapshot) {
+                          // store.commit('emptyAddressMembers')
                           querySnapshot.forEach(function (doc) {
                             let member = doc.data()
-                            store.commit('getAddressMember2', { member, addressID })
+                            store.commit('getAddressMember', { member, addressID })
                           })
                         })
                       db.collection('addresses').doc(addressID).collection('months')
                         .onSnapshot(function (querySnapshot) {
+                          // store.commit('emptyAddressMonths')
                           querySnapshot.forEach(function (doc) {
                             let month = doc.data()
-                            store.commit('getAddressMonths2', { month, addressID })
+                            store.commit('getAddressMonths', { month, addressID })
                           })
                         })
                       let start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
                       db.collection('addresses').doc(addressID).collection('months').where('date', '>=', Number(start.format('YYYYMMDD'))).where('date', '<', Number(start.add(data.shoppingListLength, 'days').format('YYYYMMDD'))).orderBy('date')
                         .onSnapshot(function (querySnapshot) {
+                          // store.commit('emptyAddressCalendar')
                           querySnapshot.forEach(function (doc) {
                             let day = doc.data()
-                            store.commit('getAddressCalendar2', { day, addressID })
+                            store.commit('getAddressCalendar', { day, addressID })
                           })
                         })
                     })
@@ -61,15 +64,75 @@ export default {
               })
             db.collection('users').doc(user.uid).collection('recipies')
               .onSnapshot(function (querySnapshot) {
+                store.commit('emptyUserRecipies')
                 querySnapshot.forEach(function (doc) {
-                  let recipe = doc.data()
-                  store.commit('getUserRecipies2', recipe)
+                  let userRecipe = doc.data()
+                  store.commit('getUserRecipies', userRecipe)
+                })
+              })
+            db.collection('users').doc(user.uid).collection('filters')
+              .onSnapshot(function (querySnapshot) {
+                store.commit('emptyUserFilters')
+                querySnapshot.forEach(function (doc) {
+                  let userFilter = doc.data()
+                  store.commit('getUserFilters', userFilter)
                 })
               })
           })
       } else {
-        // User is signed out.
-        store.commit('setDefaultUser')
+        db.collection('users').doc('default')
+          .onSnapshot(function (doc) {
+            let data = doc.data()
+            store.commit('getUser', data)
+            store.commit('emptyUserAddresses')
+            db.collection('users').doc('default').collection('addresses')
+              .onSnapshot(function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+                  let userAddress = doc.data()
+                  var addressID = userAddress.address
+                  store.commit('getUserAddress', userAddress)
+                  store.commit('emptyAddresses')
+                  db.collection('addresses').doc(addressID)
+                    .onSnapshot(function (doc) {
+                      let address = doc.data()
+                      store.commit('getAddress', address)
+                      store.commit('emptyAddressMembers')
+                      db.collection('addresses').doc(addressID).collection('members')
+                        .onSnapshot(function (querySnapshot) {
+                          querySnapshot.forEach(function (doc) {
+                            let member = doc.data()
+                            store.commit('getAddressMember', { member, addressID })
+                          })
+                        })
+                      store.commit('emptyAddressMonths')
+                      db.collection('addresses').doc(addressID).collection('months')
+                        .onSnapshot(function (querySnapshot) {
+                          querySnapshot.forEach(function (doc) {
+                            let month = doc.data()
+                            store.commit('getAddressMonths', { month, addressID })
+                          })
+                        })
+                      let start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
+                      store.commit('emptyAddressCalendar')
+                      db.collection('addresses').doc(addressID).collection('months').where('date', '>=', Number(start.format('YYYYMMDD'))).where('date', '<', Number(start.add(data.shoppingListLength, 'days').format('YYYYMMDD'))).orderBy('date')
+                        .onSnapshot(function (querySnapshot) {
+                          querySnapshot.forEach(function (doc) {
+                            let day = doc.data()
+                            store.commit('getAddressCalendar', { day, addressID })
+                          })
+                        })
+                    })
+                })
+              })
+            store.commit('emptyUserRecipies')
+            db.collection('users').doc('default').collection('recipies')
+              .onSnapshot(function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+                  let userRecipe = doc.data()
+                  store.commit('getUserRecipies', userRecipe)
+                })
+              })
+          })
       }
     })
     window.onbeforeunload = function () {
@@ -86,9 +149,9 @@ export default {
       } else if (this.currentPage === 'calendar') {
         document.getElementById('calendar').classList.remove('dropdown_item')
         document.getElementById('calendar').classList.add('dropdown_item_selected')
-      } else if (this.currentPage === 'menu') {
-        document.getElementById('menu').classList.remove('dropdown_item')
-        document.getElementById('menu').classList.add('dropdown_item_selected')
+      } else if (this.currentPage === 'recipies') {
+        document.getElementById('recipies').classList.remove('dropdown_item')
+        document.getElementById('recipies').classList.add('dropdown_item_selected')
       } else if (this.currentPage === 'shoppinglist') {
         document.getElementById('shoppinglist').classList.remove('dropdown_item')
         document.getElementById('shoppinglist').classList.add('dropdown_item_selected')

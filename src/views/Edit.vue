@@ -3,7 +3,7 @@
     <template v-for="filteredmeal in filtered(userData, editor)">
       <!-- eslint-disable-next-line -->
       <div class="recipies">
-        <div class="number" @click="returnToMenu(); deleteMeal()">
+        <div class="number" @click="returnToRecipies(); deleteMeal()">
           <p class="add_recipe" style="transform: rotate(45deg)">+</p>
         </div>
         <p class="recipe_name"> {{ filteredmeal.name }} </p>
@@ -79,7 +79,7 @@
       <br>
       <div class="add_button" @click="focusIngredient(), addIngredient()" style="margin-top: 20px; margin-bottom: 40px"><span class="add_text">Add Ingredient</span></div>
     </div>
-    <div class="save_button" style="margin-bottom: 70px" @click="returnToMenu()">
+    <div class="save_button" style="margin-bottom: 70px" @click="returnToRecipies()">
       <span class="save_text">Save & Return</span>
     </div>
     <!-- <img  src="../assets/icons8-save-close-48.png" alt="Save"> -->
@@ -160,8 +160,8 @@ export default {
         placesList[p].blur()
       }
     },
-    returnToMenu () {
-      this.$router.push('menu')
+    returnToRecipies () {
+      this.$router.push('/recipies')
       this.$store.commit('resetPointer')
       this.$store.commit('changeFilters')
     },

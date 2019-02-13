@@ -15,7 +15,7 @@
       <div class="dropdown_item_break">
 
       </div>
-      <span id="menu" class="dropdown_item" v-on:click='goMenu()'>RECIPIES</span>
+      <span id="recipies" class="dropdown_item" v-on:click='goRecipies()'>RECIPIES</span>
       <div class="dropdown_item_break">
 
       </div>
@@ -64,9 +64,9 @@ export default {
       this.$router.push('calendar')
       this.$forceUpdate()
     },
-    goMenu () {
-      this.$store.commit('setPage', 'menu')
-      this.$router.push('menu')
+    goRecipies () {
+      this.$store.commit('setPage', 'recipies')
+      this.$router.push('recipies')
       this.$store.commit('resetPointer')
       this.$forceUpdate()
     },
@@ -142,9 +142,9 @@ export default {
     } else if (this.currentPage === 'calendar') {
       document.getElementById('calendar').classList.remove('dropdown_item')
       document.getElementById('calendar').classList.add('dropdown_item_selected')
-    } else if (this.currentPage === 'menu') {
-      document.getElementById('menu').classList.remove('dropdown_item')
-      document.getElementById('menu').classList.add('dropdown_item_selected')
+    } else if (this.currentPage === 'recipies') {
+      document.getElementById('recipies').classList.remove('dropdown_item')
+      document.getElementById('recipies').classList.add('dropdown_item_selected')
     } else if (this.currentPage === 'shoppinglist') {
       document.getElementById('shoppinglist').classList.remove('dropdown_item')
       document.getElementById('shoppinglist').classList.add('dropdown_item_selected')
@@ -170,9 +170,9 @@ export default {
     } else if (this.currentPage === 'calendar') {
       document.getElementById('calendar').classList.remove('dropdown_item')
       document.getElementById('calendar').classList.add('dropdown_item_selected')
-    } else if (this.currentPage === 'menu') {
-      document.getElementById('menu').classList.remove('dropdown_item')
-      document.getElementById('menu').classList.add('dropdown_item_selected')
+    } else if (this.currentPage === 'recipies') {
+      document.getElementById('recipies').classList.remove('dropdown_item')
+      document.getElementById('recipies').classList.add('dropdown_item_selected')
     } else if (this.currentPage === 'shoppinglist') {
       document.getElementById('shoppinglist').classList.remove('dropdown_item')
       document.getElementById('shoppinglist').classList.add('dropdown_item_selected')
