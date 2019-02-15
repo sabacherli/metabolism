@@ -15,12 +15,12 @@
       <!-- eslint-disable-next-line -->
       <div class="day">
         <!-- A user needs to be able to edit the meal -->
-        <div class="box" v-if="userID !== 'default'" @click="setEditor(meal); goEdit()">
+        <div class="box" v-if="userData.uid !== 'default'" @click="setEditor(meal); goEdit()">
           <p class="date"> {{ meal.id }} </p>
           <img class="edit_icon" src="../assets/icon-edit.png" alt="Edit">
         </div>
         <!-- Default user shouldn't be able to edit the meal, thus the edit icon is not shown -->
-        <div class="box_default" v-if="userID == 'default'">
+        <div class="box_default" v-if="userData.uid == 'default'">
           <p class="date_default"> {{ meal.id }} </p>
         </div>
         <!-- Meal is selected and entered into the calendar in the backend -->
@@ -37,7 +37,7 @@
         </template>
       </div>
     </template>
-    <div class="day" v-if="userID !== 'default' && pointer.doc === ''">
+    <div class="day" v-if="userData.uid !== 'default' && pointer.doc === ''">
       <div class="box" @click="addMeal()">
         <p class="add">+</p>
       </div>
@@ -97,7 +97,6 @@ export default {
   computed: {
     ...mapState([
       'userData',
-      'userID',
       'pointer',
       'meal',
       'mealName',
@@ -154,16 +153,16 @@ export default {
     },
     filtered (userData) {
       var filteredMeals = []
-      var activeTags = []
-      for (let t = 0; t < userData.tagList.length; t++) {
-        if (userData.tagList[t].isActive) {
-          activeTags.push(userData.tagList[t].text)
+      var activeFilters = []
+      for (let f = 0; f < userData.filters.length; f++) {
+        if (userData.filters[f].isActive) {
+          activeFilters.push(userData.filters[f].text)
         }
       }
-      for (let f = 0; f < userData.recipies.length; f++) {
-        for (let t = 0; t < userData.recipies[f].tags.length; t++) {
-          if ((activeTags.includes(userData.recipies[f].tags[t])) && (!filteredMeals.includes(userData.recipies[f]))) {
-            filteredMeals.push(userData.recipies[f])
+      for (let r = 0; r < userData.recipies.length; r++) {
+        for (let t = 0; t < userData.recipies[r].tags.length; t++) {
+          if ((activeFilters.includes(userData.recipies[r].tags[t])) && (!filteredMeals.includes(userData.recipies[r]))) {
+            filteredMeals.push(userData.recipies[r])
           }
         }
       }

@@ -46,15 +46,16 @@ export default {
   },
   computed: {
     ...mapState([
-      'userID',
-      'userEmail',
-      'userAddresses',
-      'userData'
+      'userData',
+      'userAddresses'
     ])
   },
   methods: {
     focusEmailInput () {
       document.getElementById('emailInput').focus()
+    },
+    createDefaultUser () {
+      store.commit('createDefaultUser')
     },
     login () {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password)

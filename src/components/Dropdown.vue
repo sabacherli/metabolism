@@ -7,7 +7,7 @@
       <div class="dropdown_item_break" v-if="userData.uid === 'default'">
 
       </div>
-      <span id="calendar" class="dropdown_item_selected" v-on:click='goCalendar()'>CALENDAR</span>
+      <span id="calendar" class="dropdown_item" v-on:click='goCalendar()'>CALENDAR</span>
       <div class="dropdown_item_break">
 
       </div>
@@ -28,7 +28,7 @@
 
       </div>
       <span id="login" class="dropdown_item" v-if="userData.uid === 'default'" v-on:click='goLogin()'>LOGIN</span>
-      <span class="dropdown_item" v-if="userData.uid !== 'default'" v-on:click='logout()'>LOGOUT</span>
+      <span id="logout" class="dropdown_item" v-if="userData.uid !== 'default'" v-on:click='logout()'>LOGOUT</span>
     </div>
     <div id="background" class="" @click="touchLeave()">
 
@@ -46,7 +46,6 @@ export default {
   computed: {
     ...mapState([
       'currentPage',
-      'userID',
       'userData'
     ])
   },
@@ -91,7 +90,6 @@ export default {
       this.$forceUpdate()
     },
     logout () {
-      this.$store.commit('saveData')
       firebase.auth().signOut()
         .then(success => {
           this.$store.commit('setPage', 'login')
@@ -131,61 +129,35 @@ export default {
       document.getElementById('container').classList.remove('remove_hover')
     }
   },
-  mounted () {
-    for (var i = 0; i < document.getElementsByClassName('dropdown_item_selected').length; i++) {
-      document.getElementsByClassName('dropdown_item_selected')[i].classList.add('dropdown_item')
-      document.getElementsByClassName('dropdown_item_selected')[i].classList.remove('dropdown_item_selected')
-    }
-    if (this.currentPage === 'benefits') {
-      document.getElementById('benefits').classList.remove('dropdown_item')
-      document.getElementById('benefits').classList.add('dropdown_item_selected')
-    } else if (this.currentPage === 'calendar') {
-      document.getElementById('calendar').classList.remove('dropdown_item')
-      document.getElementById('calendar').classList.add('dropdown_item_selected')
-    } else if (this.currentPage === 'recipies') {
-      document.getElementById('recipies').classList.remove('dropdown_item')
-      document.getElementById('recipies').classList.add('dropdown_item_selected')
-    } else if (this.currentPage === 'shoppinglist') {
-      document.getElementById('shoppinglist').classList.remove('dropdown_item')
-      document.getElementById('shoppinglist').classList.add('dropdown_item_selected')
-    } else if (this.currentPage === 'profile') {
-      document.getElementById('profile').classList.remove('dropdown_item')
-      document.getElementById('profile').classList.add('dropdown_item_selected')
-    } else if (this.currentPage === 'register') {
-      document.getElementById('register').classList.remove('dropdown_item')
-      document.getElementById('register').classList.add('dropdown_item_selected')
-    } else if (this.currentPage === 'login') {
-      document.getElementById('login').classList.remove('dropdown_item')
-      document.getElementById('login').classList.add('dropdown_item_selected')
-    }
-  },
   updated () {
-    for (var i = 0; i < document.getElementsByClassName('dropdown_item_selected').length; i++) {
-      document.getElementsByClassName('dropdown_item_selected')[i].classList.add('dropdown_item')
-      document.getElementsByClassName('dropdown_item_selected')[i].classList.remove('dropdown_item_selected')
-    }
-    if (this.currentPage === 'benefits') {
-      document.getElementById('benefits').classList.remove('dropdown_item')
-      document.getElementById('benefits').classList.add('dropdown_item_selected')
-    } else if (this.currentPage === 'calendar') {
-      document.getElementById('calendar').classList.remove('dropdown_item')
-      document.getElementById('calendar').classList.add('dropdown_item_selected')
-    } else if (this.currentPage === 'recipies') {
-      document.getElementById('recipies').classList.remove('dropdown_item')
-      document.getElementById('recipies').classList.add('dropdown_item_selected')
-    } else if (this.currentPage === 'shoppinglist') {
-      document.getElementById('shoppinglist').classList.remove('dropdown_item')
-      document.getElementById('shoppinglist').classList.add('dropdown_item_selected')
-    } else if (this.currentPage === 'profile') {
-      document.getElementById('profile').classList.remove('dropdown_item')
-      document.getElementById('profile').classList.add('dropdown_item_selected')
-    } else if (this.currentPage === 'register') {
-      document.getElementById('register').classList.remove('dropdown_item')
-      document.getElementById('register').classList.add('dropdown_item_selected')
-    } else if (this.currentPage === 'login') {
-      document.getElementById('login').classList.remove('dropdown_item')
-      document.getElementById('login').classList.add('dropdown_item_selected')
-    }
+    this.$nextTick(function () {
+      for (var i = 0; i < document.getElementsByClassName('dropdown_item_selected').length; i++) {
+        document.getElementsByClassName('dropdown_item_selected')[i].classList.add('dropdown_item')
+        document.getElementsByClassName('dropdown_item_selected')[i].classList.remove('dropdown_item_selected')
+      }
+      if (this.currentPage === 'benefits' && document.getElementById('benefits') !== null) {
+        document.getElementById('benefits').classList.remove('dropdown_item')
+        document.getElementById('benefits').classList.add('dropdown_item_selected')
+      } else if (this.currentPage === 'calendar' && document.getElementById('calendar') !== null) {
+        document.getElementById('calendar').classList.remove('dropdown_item')
+        document.getElementById('calendar').classList.add('dropdown_item_selected')
+      } else if (this.currentPage === 'recipies' && document.getElementById('recipies') !== null) {
+        document.getElementById('recipies').classList.remove('dropdown_item')
+        document.getElementById('recipies').classList.add('dropdown_item_selected')
+      } else if (this.currentPage === 'shoppinglist' && document.getElementById('shoppinglist') !== null) {
+        document.getElementById('shoppinglist').classList.remove('dropdown_item')
+        document.getElementById('shoppinglist').classList.add('dropdown_item_selected')
+      } else if (this.currentPage === 'profile' && document.getElementById('profile') !== null) {
+        document.getElementById('profile').classList.remove('dropdown_item')
+        document.getElementById('profile').classList.add('dropdown_item_selected')
+      } else if (this.currentPage === 'register' && document.getElementById('register') !== null) {
+        document.getElementById('register').classList.remove('dropdown_item')
+        document.getElementById('register').classList.add('dropdown_item_selected')
+      } else if (this.currentPage === 'login' && document.getElementById('login') !== null) {
+        document.getElementById('login').classList.remove('dropdown_item')
+        document.getElementById('login').classList.add('dropdown_item_selected')
+      }
+    })
   }
 }
 </script>

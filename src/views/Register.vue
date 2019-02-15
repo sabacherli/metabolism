@@ -55,7 +55,6 @@ export default {
   },
   computed: {
     ...mapState([
-      'userID'
     ])
   },
   methods: {

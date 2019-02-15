@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="container container_animation">
-    <div class="calendar_navigation_button" @click="previousWeek()" v-if="userID !== 'Default'"><span class="calendar_navigation_text">Previous Week</span></div>
+    <div class="calendar_navigation_button" @click="previousWeek()" v-if="userData.uid !== 'Default'"><span class="calendar_navigation_text">Previous Week</span></div>
     <div class="animated">
       <!-- eslint-disable-next-line -->
       <div v-for="(place, index) in userData.addresses">
@@ -128,7 +128,7 @@
         </div>
       </div>
     </div>
-    <div class="calendar_navigation_button" style="margin-bottom: 70px" @click="nextWeek()" v-if="userID !== 'Default'"><span class="calendar_navigation_text">Next Week</span></div>
+    <div class="calendar_navigation_button" style="margin-bottom: 70px" @click="nextWeek()" v-if="userData.uid !== 'Default'"><span class="calendar_navigation_text">Next Week</span></div>
   </div>
 </template>
 
@@ -149,7 +149,6 @@ export default {
   },
   computed: {
     ...mapState([
-      'userID',
       'userData',
       'userAddresses',
       'today',
@@ -168,9 +167,9 @@ export default {
       'setDinner',
       'nextWeek',
       'previousWeek',
-      'addMonths',
       'toggleSelected',
-      'calcPrice'
+      'calcPrice',
+      'addMonths'
     ]),
     openMenu () {
       if (this.menu.isActive) {

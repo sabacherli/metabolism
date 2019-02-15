@@ -43,6 +43,7 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       components: {
         default: () => import(/* webpackChunkName: "calendar" */ './views/Calendar.vue'),
+        dropdown: () => import(/* webpackChunkName: "dropdown" */ './components/Dropdown.vue'),
         banner: () => import(/* webpackChunkName: "banner" */ './components/Banner.vue')
       },
       meta: {
@@ -62,7 +63,8 @@ const router = new Router({
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       components: {
-        default: () => import(/* webpackChunkName: "recipies" */ './views/Menu.vue'),
+        default: () => import(/* webpackChunkName: "recipies" */ './views/Recipies.vue'),
+        dropdown: () => import(/* webpackChunkName: "dropdown" */ './components/Dropdown.vue'),
         banner: () => import(/* webpackChunkName: "banner" */ './components/Banner.vue')
       },
       meta: {
@@ -83,6 +85,7 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       components: {
         default: () => import(/* webpackChunkName: "edit" */ './views/Edit.vue'),
+        dropdown: () => import(/* webpackChunkName: "dropdown" */ './components/Dropdown.vue'),
         banner: () => import(/* webpackChunkName: "banner" */ './components/Banner.vue')
       },
       meta: {
@@ -103,6 +106,7 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       components: {
         default: () => import(/* webpackChunkName: "shoppinglist" */ './views/Shoppinglist.vue'),
+        dropdown: () => import(/* webpackChunkName: "dropdown" */ './components/Dropdown.vue'),
         banner: () => import(/* webpackChunkName: "banner" */ './components/Banner.vue')
       },
       meta: {
@@ -123,6 +127,7 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       components: {
         default: () => import(/* webpackChunkName: "profile" */ './views/Profile.vue'),
+        dropdown: () => import(/* webpackChunkName: "dropdown" */ './components/Dropdown.vue'),
         banner: () => import(/* webpackChunkName: "banner" */ './components/Banner.vue')
       },
       meta: {
@@ -143,7 +148,7 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       components: {
         default: () => import(/* webpackChunkName: "login" */ './views/Login.vue'),
-        banner: () => import(/* webpackChunkName: "dropdown" */ './components/Dropdown.vue')
+        dropdown: () => import(/* webpackChunkName: "dropdown" */ './components/Dropdown.vue')
       },
       meta: {
         title: 'Metabolism',
@@ -163,7 +168,7 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       components: {
         default: () => import(/* webpackChunkName: "register" */ './views/Register.vue'),
-        banner: () => import(/* webpackChunkName: "dropdown" */ './components/Dropdown.vue')
+        dropdown: () => import(/* webpackChunkName: "dropdown" */ './components/Dropdown.vue')
       },
       meta: {
         title: 'Metabolism',

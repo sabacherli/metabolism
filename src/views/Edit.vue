@@ -167,9 +167,9 @@ export default {
     },
     filtered (userData, editor) {
       var editIngredients = []
-      for (let f = 0; f < userData.foods.length; f++) {
-        if (userData.foods[f].id === editor.id) {
-          editIngredients.push(userData.foods[f])
+      for (let r = 0; r < userData.recipies.length; r++) {
+        if (userData.recipies[r].id === editor.id) {
+          editIngredients.push(userData.recipies[r])
         }
       }
       return editIngredients

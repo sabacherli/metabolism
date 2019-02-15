@@ -583,15 +583,8 @@ export default {
               address: address.id
             })
           })
-      }
-    },
-    addPlace2 () {
-      if (this.newPlace !== '') {
-        store.commit('addPlace', this.newPlace, this.currentYear)
         this.newPlace = ''
         document.getElementById('newPlace').focus()
-      } else {
-        alert('Add a place first.')
       }
     },
     removePlace (place, index) {
@@ -635,6 +628,7 @@ export default {
       }
     },
     updateFilter (filter) {
+      var userData = this.userData
       db.collection('users').doc(userData.uid).collection('filters').doc(filter.uid).update({
         text: filter.text
       })

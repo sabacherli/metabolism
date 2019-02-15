@@ -76,7 +76,6 @@ export default {
       'newAmount',
       'newUnit',
       'userAddresses',
-      'userID',
       'tempCal',
       'start',
       'userData'

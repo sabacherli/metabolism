@@ -4,7 +4,6 @@
     <div class="banner">
       <h1 class="brand_large target" @click="goCalendar()">METABOLISM</h1>
       <h1 class="brand_small target" @click="goCalendar()">ME</h1>
-      <dropdownComponent :key="rerender"></dropdownComponent>
       <transition name="slide" mode="out-in" appear>
       <component :is="currentPageComponent"></component>
       </transition>
@@ -25,7 +24,7 @@ export default {
   components: {
     'filters-benefits': CalendarFilters,
     'filters-calendar': CalendarFilters,
-    'filters-menu': MealFilters,
+    'filters-recipies': MealFilters,
     'filters-shoppinglist': LocationFilters,
     'filters-profile': ProfileFilters,
     'filters-register': CalendarFilters,

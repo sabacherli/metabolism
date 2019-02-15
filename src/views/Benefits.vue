@@ -37,7 +37,6 @@ export default {
   name: 'Landing',
   created () {
     this.$store.commit('setPage', 'benefits')
-    this.$store.commit('setDefaultUser')
   },
   methods: {
     scrollCalendar () {
