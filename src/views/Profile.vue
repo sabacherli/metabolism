@@ -277,7 +277,7 @@
       </div>
     </div>
     <div class="animated" v-if="profileFilters[3].isActive" style="padding-bottom: 100px">
-      <template v-for="filter in userData.filters">
+      <template v-for="filter in userData.mealplans[0].filters">
         <!-- eslint-disable-next-line -->
         <div class="box" @click="removeFilter(filter)">
           <p class="sign" style="transform: rotate(45deg)">+</p>
@@ -491,7 +491,7 @@ export default {
         })
     },
     updatePlace (place) {
-      db.collection('users').doc(this.userData.uid).collection('addresses').doc(place.address).update({
+      db.collection('users').doc(this.userData.uid).collection('addresses').doc(place.uid).update({
         name: place.name
       })
     },
@@ -515,13 +515,13 @@ export default {
         .onSnapshot(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
             var memberID = doc.id
-            db.collection('users').doc(doc.id).collection('addresses').doc(place.address).set({
-              address: place.address,
+            db.collection('users').doc(doc.id).collection('addresses').doc(place.uid).set({
+              uid: place.uid,
               isActive: false,
               isDefault: false,
               name: 'Invited by ' + ownerEmail
             })
-            db.collection('addresses').doc(place.address).collection('members').doc(memberID).set({
+            db.collection('addresses').doc(place.uid).collection('members').doc(memberID).set({
               email: memberEmail,
               role: 'Member',
               uid: memberID
@@ -532,8 +532,8 @@ export default {
     },
     removeMember (member, place) {
       if (confirm('Are you sure you wan to remove this member?')) {
-        db.collection('addresses').doc(place.address).collection('members').doc(member.uid).delete()
-        db.collection('users').doc(member.uid).collection('addresses').doc(place.address).delete()
+        db.collection('addresses').doc(place.uid).collection('members').doc(member.uid).delete()
+        db.collection('users').doc(member.uid).collection('addresses').doc(place.uid).delete()
       }
     },
     addPlace () {
@@ -541,7 +541,7 @@ export default {
         var userData = this.userData
         var newPlace = this.newPlace
         db.collection('addresses').add({
-          address: '',
+          uid: '',
           personalList: [],
           shoppingList: [],
           calendar: [],
@@ -550,7 +550,7 @@ export default {
         })
           .then(function (address) {
             db.collection('addresses').doc(address.id).update({
-              address: address.id
+              uid: address.id
             })
             db.collection('addresses').doc(address.id).collection('members').doc(userData.uid).set({
               email: userData.email,
@@ -580,7 +580,7 @@ export default {
               name: newPlace,
               isActive: false,
               isDefault: false,
-              address: address.id
+              uid: address.id
             })
           })
         this.newPlace = ''
@@ -592,32 +592,82 @@ export default {
         var userData = this.userData
         var userAddresses = this.userAddresses
         var isOwner = false
+        var batch = db.batch()
         for (let member in userAddresses[index].members) {
           if (userAddresses[index].members[member].role === 'Owner' && userAddresses[index].members[member].uid === userData.uid) {
             isOwner = true
           }
         }
         if (isOwner) {
-          for (let member in userAddresses[index].members) {
-            db.collection('users').doc(userAddresses[index].members[member].uid).collection('addresses').doc(place.address).delete()
-          }
-          db.collection('addresses').doc(place.address).delete()
+          new Promise(function (resolve, reject) {
+            for (let member in userAddresses[index].members) {
+              var addressRef = db.collection('users').doc(userAddresses[index].members[member].uid).collection('addresses').doc(place.uid)
+              batch.delete(addressRef)
+            }
+            resolve()
+          })
+            .then(function () {
+              new Promise(function (resolve, reject) {
+                db.collection('addresses').doc(place.uid).collection('calendar')
+                  .onSnapshot(function (querySnapshot) {
+                    querySnapshot.forEach(function (doc) {
+                      var calendarRef = db.collection('addresses').doc(place.uid).collection('calendar').doc(doc.id)
+                      batch.delete(calendarRef)
+                    })
+                    resolve()
+                  })
+              })
+                .then(function () {
+                  new Promise(function (resolve, reject) {
+                    db.collection('addresses').doc(place.uid).collection('members')
+                      .onSnapshot(function (querySnapshot) {
+                        querySnapshot.forEach(function (doc) {
+                          var memberRef = db.collection('addresses').doc(place.uid).collection('members').doc(doc.id)
+                          batch.delete(memberRef)
+                        })
+                        resolve()
+                      })
+                  })
+                    .then(function () {
+                      new Promise(function (resolve, reject) {
+                        db.collection('addresses').doc(place.uid).collection('months')
+                          .onSnapshot(function (querySnapshot) {
+                            querySnapshot.forEach(function (doc) {
+                              var monthRef = db.collection('addresses').doc(place.uid).collection('months').doc(doc.id)
+                              batch.delete(monthRef)
+                            })
+                            resolve()
+                          })
+                      })
+                        .then(function () {
+                          new Promise(function (resolve, reject) {
+                            var docRef = db.collection('addresses').doc(place.uid)
+                            batch.delete(docRef)
+                            resolve()
+                          })
+                            .then(function () {
+                              batch.commit()
+                            })
+                        })
+                    })
+                })
+            })
         } else {
-          db.collection('addresses').doc(place.address).collection('members').doc(userData.uid).delete()
-          db.collection('users').doc(userData.uid).collection('addresses').doc(place.address).delete()
+          batch.delete(db.collection('addresses').doc(place.uid).collection('members').doc(userData.uid))
+          batch.delete(db.collection('users').doc(userData.uid).collection('addresses').doc(place.uid))
         }
       }
     },
     addFilter (newFilter) {
       if (this.newFilter !== '') {
         var userData = this.userData
-        db.collection('users').doc(userData.uid).collection('filters').add({
+        db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('filters').add({
           text: newFilter,
           isActive: false,
           uid: ''
         })
           .then(function (filter) {
-            db.collection('users').doc(userData.uid).collection('filters').doc(filter.id).update({
+            db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('filters').doc(filter.id).update({
               uid: filter.id
             })
           })
@@ -629,13 +679,13 @@ export default {
     },
     updateFilter (filter) {
       var userData = this.userData
-      db.collection('users').doc(userData.uid).collection('filters').doc(filter.uid).update({
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('filters').doc(filter.uid).update({
         text: filter.text
       })
     },
     removeFilter (filter) {
       var userData = this.userData
-      db.collection('users').doc(userData.uid).collection('filters').doc(filter.uid).delete()
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('filters').doc(filter.uid).delete()
     }
   }
 }

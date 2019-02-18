@@ -22,34 +22,42 @@ export default {
         db.collection('users').doc(user.uid)
           .onSnapshot(function (doc) {
             var userData = doc.data()
+            var addressID = ''
+            var mealplanID = ''
+            var recipeID = ''
             store.commit('getUserData', userData)
             db.collection('users').doc(user.uid).collection('addresses')
               .onSnapshot(function (querySnapshot) {
                 store.commit('emptyUserDataAddresses')
+                store.commit('emptyUserAddresses')
                 querySnapshot.forEach(function (doc) {
-                  var userDataAddress = doc.data()
-                  store.commit('pushUserDataAddress', userDataAddress)
-                  db.collection('addresses').doc(doc.id)
-                    .onSnapshot(function (doc) {
-                      store.commit('emptyUserAddresses')
-                      var userAddress = doc.data()
-                      var addressID = doc.id
-                      store.commit('pushUserAddress', userAddress)
-                      db.collection('addresses').doc(doc.id).collection('members')
-                        .onSnapshot(function (querySnapshot) {
-                          store.commit('emptyUserAddressMembers', addressID)
-                          querySnapshot.forEach(function (doc) {
-                            var userAddressMember = doc.data()
-                            store.commit('pushUserAddressMember', { userAddressMember, addressID })
-                          })
-                        })
-                      db.collection('addresses').doc(doc.id).collection('months')
-                        .onSnapshot(function (querySnapshot) {
-                          store.commit('emptyUserAddressMonths', addressID)
-                          querySnapshot.forEach(function (doc) {
-                            var userAddressMonth = doc.data()
-                            store.commit('pushUserAddressMonth', { userAddressMonth, addressID })
-                          })
+                  new Promise(function (resolve, reject) {
+                    var userDataAddress = doc.data()
+                    addressID = userDataAddress.uid
+                    store.commit('pushUserDataAddress', userDataAddress)
+                    resolve()
+                  })
+                    .then(function () {
+                      db.collection('addresses').doc(addressID)
+                        .onSnapshot(function (doc) {
+                          var userAddress = doc.data()
+                          store.commit('pushUserAddress', userAddress)
+                          db.collection('addresses').doc(addressID).collection('members')
+                            .onSnapshot(function (querySnapshot) {
+                              store.commit('emptyUserAddressMembers', addressID)
+                              querySnapshot.forEach(function (doc) {
+                                var userAddressMember = doc.data()
+                                store.commit('pushUserAddressMember', { userAddressMember, addressID })
+                              })
+                            })
+                          db.collection('addresses').doc(addressID).collection('months')
+                            .onSnapshot(function (querySnapshot) {
+                              store.commit('emptyUserAddressMonths', addressID)
+                              querySnapshot.forEach(function (doc) {
+                                var userAddressMonth = doc.data()
+                                store.commit('pushUserAddressMonth', { userAddressMonth, addressID })
+                              })
+                            })
                         })
                     })
                 })
@@ -68,9 +76,9 @@ export default {
                 store.commit('emptyUserDataMealplans')
                 querySnapshot.forEach(function (doc) {
                   var userDataMealplan = doc.data()
-                  var mealplanID = doc.id
+                  mealplanID = doc.id
                   store.commit('pushUserDataMealplan', userDataMealplan)
-                  db.collection('users').doc(user.uid).collection('mealplans').doc(doc.id).collection('filters')
+                  db.collection('users').doc(user.uid).collection('mealplans').doc(mealplanID).collection('filters')
                     .onSnapshot(function (querySnapshot) {
                       store.commit('emptyUserDataMealplanFilters', mealplanID)
                       querySnapshot.forEach(function (doc) {
@@ -78,20 +86,24 @@ export default {
                         store.commit('pushUserDataMealplanFilter', { userDataMealplanFilter, mealplanID })
                       })
                     })
-                  db.collection('users').doc(user.uid).collection('mealplans').doc(doc.id).collection('recipies')
+                  db.collection('users').doc(user.uid).collection('mealplans').doc(mealplanID).collection('recipies')
                     .onSnapshot(function (querySnapshot) {
                       store.commit('emptyUserDataMealplanRecipies', mealplanID)
                       querySnapshot.forEach(function (doc) {
-                        var userDataMealplanRecipe = doc.data()
-                        var recipeID = doc.id
-                        store.commit('pushUserDataMealplanRecipe', { userDataMealplanRecipe, mealplanID })
-                        db.collection('users').doc(user.uid).collection('mealplans').doc(userDataMealplan.uid).collection('recipies').doc(doc.id).collection('ingredients')
-                          .onSnapshot(function (querySnapshot) {
-                            store.commit('emptyUserDataMealplanRecipeIngredients', { mealplanID, recipeID })
-                            querySnapshot.forEach(function (doc) {
-                              var userDataMealplansRecipiesIngredient = doc.data()
-                              store.commit('pushUserDataMealplanRecipeIngredient',  { userDataMealplansRecipiesIngredient, mealplanID, recipeID })
-                            })
+                        new Promise(function (resolve, reject) {
+                          var userDataMealplanRecipe = doc.data()
+                          recipeID = doc.id
+                          store.commit('pushUserDataMealplanRecipe', { userDataMealplanRecipe, mealplanID })
+                          resolve()
+                        })
+                          .then(function () {
+                            db.collection('users').doc(user.uid).collection('mealplans').doc(mealplanID).collection('recipies').doc(recipeID).collection('ingredients')
+                              .onSnapshot(function (querySnapshot) {
+                                store.commit('emptyUserDataMealplanRecipeIngredients', { mealplanID, recipeID })
+                                querySnapshot.forEach(function (doc) {
+                                  var userDataMealplanRecipeIngredient = doc.data()
+                                })
+                              })
                           })
                       })
                     })
@@ -102,34 +114,42 @@ export default {
         db.collection('users').doc('default')
           .onSnapshot(function (doc) {
             var userData = doc.data()
+            var addressID = ''
+            var mealplanID = ''
+            var recipeID = ''
             store.commit('getUserData', userData)
             db.collection('users').doc('default').collection('addresses')
               .onSnapshot(function (querySnapshot) {
                 store.commit('emptyUserDataAddresses')
+                store.commit('emptyUserAddresses')
                 querySnapshot.forEach(function (doc) {
-                  var userDataAddress = doc.data()
-                  store.commit('pushUserDataAddress', userDataAddress)
-                  db.collection('addresses').doc(doc.id)
-                    .onSnapshot(function (doc) {
-                      store.commit('emptyUserAddresses')
-                      var userAddress = doc.data()
-                      var addressID = doc.id
-                      store.commit('pushUserAddress', userAddress)
-                      db.collection('addresses').doc(doc.id).collection('members')
-                        .onSnapshot(function (querySnapshot) {
-                          store.commit('emptyUserAddressMembers', addressID)
-                          querySnapshot.forEach(function (doc) {
-                            var userAddressMember = doc.data()
-                            store.commit('pushUserAddressMember', { userAddressMember, addressID })
-                          })
-                        })
-                      db.collection('addresses').doc(doc.id).collection('months')
-                        .onSnapshot(function (querySnapshot) {
-                          store.commit('emptyUserAddressMonths', addressID)
-                          querySnapshot.forEach(function (doc) {
-                            var userAddressMonth = doc.data()
-                            store.commit('pushUserAddressMonth', { userAddressMonth, addressID })
-                          })
+                  new Promise(function (resolve, reject) {
+                    var userDataAddress = doc.data()
+                    addressID = userDataAddress.uid
+                    store.commit('pushUserDataAddress', userDataAddress)
+                    resolve()
+                  })
+                    .then(function () {
+                      db.collection('addresses').doc(addressID)
+                        .onSnapshot(function (doc) {
+                          var userAddress = doc.data()
+                          store.commit('pushUserAddress', userAddress)
+                          db.collection('addresses').doc(addressID).collection('members')
+                            .onSnapshot(function (querySnapshot) {
+                              store.commit('emptyUserAddressMembers', addressID)
+                              querySnapshot.forEach(function (doc) {
+                                var userAddressMember = doc.data()
+                                store.commit('pushUserAddressMember', { userAddressMember, addressID })
+                              })
+                            })
+                          db.collection('addresses').doc(addressID).collection('months')
+                            .onSnapshot(function (querySnapshot) {
+                              store.commit('emptyUserAddressMonths', addressID)
+                              querySnapshot.forEach(function (doc) {
+                                var userAddressMonth = doc.data()
+                                store.commit('pushUserAddressMonth', { userAddressMonth, addressID })
+                              })
+                            })
                         })
                     })
                 })
@@ -148,9 +168,9 @@ export default {
                 store.commit('emptyUserDataMealplans')
                 querySnapshot.forEach(function (doc) {
                   var userDataMealplan = doc.data()
-                  var mealplanID = doc.id
+                  mealplanID = doc.id
                   store.commit('pushUserDataMealplan', userDataMealplan)
-                  db.collection('users').doc('default').collection('mealplans').doc(doc.id).collection('filters')
+                  db.collection('users').doc('default').collection('mealplans').doc(mealplanID).collection('filters')
                     .onSnapshot(function (querySnapshot) {
                       store.commit('emptyUserDataMealplanFilters', mealplanID)
                       querySnapshot.forEach(function (doc) {
@@ -158,20 +178,24 @@ export default {
                         store.commit('pushUserDataMealplanFilter', { userDataMealplanFilter, mealplanID })
                       })
                     })
-                  db.collection('users').doc('default').collection('mealplans').doc(doc.id).collection('recipies')
+                  db.collection('users').doc('default').collection('mealplans').doc(mealplanID).collection('recipies')
                     .onSnapshot(function (querySnapshot) {
                       store.commit('emptyUserDataMealplanRecipies', mealplanID)
                       querySnapshot.forEach(function (doc) {
-                        var userDataMealplanRecipe = doc.data()
-                        var recipeID = doc.id
-                        store.commit('pushUserDataMealplanRecipe', { userDataMealplanRecipe, mealplanID })
-                        db.collection('users').doc('default').collection('mealplans').doc(userDataMealplan.uid).collection('recipies').doc(doc.id).collection('ingredients')
-                          .onSnapshot(function (querySnapshot) {
-                            store.commit('emptyUserDataMealplanRecipeIngredients', { mealplanID, recipeID })
-                            querySnapshot.forEach(function (doc) {
-                              var userDataMealplansRecipiesIngredient = doc.data()
-                              store.commit('pushUserDataMealplanRecipeIngredient',  { userDataMealplansRecipiesIngredient, mealplanID, recipeID })
-                            })
+                        new Promise(function (resolve, reject) {
+                          var userDataMealplanRecipe = doc.data()
+                          recipeID = doc.id
+                          store.commit('pushUserDataMealplanRecipe', { userDataMealplanRecipe, mealplanID })
+                          resolve()
+                        })
+                          .then(function () {
+                            db.collection('users').doc('default').collection('mealplans').doc(mealplanID).collection('recipies').doc(recipeID).collection('ingredients')
+                              .onSnapshot(function (querySnapshot) {
+                                store.commit('emptyUserDataMealplanRecipeIngredients', { mealplanID, recipeID })
+                                querySnapshot.forEach(function (doc) {
+                                  var userDataMealplanRecipeIngredient = doc.data()
+                                })
+                              })
                           })
                       })
                     })

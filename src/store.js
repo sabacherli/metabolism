@@ -11,7 +11,7 @@ Vue.use(Vuex, moment)
 export default new Vuex.Store({
   state: {
     userData: {
-      uid: 'Default'
+
     },
     userAddresses: [],
     mealName: null,
@@ -814,7 +814,7 @@ export default new Vuex.Store({
         }
       }
       db.collection('addresses').add({
-        address: '',
+        uid: '',
         members: [{
           email: state.userData.email,
           role: 'Owner',
@@ -845,7 +845,7 @@ export default new Vuex.Store({
           }
           db.collection('users').doc(state.userData.uid).set(state.userData)
           db.collection('addresses').doc(docRef.id).update({
-            address: docRef.id
+            uid: docRef.id
           })
           // getData without checking userData.months ()
           const dataRef = db.collection('users').doc(state.userData.uid)
@@ -1432,7 +1432,7 @@ export default new Vuex.Store({
           db.collection('users').doc('default').update({
             months: months
           })
-      })
+        })
     },
     createUser (state, user) {
       const object = JSON.parse(JSON.stringify(user))
@@ -1451,7 +1451,7 @@ export default new Vuex.Store({
           db.collection('addresses').doc(address.id).collection('members').doc(object.user.uid).set({
             email: object.user.email,
             role: 'Owner',
-            uid: object.user.uid
+            userID: object.user.uid
           })
           db.collection('addresses').doc(address.id).collection('calendar').doc('default').set({
             placeholder: 'default'

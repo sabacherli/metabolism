@@ -154,15 +154,15 @@ export default {
     filtered (userData) {
       var filteredMeals = []
       var activeFilters = []
-      for (let f = 0; f < userData.filters.length; f++) {
-        if (userData.filters[f].isActive) {
-          activeFilters.push(userData.filters[f].text)
+      for (let f = 0; f < userData.mealplans[0].filters.length; f++) {
+        if (userData.mealplans[0].filters[f].isActive) {
+          activeFilters.push(userData.mealplans[0].filters[f].text)
         }
       }
-      for (let r = 0; r < userData.recipies.length; r++) {
-        for (let t = 0; t < userData.recipies[r].tags.length; t++) {
-          if ((activeFilters.includes(userData.recipies[r].tags[t])) && (!filteredMeals.includes(userData.recipies[r]))) {
-            filteredMeals.push(userData.recipies[r])
+      for (let r = 0; r < userData.mealplans[0].recipies.length; r++) {
+        for (let t = 0; t < userData.mealplans[0].recipies[r].tags.length; t++) {
+          if ((activeFilters.includes(userData.mealplans[0].recipies[r].tags[t])) && (!filteredMeals.includes(userData.mealplans[0].recipies[r]))) {
+            filteredMeals.push(userData.mealplans[0].recipies[r])
           }
         }
       }

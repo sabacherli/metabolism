@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="filters">
-    <template v-for="filter in userData.filters">
+    <template v-for="filter in userData.mealplans[0].filters">
       <!-- eslint-disable-next-line -->
       <div class="filter" @click="toggleFilter(filter)">
         <p> {{ filter.text }} </p>
