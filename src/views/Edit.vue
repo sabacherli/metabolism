@@ -1,66 +1,59 @@
 <template lang="html">
   <div class="container_recipies">
-    <template v-for="filteredmeal in filtered(userData, editor)">
+
+    <!-- eslint-disable-next-line -->
+    <div class="recipies">
+      <div class="number" @click="deleteRecipe()">
+        <p class="add_recipe" style="transform: rotate(45deg)">+</p>
+      </div>
+      <p class="recipe_name"> {{ userData.mealplans[0].recipies[editor.index].name }} </p>
+      <div class="square square_recipies">
+
+      </div>
+      <div class="" align="left">
+        <label for="">Recipe Name</label>
+        <input id="mealName" class="amount editPlace" type="text" @keyup.enter="updateName()" v-model="userData.mealplans[0].recipies[editor.index].name" required>
+      </div>
+      <br>
+      <div class="add_button" @click="updateName()" style="margin-top: 20px; margin-bottom: 40px">
+        <span class="add_text">Update Name</span>
+      </div>
+    </div>
+
+    <!-- eslint-disable-next-line -->
+    <template v-for="ingredient in userData.mealplans[0].recipies[editor.index].ingredients">
       <!-- eslint-disable-next-line -->
       <div class="recipies">
-        <div class="number" @click="returnToRecipies(); deleteMeal()">
+        <div class="number" @click="deleteIngredient(ingredient)">
           <p class="add_recipe" style="transform: rotate(45deg)">+</p>
         </div>
-        <p class="recipe_name"> {{ filteredmeal.name }} </p>
-        <div class="square square_recipies">
-
-        </div>
+        <p class="recipe_name"> {{ ingredient.ingredient }} </p>
+        <p class="amount"> {{ ingredient.amount }} {{ ingredient.unit }} </p>
         <div class="" align="left">
-          <label for="">Recipe Name</label>
-          <input id="mealName" class="amount editPlace" type="text" @keyup.enter="removeFocus()" v-model="filteredmeal.name" required>
+          <label for="">Ingredient</label>
+          <input class="amount" type="text" @keyup.enter="focusAmount" v-model="ingredient.ingredient" required>
+          <br>
+          <label for="">Amount</label>
+          <input id="amount" class="amount" type="number" name="" value="" @keyup.enter="focusUnit" v-model="ingredient.amount" required>
+          <br>
+          <label for="">Unit</label>
+          <input id="unit" class="amount editPlace" type="text" @keyup.enter="updateIngredient(ingredient)" v-model="ingredient.unit" required>
         </div>
+
         <br>
-        <div class="add_button" @click="removeFocus()" style="margin-top: 20px; margin-bottom: 40px">
-          <span class="add_text">Update Meal Name</span>
+        <div class="add_button" @click="updateIngredient(ingredient)" style="margin-top: 20px; margin-bottom: 40px">
+          <span class="add_text">Update Ingredient</span>
         </div>
       </div>
-      <!-- eslint-disable-next-line -->
-      <template v-for="ingredient in filteredmeal.ingredients">
-        <!-- eslint-disable-next-line -->
-        <div class="recipies">
-          <div class="number" @click="deleteIngredient(ingredient)">
-            <p class="add_recipe" style="transform: rotate(45deg)">+</p>
-          </div>
-          <p class="recipe_name"> {{ ingredient.ingredient }} </p>
-          <p class="amount"> {{ ingredient.amount }} {{ ingredient.unit }} </p>
-          <div class="" align="left">
-            <label for="">Ingredient</label>
-            <input class="amount" type="text" @keyup.enter="focusAmount" v-model="ingredient.ingredient" required>
-            <br>
-            <label for="">Amount</label>
-            <input id="amount" class="amount" type="number" name="" value="" @keyup.enter="focusUnit" v-model="ingredient.amount" required>
-            <br>
-            <label for="">Unit</label>
-            <input id="unit" class="amount editPlace" type="text" @keyup.enter="removeFocus" v-model="ingredient.unit" required>
-          </div>
-
-          <br>
-          <div class="add_button" @click="removeFocus()" style="margin-top: 20px; margin-bottom: 40px">
-            <span class="add_text">Update Ingredients</span>
-          </div>
-        </div>
-      </template>
     </template>
+
     <div class="recipies">
       <div class="number">
-        <p class="add_recipe" @click="addIngredient()">+</p>
+        <p class="add_recipe" @click="addIngredient(); resetData()">+</p>
       </div>
-      <p class="recipe_name" v-if="mealName"> {{ mealName }} </p>
+      <p class="recipe_name" v-if="newName"> {{ newName }} </p>
       <p class="recipe_name" v-else>Add Ingredient</p>
-      <template v-for="object in meal.ingredients">
-        <!-- eslint-disable-next-line -->
-        <div class="">
-          <p class="recipe_name"> {{ object.ingredient }} </p>
-          <p class="amount"> {{ object.amount }} <span> {{ object.unit }} </span></p>
-        </div>
-      </template>
       <div class="">
-        <p class="amount"> {{ mealName }} </p>
         <p class="amount"> {{ newAmount }} <span> {{ newUnit }} </span></p>
       </div>
       <div class="square square_recipies">
@@ -68,83 +61,118 @@
       </div>
       <div class="" align="left">
         <label for="">Ingredient</label>
-        <input id="newIngredient" class="amount" type="text" name="" value="" @keyup.enter="addMealName" v-model="mealName" required>
+        <input id="newIngredient" class="amount" type="text" name="" value="" @keyup.enter="addName" v-model="newName" required>
         <br>
         <label for="">Amount</label>
         <input class="amount" type="text" name="" value="" @keyup.enter="focusUnit" v-model="newAmount" required>
         <br>
         <label for="">Unit</label>
-        <input class="amount" type="text" name="" value="" @keyup.enter="focusIngredient(), addIngredient()" v-model="newUnit" required>
+        <input class="amount" type="text" name="" value="" @keyup.enter="addIngredient(); resetData()" v-model="newUnit" required>
       </div>
       <br>
-      <div class="add_button" @click="focusIngredient(), addIngredient()" style="margin-top: 20px; margin-bottom: 40px"><span class="add_text">Add Ingredient</span></div>
+      <div class="add_button" @click="addIngredient(); resetData()" style="margin-top: 20px; margin-bottom: 40px"><span class="add_text">Add Ingredient</span></div>
     </div>
-    <div class="save_button" style="margin-bottom: 70px" @click="returnToRecipies()">
-      <span class="save_text">Save & Return</span>
-    </div>
-    <!-- <img  src="../assets/icons8-save-close-48.png" alt="Save"> -->
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState } from 'vuex'
+import db from '@/database.js'
+import store from '../store'
+import router from '../router'
 
 export default {
   name: 'Edit',
   created () {
-    this.$store.commit('setEditFilters')
+    store.commit('setPage', 'edit')
+    var userData = this.userDataAddress
+    var editor = this.editor
+    for (let t = 0; t < userData.mealplans[0].filters.length; t++) {
+      userData.mealplans[0].filters[t].isActive = false
+    }
+    for (let t = 0; t < userData.mealplans[0].recipies[editor.index].filters.length; t++) {
+      for (let tag = 0; tag < userData.mealplans[0].recipies[editor.index].tags.length; tag++) {
+        if (userData.mealplans[0].recipies[editor.index].tags[tag] === userData.mealplans[0].filters[t].text) {
+          userData.mealplans[0].recipies[editor.index].filters[t].isActive = true
+        }
+      }
+    }
+  },
+  data () {
+    return {
+      newName: null,
+      newIngredient: null,
+      newAmount: null,
+      newUnit: null
+    }
   },
   computed: {
     ...mapState([
       'userData',
-      'mealName',
-      'newIngredient',
-      'newAmount',
-      'newUnit',
-      'meal',
-      'pointer',
       'editor'
-    ]),
-    mealName: {
-      get () {
-        return this.$store.state.mealName
-      },
-      set (value) {
-        this.$store.commit('syncMealName', value)
-      }
-    },
-    newIngredient: {
-      get () {
-        return this.$store.state.newIngredient
-      },
-      set (value) {
-        this.$store.commit('syncIngredient', value)
-      }
-    },
-    newAmount: {
-      get () {
-        return this.$store.state.newAmount
-      },
-      set (value) {
-        this.$store.commit('syncAmount', value)
-      }
-    },
-    newUnit: {
-      get () {
-        return this.$store.state.newUnit
-      },
-      set (value) {
-        this.$store.commit('syncUnit', value)
-      }
-    }
+    ])
   },
   methods: {
-    ...mapMutations([
-      'addMealName',
-      'addIngredient',
-      'deleteIngredient',
-      'deleteMeal'
-    ]),
+    addIngredient () {
+      var ingredient = this.newName
+      var amount = this.newAmount
+      var unit = this.newUnit
+      var userData = this.userData
+      var editor = this.editor
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[editor.index].uid).collection('ingredients').add({
+        ingredient: ingredient,
+        amount: amount,
+        unit: unit,
+        isActive: false,
+        isPurchased: false,
+        uid: ''
+      })
+        .then(function (doc) {
+          db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[editor.index].uid).collection('ingredients').doc(doc.id).update({
+            uid: doc.id
+          })
+        })
+    },
+    resetData () {
+      this.newName = null
+      this.newIngredient = null
+      this.newAmount = null
+      this.newUnit = null
+      document.getElementById('newIngredient').focus()
+    },
+    updateIngredient (ingredient) {
+      var userData = this.userData
+      console.log(ingredient.uid);
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[this.editor.index].uid).collection('ingredients').doc(ingredient.uid).update({
+        ingredient: ingredient.ingredient,
+        amount: ingredient.amount,
+        unit: ingredient.unit
+      })
+    },
+    deleteIngredient (ingredient) {
+      var userData = this.userData
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[this.editor.index].uid).collection('ingredients').doc(ingredient.uid).delete()
+    },
+    updateName () {
+      var userData = this.userData
+      var editor = this.editor
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[this.editor.index].uid).update({
+        name: userData.mealplans[0].recipies[editor.index].name
+      })
+    },
+    deleteRecipe () {
+      var userData = this.userData
+      var editor = this.editor
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[editor.index].uid).collection('ingredients')
+        .onSnapshot(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[editor.index].uid).collection('ingredients').doc(doc.id).delete()
+          })
+          db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[editor.index].uid).delete()
+          router.push('/recipies')
+          store.commit('resetPointer')
+        })
+    },
     focusAmount () {
       document.getElementById('amount').focus()
     },
@@ -165,11 +193,11 @@ export default {
       this.$store.commit('resetPointer')
       this.$store.commit('changeFilters')
     },
-    filtered (userData, editor) {
+    editRecipe (userData, editor) {
       var editIngredients = []
-      for (let r = 0; r < userData.recipies.length; r++) {
-        if (userData.recipies[r].id === editor.id) {
-          editIngredients.push(userData.recipies[r])
+      for (let r = 0; r < userData.mealplans[0].recipies.length; r++) {
+        if (userData.mealplans[0].recipies[r].id === editor.id) {
+          editIngredients.push(userData.mealplans[0].recipies[r])
         }
       }
       return editIngredients

@@ -190,7 +190,7 @@
     <div class="animated" v-if="profileFilters[2].isActive" style="padding-bottom: 100px">
       <template v-for="(place, index) in userData.addresses">
         <!-- eslint-disable-next-line -->
-        <div class="box" @click="removePlace(place, index)">
+        <div class="box" @click="deletePlace(place, index)">
           <p class="sign" style="transform: rotate(45deg)">+</p>
         </div>
         <!-- eslint-disable-next-line -->
@@ -225,7 +225,7 @@
             <!-- eslint-disable-next-line -->
             <div class="" align="left">
               <div v-if="member.role != 'Owner'">
-                <span class="sign_remove" @click="removeMember(member, place)">+</span>
+                <span class="sign_remove" @click="deleteMember(member, place)">+</span>
               </div>
               <!-- eslint-disable-next-line -->
               <label>{{ member.role }}</label>
@@ -279,7 +279,7 @@
     <div class="animated" v-if="profileFilters[3].isActive" style="padding-bottom: 100px">
       <template v-for="filter in userData.mealplans[0].filters">
         <!-- eslint-disable-next-line -->
-        <div class="box" @click="removeFilter(filter)">
+        <div class="box" @click="deleteFilter(filter)">
           <p class="sign" style="transform: rotate(45deg)">+</p>
         </div>
         <!-- eslint-disable-next-line -->
@@ -530,7 +530,7 @@ export default {
         })
       this.newMember = ''
     },
-    removeMember (member, place) {
+    deleteMember (member, place) {
       if (confirm('Are you sure you wan to remove this member?')) {
         db.collection('addresses').doc(place.uid).collection('members').doc(member.uid).delete()
         db.collection('users').doc(member.uid).collection('addresses').doc(place.uid).delete()
@@ -587,7 +587,7 @@ export default {
         document.getElementById('newPlace').focus()
       }
     },
-    removePlace (place, index) {
+    deletePlace (place, index) {
       if (confirm('Are you sure you want to remove this place?')) {
         var userData = this.userData
         var userAddresses = this.userAddresses
@@ -683,7 +683,7 @@ export default {
         text: filter.text
       })
     },
-    removeFilter (filter) {
+    deleteFilter (filter) {
       var userData = this.userData
       db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('filters').doc(filter.uid).delete()
     }

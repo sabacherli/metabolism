@@ -2,7 +2,7 @@
   <div class="filters">
     <template v-for="filter in userData.mealplans[0].filters">
       <!-- eslint-disable-next-line -->
-      <div class="filter" @click="toggleFilter(filter)">
+      <div class="filter" @click="editFilter(filter)">
         <p> {{ filter.text }} </p>
         <div :class="{ filter_selected: filter.isActive }">
 
@@ -16,7 +16,7 @@
 import { mapState, mapMutations } from 'vuex'
 
 export default {
-  name: 'MealFilters',
+  name: 'EditFilters',
   computed: {
     ...mapState([
       'userData',
@@ -25,7 +25,8 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'toggleFilter'
+      'toggleFilter',
+      'editFilter'
     ])
   }
 }

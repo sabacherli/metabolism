@@ -3,7 +3,7 @@
     <img id="dropdown_icon" class="dropdown_icon_t dropdown_icon_p" src="../assets/icon-menu-dropdown.png" alt="Menu" @click="touchCome()">
     <div id="dropdown_nav" class="dropdown_nav_p dropdown_nav_t">
       <img id="dropdown_close" class="dropdown_close_t dropdown_close_p" src="../assets/icons8-delete-50.png" alt="Close" @click="touchLeave()">
-      <span id="benefits" class="dropdown_item" v-if="userData.uid === 'default'" v-on:click='goBenefits(); thisWeek()'>BENEFITS</span>
+      <span id="benefits" class="dropdown_item" v-if="userData.uid === 'default'" v-on:click='goBenefits()'>BENEFITS</span>
       <div class="dropdown_item_break" v-if="userData.uid === 'default'">
 
       </div>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState } from 'vuex'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 
@@ -50,15 +50,13 @@ export default {
     ])
   },
   methods: {
-    ...mapMutations([
-      'thisWeek'
-    ]),
     goBenefits () {
       this.$store.commit('setPage', 'benefits')
       this.$router.push('benefits')
       this.$forceUpdate()
     },
     goCalendar () {
+      this.$store.commit('thisWeek')
       this.$store.commit('setPage', 'calendar')
       this.$router.push('calendar')
       this.$forceUpdate()

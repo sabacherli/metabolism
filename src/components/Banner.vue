@@ -16,6 +16,7 @@ import { mapState } from 'vuex'
 import CalendarFilters from '@/components/CalendarFilters.vue'
 import LocationFilters from '@/components/LocationFilters.vue'
 import MealFilters from '@/components/MealFilters.vue'
+import EditFilters from '@/components/EditFilters.vue'
 import ProfileFilters from '@/components/ProfileFilters.vue'
 import Dropdown from '@/components/Dropdown.vue'
 
@@ -25,6 +26,7 @@ export default {
     'filters-benefits': CalendarFilters,
     'filters-calendar': CalendarFilters,
     'filters-recipies': MealFilters,
+    'filters-edit': EditFilters,
     'filters-shoppinglist': LocationFilters,
     'filters-profile': ProfileFilters,
     'filters-register': CalendarFilters,
@@ -46,9 +48,7 @@ export default {
   },
   methods: {
     goCalendar () {
-      if (this.currentPage === 'calendar') {
-        this.$store.commit('thisWeek')
-      }
+      this.$store.commit('thisWeek')
       this.$store.commit('setPage', 'calendar')
       this.$router.push('calendar')
       this.rerender += 1

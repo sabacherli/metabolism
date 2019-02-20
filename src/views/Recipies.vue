@@ -1,34 +1,36 @@
 <template lang="html">
   <div class="container">
+
     <!-- Remove meal from calendar if one has been chosen. -->
-    <div class="day" v-if="checkSelection(userData, pointer)">
-      <div class="box" @click="returnToCalendar(pointer); removeMeal()">
+    <div class="day" v-if="pointer.meal">
+      <div class="box" @click="removeMeal(); goCalendar()">
         <p class="sign_remove" style="transform: rotate(45deg)">+</p>
       </div>
-      <p class="dayname" @click="returnToCalendar(pointer); removeMeal()">Remove Meal</p>
+      <p class="dayname" @click="removeMeal(); goCalendar()">Remove Meal</p>
       <div class="ingredients_break">
 
       </div>
     </div>
+
     <!-- Display filtered list of meals. -->
-    <template v-for="meal in filtered(userData)">
+    <template v-for="recipe in recipiesFiltered(userData)">
       <!-- eslint-disable-next-line -->
       <div class="day">
-        <!-- A user needs to be able to edit the meal -->
-        <div class="box" v-if="userData.uid !== 'default'" @click="setEditor(meal); goEdit()">
-          <p class="date"> {{ meal.id }} </p>
+        <!-- A user needs to be able to edit the recipe -->
+        <div class="box" v-if="userData.uid !== 'default'" @click="setEditor(recipe)">
+          <p class="date"> {{ recipe.id }} </p>
           <img class="edit_icon" src="../assets/icon-edit.png" alt="Edit">
         </div>
-        <!-- Default user shouldn't be able to edit the meal, thus the edit icon is not shown -->
+        <!-- Default user shouldn't be able to edit the recipe, thus the edit icon is not shown -->
         <div class="box_default" v-if="userData.uid == 'default'">
-          <p class="date_default"> {{ meal.id }} </p>
+          <p class="date_default"> {{ recipe.id }} </p>
         </div>
         <!-- Meal is selected and entered into the calendar in the backend -->
-        <p class="dayname" @click="returnToCalendar(pointer); removeMeal(); selectMeal(meal)"> {{ meal.name }} </p>
+        <p class="dayname" @click="removeMeal(); selectRecipe(recipe); goCalendar()"> {{ recipe.name }} </p>
         <div class="ingredients_break">
 
         </div>
-        <template v-for="ingredient in meal.ingredients">
+        <template v-for="ingredient in recipe.ingredients">
           <!-- eslint-disable-next-line -->
           <div class="">
             <p class="meal"> {{ ingredient.ingredient }} </p>
@@ -37,16 +39,17 @@
         </template>
       </div>
     </template>
+
     <div class="day" v-if="userData.uid !== 'default' && pointer.doc === ''">
-      <div class="box" @click="addMeal()">
+      <div class="box">
         <p class="add">+</p>
       </div>
-      <p class="dayname" v-if="mealName"> {{ mealName }} </p>
+      <p class="dayname" v-if="newName"> {{ newName }} </p>
       <p class="dayname" v-else>Add Meal</p>
       <div class="ingredients_break">
 
       </div>
-      <template v-for="ingredient in meal.ingredients">
+      <template v-for="ingredient in newRecipe.ingredients">
         <!-- eslint-disable-next-line -->
         <div class="">
           <p class="meal"> {{ ingredient.ingredient }} </p>
@@ -60,29 +63,34 @@
       <div class="" v-if="newIngredient">
 
       </div>
-      <div class="" v-if="!meal.name">
-        <label for="">Meal Name</label>
-        <input class="amount" type="text" @keyup.enter="addMealName(); focusIngredient()" v-model="mealName" required>
+      <div class="" v-if="!newRecipe.name">
+        <label>Meal Name</label>
+        <input class="amount" type="text" @keyup.enter="addName()" v-model="newName" required>
         <br>
-        <div class="add_button" @click="addMealName()" style="margin-top: 20px; margin-bottom: 40px">
-          <span class="add_text">Add Meal Name</span>
+        <div class="add_button" @click="addName()" style="margin-top: 20px; margin-bottom: 40px">
+          <span class="add_text">Add Name</span>
         </div>
       </div>
-      <div class="" v-if="meal.name">
-        <label for="">Ingredient</label>
+      <div class="" v-if="newRecipe.name">
+        <label>Ingredient</label>
         <input id="newIngredient" class="amount" type="text" @keyup.enter="focusAmount()" v-model="newIngredient">
         <br>
-        <label for="">Amount</label>
+        <label>Amount</label>
         <input id="newAmount" class="amount" type="number" @keyup.enter="focusUnit()" v-model="newAmount">
         <br>
-        <label for="">Unit</label>
-        <input id="newUnit" class="amount" type="text" @keyup.enter="addIngredientToMeal()" v-model="newUnit">
+        <label>Unit</label>
+        <input id="newUnit" class="amount" type="text" @keyup.enter="addIngredient()" v-model="newUnit">
         <br>
-        <div class="add_button" @click="addIngredientToMeal()" style="margin-top: 20px; margin-bottom: 40px">
+        <div class="add_button" @click="addIngredient()" style="margin-top: 20px; margin-bottom: 40px">
           <span class="add_text">Add Ingredient</span>
+        </div>
+        <br>
+        <div class="confirm_button" style="margin-bottom: 70px" v-if="newRecipe.ingredients.length > 0" @click="addRecipe()">
+          <span class="confirm_text">Add Meal</span>
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -94,64 +102,57 @@ export default {
   created () {
     this.$store.commit('setPage', 'recipies')
   },
+  data () {
+    return {
+      newName: null,
+      newIngredient: null,
+      newAmount: null,
+      newUnit: null
+    }
+  },
   computed: {
     ...mapState([
       'userData',
       'pointer',
-      'meal',
-      'mealName',
-      'newIngredient',
-      'newAmount',
-      'newUnit'
-    ]),
-    mealName: {
-      get () {
-        return this.$store.state.mealName
-      },
-      set (value) {
-        this.$store.commit('syncMealName', value)
-      }
-    },
-    newIngredient: {
-      get () {
-        return this.$store.state.newIngredient
-      },
-      set (value) {
-        this.$store.commit('syncIngredient', value)
-      }
-    },
-    newAmount: {
-      get () {
-        return this.$store.state.newAmount
-      },
-      set (value) {
-        this.$store.commit('syncAmount', value)
-      }
-    },
-    newUnit: {
-      get () {
-        return this.$store.state.newUnit
-      },
-      set (value) {
-        this.$store.commit('syncUnit', value)
-      }
-    }
+      'newRecipe'
+    ])
   },
   methods: {
     ...mapMutations([
-      'selectMeal',
-      'addMealName',
-      'addMeal',
-      'addIngredientToMeal',
+      'selectRecipe',
       'setEditor',
-      'removeMeal'
+      'removeMeal',
+      'addIngredient',
+      'addRecipie'
     ]),
-    returnToCalendar (pointer) {
-      if (pointer.doc !== '') {
-        this.$router.push('/calendar')
+    addName () {
+      if (this.newName !== null && this.newName !== '') {
+        this.$store.commit('addName', this.newName)
+      } else {
+        alert('Please enter a meal name.')
       }
     },
-    filtered (userData) {
+    addIngredient () {
+      var ingredient = this.newIngredient
+      var amount = this.newAmount
+      var unit = this.newUnit
+      if (this.newIngredient !== null && this.newAmount !== null && this.newUnit !== null) {
+        this.$store.commit('pushIngredient', { ingredient, amount, unit })
+      }
+      this.newIngredient = null
+      this.newAmount = null
+      this.newUnit = null
+      document.getElementById('newIngredient').focus()
+    },
+    addRecipe () {
+      this.$store.commit('addRecipe')
+      this.newName = null
+    },
+    goCalendar () {
+      this.$store.commit('thisWeek')
+      this.$router.push('/calendar')
+    },
+    recipiesFiltered (userData) {
       var filteredMeals = []
       var activeFilters = []
       for (let f = 0; f < userData.mealplans[0].filters.length; f++) {
@@ -168,17 +169,6 @@ export default {
       }
       return filteredMeals
     },
-    checkSelection (userData, pointer) {
-      if (pointer.position === 'breakfast') {
-        return userData.calendar[pointer.doc].breakfast !== 'Breakfast'
-      }
-      if (pointer.position === 'lunch') {
-        return userData.calendar[pointer.doc].lunch !== 'Lunch'
-      }
-      if (pointer.position === 'dinner') {
-        return userData.calendar[pointer.doc].dinner !== 'Dinner'
-      }
-    },
     focusIngredient () {
       document.getElementById('newIngredient').focus()
     },
@@ -187,9 +177,6 @@ export default {
     },
     focusUnit () {
       document.getElementById('newUnit').focus()
-    },
-    goEdit () {
-      this.$router.push('edit')
     }
   }
 }
@@ -325,6 +312,24 @@ export default {
 .add_button:active {
   transition: .05s;
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+}
+.confirm_button {
+  position: fixed;
+  bottom: -20px;
+  left: 50px;
+  font-size: .714em;
+  background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+  border-radius: 20px 20px;
+  padding: 10px;
+}
+.confirm_text {
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+}
+.confirm_button:active {
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+  transition: 0s;
 }
 input[type=text].amount,
 input[type=number].amount {

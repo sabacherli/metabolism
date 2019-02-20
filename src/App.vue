@@ -24,7 +24,6 @@ export default {
             var userData = doc.data()
             var addressID = ''
             var mealplanID = ''
-            var recipeID = ''
             store.commit('getUserData', userData)
             db.collection('users').doc(user.uid).collection('addresses')
               .onSnapshot(function (querySnapshot) {
@@ -62,50 +61,51 @@ export default {
                     })
                 })
               })
-            var start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
-            db.collection('users').doc(user.uid).collection('calendar').where('date', '>=', Number(start.format('YYYYMMDD'))).where('date', '<', Number(start.add(7, 'days').format('YYYYMMDD'))).orderBy('date')
-              .onSnapshot(function (querySnapshot) {
-                store.commit('emptyUserDataCalendar')
-                querySnapshot.forEach(function (doc) {
-                  var userDataCalendar = doc.data()
-                  store.commit('pushUserDataCalendar', userDataCalendar)
-                })
-              })
+            // var start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
+            // db.collection('users').doc(user.uid).collection('calendar').where('date', '>=', Number(start.format('YYYYMMDD'))).where('date', '<', Number(start.add(7, 'days').format('YYYYMMDD'))).orderBy('date')
+            //   .onSnapshot(function (querySnapshot) {
+            //     store.commit('emptyUserDataCalendar')
+            //     querySnapshot.forEach(function (doc) {
+            //       var userDataCalendar = doc.data()
+            //       store.commit('pushUserDataCalendar', userDataCalendar)
+            //     })
+            //   })
             db.collection('users').doc(user.uid).collection('mealplans')
               .onSnapshot(function (querySnapshot) {
                 store.commit('emptyUserDataMealplans')
                 querySnapshot.forEach(function (doc) {
-                  var userDataMealplan = doc.data()
-                  mealplanID = doc.id
-                  store.commit('pushUserDataMealplan', userDataMealplan)
-                  db.collection('users').doc(user.uid).collection('mealplans').doc(mealplanID).collection('filters')
-                    .onSnapshot(function (querySnapshot) {
-                      store.commit('emptyUserDataMealplanFilters', mealplanID)
-                      querySnapshot.forEach(function (doc) {
-                        var userDataMealplanFilter = doc.data()
-                        store.commit('pushUserDataMealplanFilter', { userDataMealplanFilter, mealplanID })
-                      })
-                    })
-                  db.collection('users').doc(user.uid).collection('mealplans').doc(mealplanID).collection('recipies')
-                    .onSnapshot(function (querySnapshot) {
-                      store.commit('emptyUserDataMealplanRecipies', mealplanID)
-                      querySnapshot.forEach(function (doc) {
-                        new Promise(function (resolve, reject) {
-                          var userDataMealplanRecipe = doc.data()
-                          recipeID = doc.id
-                          store.commit('pushUserDataMealplanRecipe', { userDataMealplanRecipe, mealplanID })
-                          resolve()
+                  new Promise(function (resolve, reject) {
+                    var userDataMealplan = doc.data()
+                    mealplanID = doc.id
+                    store.commit('pushUserDataMealplan', userDataMealplan)
+                    resolve()
+                  })
+                    .then(function () {
+                      db.collection('users').doc(user.uid).collection('mealplans').doc(mealplanID).collection('filters')
+                        .onSnapshot(function (querySnapshot) {
+                          store.commit('emptyUserDataMealplanFilters', mealplanID)
+                          querySnapshot.forEach(function (doc) {
+                            var userDataMealplanFilter = doc.data()
+                            store.commit('pushUserDataMealplanFilter', { userDataMealplanFilter, mealplanID })
+                          })
                         })
-                          .then(function () {
+                      db.collection('users').doc(user.uid).collection('mealplans').doc(mealplanID).collection('recipies')
+                        .onSnapshot(function (querySnapshot) {
+                          store.commit('emptyUserDataMealplanRecipies', mealplanID)
+                          querySnapshot.forEach(function (doc) {
+                            var recipeID = doc.id
+                            var userDataMealplanRecipe = doc.data()
+                            store.commit('pushUserDataMealplanRecipe', { userDataMealplanRecipe, mealplanID })
                             db.collection('users').doc(user.uid).collection('mealplans').doc(mealplanID).collection('recipies').doc(recipeID).collection('ingredients')
                               .onSnapshot(function (querySnapshot) {
                                 store.commit('emptyUserDataMealplanRecipeIngredients', { mealplanID, recipeID })
                                 querySnapshot.forEach(function (doc) {
                                   var userDataMealplanRecipeIngredient = doc.data()
+                                  store.commit('pushUserDataMealplanRecipeIngredient', { userDataMealplanRecipeIngredient, mealplanID, recipeID })
                                 })
                               })
                           })
-                      })
+                        })
                     })
                 })
               })
@@ -154,15 +154,15 @@ export default {
                     })
                 })
               })
-            var start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
-            db.collection('users').doc('default').collection('calendar').where('date', '>=', Number(start.format('YYYYMMDD'))).where('date', '<', Number(start.add(7, 'days').format('YYYYMMDD'))).orderBy('date')
-              .onSnapshot(function (querySnapshot) {
-                store.commit('emptyUserDataCalendar')
-                querySnapshot.forEach(function (doc) {
-                  var userDataCalendar = doc.data()
-                  store.commit('pushUserDataCalendar', userDataCalendar)
-                })
-              })
+            // var start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
+            // db.collection('users').doc('default').collection('calendar').where('date', '>=', Number(start.format('YYYYMMDD'))).where('date', '<', Number(start.add(7, 'days').format('YYYYMMDD'))).orderBy('date')
+            //   .onSnapshot(function (querySnapshot) {
+            //     store.commit('emptyUserDataCalendar')
+            //     querySnapshot.forEach(function (doc) {
+            //       var userDataCalendar = doc.data()
+            //       store.commit('pushUserDataCalendar', userDataCalendar)
+            //     })
+            //   })
             db.collection('users').doc('default').collection('mealplans')
               .onSnapshot(function (querySnapshot) {
                 store.commit('emptyUserDataMealplans')
@@ -184,7 +184,7 @@ export default {
                       querySnapshot.forEach(function (doc) {
                         new Promise(function (resolve, reject) {
                           var userDataMealplanRecipe = doc.data()
-                          recipeID = doc.id
+                          recipeID = userDataMealplanRecipe.uid
                           store.commit('pushUserDataMealplanRecipe', { userDataMealplanRecipe, mealplanID })
                           resolve()
                         })
@@ -194,6 +194,7 @@ export default {
                                 store.commit('emptyUserDataMealplanRecipeIngredients', { mealplanID, recipeID })
                                 querySnapshot.forEach(function (doc) {
                                   var userDataMealplanRecipeIngredient = doc.data()
+                                  store.commit('pushUserDataMealplanRecipeIngredient', { userDataMealplanRecipeIngredient, mealplanID, recipeID })
                                 })
                               })
                           })

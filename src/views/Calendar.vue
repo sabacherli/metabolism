@@ -19,16 +19,16 @@
 
               </div>
               <div class="">
-                <p class="meal"> {{ day.breakfast }} </p>
-                <p class="meal_location"> {{ day.breakfastLocation }} </p>
+                <p class="meal" style="text-decoration: line-through"> {{ day.breakfast }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.breakfastLocation }} </p>
               </div>
               <div class="">
-                <p class="meal"> {{ day.lunch }} </p>
-                <p class="meal_location"> {{ day.lunchLocation }} </p>
+                <p class="meal" style="text-decoration: line-through"> {{ day.lunch }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.lunchLocation }} </p>
               </div>
               <div class="">
-                <p class="meal"> {{ day.dinner }} </p>
-                <p class="meal_location"> {{ day.dinnerLocation }} </p>
+                <p class="meal" style="text-decoration: line-through"> {{ day.dinner }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.dinnerLocation }} </p>
               </div>
             </div>
             <!-- eslint-disable-next-line -->
@@ -141,7 +141,6 @@ export default {
   name: 'Calendar',
   created () {
     store.commit('setToday', moment().format('YYYYMMDD'))
-    store.commit('thisWeek')
     store.commit('setPage', 'calendar')
     window.onload = function () {
       store.commit('thisWeek')
