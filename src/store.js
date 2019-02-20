@@ -133,6 +133,15 @@ export default new Vuex.Store({
         }
       }
     },
+    setProfileFilters (state) {
+      for (var filter in state.profileFilters) {
+        if (state.profileFilters[filter].text === 'Months') {
+          state.profileFilters[filter].isActive = true
+        } else {
+          state.profileFilters[filter].isActive = false
+        }
+      }
+    },
     changeFilters (state) {
       for (let f = 0; f < state.userData.mealplans[0].recipies.length; f++) {
         if (state.userData.mealplans[0].recipies[f].uniqueID === state.editor.uniqueID) {
@@ -295,11 +304,11 @@ export default new Vuex.Store({
       var isMember = false
       var newCalories = null
       var date = day.date.toString()
-      for (var day in state.userAddresses[state.pointer.index].calendar) {
-        if (state.userAddresses[state.pointer.index].calendar[day].date === day.date) {
-          if (state.userAddresses[state.pointer.index].calendar[day].breakfastMembers.includes(state.userData.uid)) {
+      for (var object in state.userAddresses[state.pointer.index].calendar) {
+        if (state.userAddresses[state.pointer.index].calendar[object].date === day.date) {
+          if (state.userAddresses[state.pointer.index].calendar[object].breakfastMembers.includes(state.userData.uid)) {
             isMember = true
-            newCalories = state.userData.calories + state.userAddresses[state.pointer.index].calendar[day].breakfastCalories
+            newCalories = state.userData.calories + state.userAddresses[state.pointer.index].calendar[object].breakfastCalories
           }
         }
       }
@@ -335,11 +344,11 @@ export default new Vuex.Store({
       var isMember = false
       var newCalories = null
       var date = day.date.toString()
-      for (var day in state.userAddresses[state.pointer.index].calendar) {
-        if (state.userAddresses[state.pointer.index].calendar[day].date === day.date) {
-          if (state.userAddresses[state.pointer.index].calendar[day].lunchMembers.includes(state.userData.uid)) {
+      for (var object in state.userAddresses[state.pointer.index].calendar) {
+        if (state.userAddresses[state.pointer.index].calendar[object].date === day.date) {
+          if (state.userAddresses[state.pointer.index].calendar[object].lunchMembers.includes(state.userData.uid)) {
             isMember = true
-            newCalories = state.userData.calories + state.userAddresses[state.pointer.index].calendar[day].lunchCalories
+            newCalories = state.userData.calories + state.userAddresses[state.pointer.index].calendar[object].lunchCalories
           }
         }
       }
@@ -375,11 +384,11 @@ export default new Vuex.Store({
       var isMember = false
       var newCalories = null
       var date = day.date.toString()
-      for (var day in state.userAddresses[state.pointer.index].calendar) {
-        if (state.userAddresses[state.pointer.index].calendar[day].date === day.date) {
-          if (state.userAddresses[state.pointer.index].calendar[day].dinnerMembers.includes(state.userData.uid)) {
+      for (var object in state.userAddresses[state.pointer.index].calendar) {
+        if (state.userAddresses[state.pointer.index].calendar[object].date === day.date) {
+          if (state.userAddresses[state.pointer.index].calendar[object].dinnerMembers.includes(state.userData.uid)) {
             isMember = true
-            newCalories = state.userData.calories + state.userAddresses[state.pointer.index].calendar[day].dinnerCalories
+            newCalories = state.userData.calories + state.userAddresses[state.pointer.index].calendar[object].dinnerCalories
           }
         }
       }

@@ -13,10 +13,15 @@ service cloud.firestore {
     }
 
     // Default should be accessible by the public
-    match /addresses/default {
+    match /addresses/RsEbCmIPqUSxrITMxQvT {
       allow read, write: if true;
-
       match /calendar/{document=**} {
+        allow read, write: if true;
+      }
+      match /members/{document=**} {
+        allow read, write: if true;
+      }
+      match /months/{document=**} {
         allow read, write: if true;
       }
     }
@@ -24,8 +29,22 @@ service cloud.firestore {
     // Default should be accessible by the public
     match /users/default {
       allow read, write: if true;
-
       match /calendar/{document=**} {
+        allow read, write: if true;
+      }
+      match /mealplans/{document=**} {
+        allow read, write: if true;
+        match /filters/{document=**} {
+          allow read, write: if true;
+        }
+        match /recipies/{document=**} {
+          allow read, write: if true;
+          match /ingredients/{document=**} {
+            allow read, write: if true;
+          }
+        }
+      }
+      match /addresses/{document=**} {
         allow read, write: if true;
       }
     }

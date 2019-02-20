@@ -32,7 +32,7 @@
               </div>
             </div>
             <!-- eslint-disable-next-line -->
-            <div class="day" v-if="day.date >= today">
+            <div class="day" v-if="day.date >= today && dayPurchased(day)">
               <p class="date"> {{ day.day }} </p>
               <p class="dayname"> {{ day.dayname }} </p>
               <div class="ingredients_break">
@@ -49,6 +49,29 @@
               <div class="container_meal" @click="setDinner(day); openMenu()">
                 <p class="meal"> {{ day.dinner }} </p>
                 <p class="meal_location"> {{ day.dinnerLocation }} </p>
+              </div>
+            </div>
+            <!-- eslint-disable-next-line -->
+            <div class="day" v-if="day.date >= today && !dayPurchased(day)">
+              <p class="date"> {{ day.day }} </p>
+              <div class="past">
+
+              </div>
+              <p class="dayname"> {{ day.dayname }} </p>
+              <div class="ingredients_break">
+
+              </div>
+              <div class="container_meal" @click="goProfile()">
+                <p class="meal" style="text-decoration: line-through"> {{ day.breakfast }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.breakfastLocation }} </p>
+              </div>
+              <div class="container_meal" @click="goProfile()">
+                <p class="meal" style="text-decoration: line-through"> {{ day.lunch }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.lunchLocation }} </p>
+              </div>
+              <div class="container_meal" @click="goProfile()">
+                <p class="meal" style="text-decoration: line-through"> {{ day.dinner }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.dinnerLocation }} </p>
               </div>
             </div>
           </template>
@@ -174,6 +197,25 @@ export default {
       if (this.menu.isActive) {
         this.$router.push('/recipies')
       }
+    },
+    dayPurchased (day) {
+      for (var address in this.userData.addresses) {
+        if (this.userData.addresses[address].isActive) {
+          for (var place in this.userAddresses) {
+            if (this.userAddresses[place].uid === this.userData.addresses[address].uid) {
+              for (var object in this.userAddresses[place].calendar) {
+                if (this.userAddresses[place].calendar[object].date === day.date) {
+                  return true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    goProfile () {
+      this.$store.commit('setProfileFilters')
+      this.$router.push('/profile')
     }
   }
 }

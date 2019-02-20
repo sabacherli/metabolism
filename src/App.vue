@@ -8,7 +8,6 @@
 
 <script type="text/javascript">
 import firebase from 'firebase/app'
-import moment from 'moment'
 import store from './store'
 import db from './database'
 import { mapState } from 'vuex'

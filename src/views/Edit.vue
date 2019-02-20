@@ -142,7 +142,6 @@ export default {
     },
     updateIngredient (ingredient) {
       var userData = this.userData
-      console.log(ingredient.uid);
       db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[this.editor.index].uid).collection('ingredients').doc(ingredient.uid).update({
         ingredient: ingredient.ingredient,
         amount: ingredient.amount,
