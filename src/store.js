@@ -555,87 +555,70 @@ export default new Vuex.Store({
       }
       Vue.set(filter, 'isActive', true)
     },
+    setCurrent (state) {
+      state.currentYear = state.start.format('YYYY')
+      state.currentYearMonth = state.start.format('YYYYMM')
+    },
     thisWeek (state) {
-      const calendarRef = db.collection('users').doc(state.userData.uid).collection('calendar')
-      state.userData.calendar.length = 0
       state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
-      state.currentYearMonth = moment(state.start).format('YYYYMM')
-      state.currentYear = moment(state.start).format('YYYY')
-      calendarRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
-        .get()
-        .then(function (querySnapshot) {
+      for (var address in state.userAddresses) {
+        db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
+          .onSnapshot(function (querySnapshot) {
+            state.userAddresses[address].calendar.length = 0
+            querySnapshot.forEach(function (doc) {
+              var userAddressDay = doc.data()
+              state.userAddresses[address].calendar.push(userAddressDay)
+            })
+          })
+      }
+      state.start = state.start.subtract(state.displayAmount, 'days')
+      db.collection('users').doc(state.userData.uid).collection('calendar').where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
+        .onSnapshot(function (querySnapshot) {
+          state.userData.calendar.length = 0
           querySnapshot.forEach(function (doc) {
             state.userData.calendar.push(doc.data())
           })
-          state.start = state.start.subtract(state.displayAmount, 'days')
-          for (var address in state.userAddresses) {
-            const calendarRef2 = db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar')
-            state.userAddresses[address].calendar = []
-            state.currentYearMonth = moment(state.start).format('YYYYMM')
-            state.currentYear = moment(state.start).format('YYYY')
-            calendarRef2.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
-              .get()
-              .then(function (querySnapshot) {
-                querySnapshot.forEach(function (doc) {
-                  state.userAddresses[address].calendar.push(doc.data())
-                })
-              })
-          }
         })
     },
     nextWeek (state) {
-      const calendarRef = db.collection('users').doc(state.userData.uid).collection('calendar')
+      for (var address in state.userAddresses) {
+        state.userAddresses[address].calendar.length = 0
+        db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
+          .onSnapshot(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+              var userAddressDay = doc.data()
+              state.userAddresses[address].calendar.push(userAddressDay)
+            })
+          })
+      }
+      state.start = state.start.subtract(state.displayAmount, 'days')
       state.userData.calendar = []
-      state.currentYearMonth = moment(state.start).format('YYYYMM')
-      state.currentYear = moment(state.start).format('YYYY')
-      calendarRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
-        .get()
-        .then(function (querySnapshot) {
+      db.collection('users').doc(state.userData.uid).collection('calendar').where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
+        .onSnapshot(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
             state.userData.calendar.push(doc.data())
           })
-          state.start = state.start.subtract(state.displayAmount, 'days')
-          for (var address in state.userAddresses) {
-            const calendarRef2 = db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar')
-            state.userAddresses[address].calendar = []
-            state.currentYearMonth = moment(state.start).format('YYYYMM')
-            state.currentYear = moment(state.start).format('YYYY')
-            calendarRef2.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
-              .get()
-              .then(function (querySnapshot) {
-                querySnapshot.forEach(function (doc) {
-                  state.userAddresses[address].calendar.push(doc.data())
-                })
-              })
-          }
         })
     },
     previousWeek (state) {
-      const calendarRef = db.collection('users').doc(state.userData.uid).collection('calendar')
+      state.start = state.start.subtract(2*state.displayAmount, 'days')
+      for (var address in state.userAddresses) {
+        state.userAddresses[address].calendar.length = 0
+        db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
+          .onSnapshot(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+              var userAddressDay = doc.data()
+              state.userAddresses[address].calendar.push(userAddressDay)
+            })
+          })
+      }
+      state.start = state.start.subtract(state.displayAmount, 'days')
       state.userData.calendar = []
-      state.start = state.start.subtract(2 * state.displayAmount, 'days')
-      state.currentYearMonth = moment(state.start).format('YYYYMM')
-      state.currentYear = moment(state.start).format('YYYY')
-      calendarRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
-        .get()
-        .then(function (querySnapshot) {
+      db.collection('users').doc(state.userData.uid).collection('calendar').where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
+        .onSnapshot(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
             state.userData.calendar.push(doc.data())
           })
-          state.start = state.start.subtract(state.displayAmount, 'days')
-          for (var address in state.userAddresses) {
-            const calendarRef2 = db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar')
-            state.userAddresses[address].calendar = []
-            state.currentYearMonth = moment(state.start).format('YYYYMM')
-            state.currentYear = moment(state.start).format('YYYY')
-            calendarRef2.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
-              .get()
-              .then(function (querySnapshot) {
-                querySnapshot.forEach(function (doc) {
-                  state.userAddresses[address].calendar.push(doc.data())
-                })
-              })
-          }
         })
     },
     addItem (state, place) {
@@ -793,35 +776,6 @@ export default new Vuex.Store({
           dinnerIngredients: recipe.ingredients
         })
       }
-      // for (let i = 0; i < meal.ingredients.length; i++) {
-      //   const ingredientObject = JSON.parse(JSON.stringify(meal.ingredients[i]))
-      //   if (state.pointer.meal === 'breakfast') {
-      //     state.userAddresses[state.pointer.address].calendar[state.pointer.doc].breakfastIngredients.push(ingredientObject)
-      //   } else if (state.pointer.meal === 'lunch') {
-      //     state.userAddresses[state.pointer.address].calendar[state.pointer.doc].lunchIngredients.push(ingredientObject)
-      //   } else {
-      //     state.userAddresses[state.pointer.address].calendar[state.pointer.doc].dinnerIngredients.push(ingredientObject)
-      //   }
-      // }
-      // if (state.pointer.meal === 'breakfast') {
-      //   state.userData.calendar[state.pointer.doc].breakfast = mealName
-      //   state.userAddresses[state.pointer.address].calendar[state.pointer.doc].breakfast = mealName
-      //   state.userData.calendar[state.pointer.doc].breakfastID = mealID
-      //   state.userAddresses[state.pointer.address].calendar[state.pointer.doc].breakfastID = mealID
-      //   Vue.set(state.userAddresses[state.pointer.address].calendar[state.pointer.doc], 'breakfastCaloriesOwner', state.userData.info.calories)
-      // } else if (state.pointer.meal === 'lunch') {
-      //   state.userData.calendar[state.pointer.doc].lunch = mealName
-      //   state.userAddresses[state.pointer.address].calendar[state.pointer.doc].lunch = mealName
-      //   state.userData.calendar[state.pointer.doc].lunchID = mealID
-      //   state.userAddresses[state.pointer.address].calendar[state.pointer.doc].lunchID = mealID
-      //   Vue.set(state.userAddresses[state.pointer.address].calendar[state.pointer.doc], 'lunchCaloriesOwner', state.userData.info.calories)
-      // } else {
-      //   state.userData.calendar[state.pointer.doc].dinner = mealName
-      //   state.userAddresses[state.pointer.address].calendar[state.pointer.doc].dinner = mealName
-      //   state.userData.calendar[state.pointer.doc].dinnerID = mealID
-      //   state.userAddresses[state.pointer.address].calendar[state.pointer.doc].dinnerID = mealID
-      //   Vue.set(state.userAddresses[state.pointer.address].calendar[state.pointer.doc], 'dinnerCaloriesOwner', state.userData.info.calories)
-      // }
     },
     removeMeal (state) {
       if (state.pointer.meal === 'Breakfast') {
@@ -1171,166 +1125,6 @@ export default new Vuex.Store({
         for (let p = 0; p < state.userAddresses[a].personalList.length; p++) {
           if (state.userAddresses[a].personalList[p].isActive) {
             state.userAddresses[a].personalList.splice(p, 1)
-          }
-        }
-      }
-      // saveData ()
-      if (state.userData.uid !== 'default') {
-        for (let d = 0; d < state.userData.calendar.length; d++) {
-          db.collection('users').doc(state.userData.uid).collection('calendar').doc(state.userData.calendar[d].date.toString())
-            .set(state.userData.calendar[d])
-        }
-        state.userData.calendar = []
-        db.collection('users').doc(state.userData.uid).set(state.userData)
-        for (let a = 0; a < state.userAddresses.length; a++) {
-          if (state.userAddresses[a].calendar.length > 0) {
-            for (let d = 0; d < state.userAddresses[a].calendar.length; d++) {
-              db.collection('addresses').doc(state.userAddresses[a].address).collection('calendar').doc(state.userAddresses[a].calendar[d].date.toString())
-                .set(state.userAddresses[a].calendar[d])
-            }
-            state.userAddresses[a].calendar = []
-          }
-          db.collection('addresses').doc(state.userAddresses[a].address).set(state.userAddresses[a])
-        }
-      }
-      // getData ()
-      state.userData = ''
-      const docRef = db.collection('users').doc(state.userData.uid)
-      docRef.get()
-        .then((doc) => {
-          // eslint-disable-next-line
-          new Promise(function (resolve, reject) {
-            state.userData = doc.data()
-            resolve()
-          })
-            .then(function () {
-              state.userAddresses = []
-              for (let a = 0; a < state.userData.addresses.length; a++) {
-                const addressRef = db.collection('addresses').doc(state.userData.addresses[a].address)
-                addressRef.get()
-                  .then((doc) => {
-                    if (doc.exists) {
-                      state.userAddresses.push(doc.data())
-                      for (var month = 0; month < 12; month++) {
-                        if (!state.userData.months.includes(moment().add(month, 'months').format('YYYYMM'))) {
-                          const daysInMonth = moment().add(month, 'months').daysInMonth()
-                          const year = moment().add(month, 'months').format('YYYY')
-                          const mon = moment().add(month, 'months').format('MM')
-                          for (let d = 0; d < daysInMonth; d++) {
-                            const day = moment().year(year).month(mon).subtract(1, 'M')
-                              .startOf('month')
-                              .add(d, 'day')
-                              .format('DD')
-                            const docName = moment().year(year).month(mon).subtract(1, 'M')
-                              .date(day)
-                              .format('YYYYMMDD')
-                            const dayTemplate = {
-                              date: Number(moment().year(year).month(mon).subtract(1, 'M')
-                                .date(day)
-                                .format('YYYYMMDD')),
-                              day,
-                              dayname: moment().isoWeekday(moment().year(year).month(mon).subtract(1, 'M')
-                                .date(day)
-                                .weekday()).format('dddd'),
-                              breakfast: 'Breakfast',
-                              breakfastLocation: 'Home',
-                              breakfastAddress: state.userAddresses[0].address,
-                              lunch: 'Lunch',
-                              lunchLocation: 'Home',
-                              lunchAddress: state.userAddresses[0].address,
-                              dinner: 'Dinner',
-                              dinnerLocation: 'Home',
-                              dinnerAddress: state.userAddresses[0].address
-                            }
-                            db.collection('users').doc(state.userData.uid).collection('calendar').doc(docName)
-                              .set(dayTemplate)
-                          }
-                          state.userData.months.push(moment().add(month, 'months').format('YYYYMM'))
-                        }
-                      }
-                      state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
-                      const calRef = db.collection('users').doc(state.userData.uid).collection('calendar')
-                      calRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date').get()
-                        .then(function (querySnapshot) {
-                          querySnapshot.forEach((doc) => {
-                            state.userData.calendar.push(doc.data())
-                          })
-                        })
-                      state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
-                      const calAddressRef = db.collection('addresses').doc(state.userData.addresses[a].address).collection('calendar')
-                      calAddressRef.where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.userData.shoppingListLength, 'days').format('YYYYMMDD'))).orderBy('date').get()
-                        .then(function (querySnapshot) {
-                          querySnapshot.forEach((doc) => {
-                            state.userAddresses[a].calendar.push(doc.data())
-                          })
-                        })
-                    }
-                  })
-              }
-            })
-        })
-      for (let a = 0; a < state.userAddresses.length; a++) {
-        state.userAddresses[a].shoppingList = []
-        for (let d = 0; d < state.userAddresses[a].calendar.length; d++) {
-          const breakfastRatio = state.userAddresses[a].calendar[d].breakfastCalories / state.userAddresses[a].calendar[d].breakfastCaloriesOwner
-          const lunchRatio = state.userAddresses[a].calendar[d].lunchCalories / state.userAddresses[a].calendar[d].lunchCaloriesOwner
-          const dinnerRatio = state.userAddresses[a].calendar[d].dinnerCalories / state.userAddresses[a].calendar[d].dinnerCaloriesOwner
-          for (let ingredient = 0; ingredient < state.userAddresses[a].calendar[d].breakfastIngredients.length; ingredient++) {
-            // needs to check whether the ingredient is already purchased / active
-            if (state.userAddresses[a].calendar[d].breakfastIngredients[ingredient].isActive === false) {
-              // for each ingredient, it checks whether the ingredient is already in the shopping list
-              let check = true
-              for (let item = 0; item < state.userAddresses[a].shoppingList.length; item++) {
-                // if it is, it increases the amount
-                if (state.userAddresses[a].shoppingList[item].ingredient === state.userAddresses[a].calendar[d].breakfastIngredients[ingredient].ingredient) {
-                  state.userAddresses[a].shoppingList[item].amount += (state.userAddresses[a].calendar[d].breakfastIngredients[ingredient].amount * breakfastRatio)
-                  check = false
-                }
-              }
-              // if the ingredient isn't already on the list, then it adds it
-              if (check) {
-                state.userAddresses[a].shoppingList.push(JSON.parse(JSON.stringify(state.userAddresses[a].calendar[d].breakfastIngredients[ingredient])))
-                state.userAddresses[a].shoppingList[state.userAddresses[a].shoppingList.length - 1].amount *= breakfastRatio
-              }
-            }
-          }
-          for (let ingredient = 0; ingredient < state.userAddresses[a].calendar[d].lunchIngredients.length; ingredient++) {
-            // needs to check whether the ingredient is already purchased / active
-            if (state.userAddresses[a].calendar[d].lunchIngredients[ingredient].isActive === false) {
-              // for each ingredient, it checks whether the ingredient is already in the shopping list
-              let check = true
-              for (let item = 0; item < state.userAddresses[a].shoppingList.length; item++) {
-                // if it is, it increases the amount
-                if (state.userAddresses[a].shoppingList[item].ingredient === state.userAddresses[a].calendar[d].lunchIngredients[ingredient].ingredient) {
-                  state.userAddresses[a].shoppingList[item].amount += (state.userAddresses[a].calendar[d].lunchIngredients[ingredient].amount * lunchRatio)
-                  check = false
-                }
-              }
-              // if the ingredient isn't already on the list, then it adds it
-              if (check) {
-                state.userAddresses[a].shoppingList.push(JSON.parse(JSON.stringify(state.userAddresses[a].calendar[d].lunchIngredients[ingredient])))
-                state.userAddresses[a].shoppingList[state.userAddresses[a].shoppingList.length - 1].amount *= lunchRatio
-              }
-            }
-          }
-          for (let ingredient = 0; ingredient < state.userAddresses[a].calendar[d].dinnerIngredients.length; ingredient++) {
-            // needs to check whether the ingredient is already purchased / active
-            if (state.userAddresses[a].calendar[d].dinnerIngredients[ingredient].isActive === false) {
-              // for each ingredient, it checks whether the ingredient is already in the shopping list
-              let check = true
-              for (let item = 0; item < state.userAddresses[a].shoppingList.length; item++) {
-                // if it is, it increases the amount
-                if (state.userAddresses[a].shoppingList[item].ingredient === state.userAddresses[a].calendar[d].dinnerIngredients[ingredient].ingredient) {
-                  state.userAddresses[a].shoppingList[item].amount += (state.userAddresses[a].calendar[d].dinnerIngredients[ingredient].amount * dinnerRatio)
-                  check = false
-                }
-              }
-              // if the ingredient isn't already on the list, then it adds it
-              if (check) {
-                state.userAddresses[a].shoppingList.push(JSON.parse(JSON.stringify(state.userAddresses[a].calendar[d].dinnerIngredients[ingredient])))
-                state.userAddresses[a].shoppingList[state.userAddresses[a].shoppingList.length - 1].amount *= dinnerRatio
-              }
-            }
           }
         }
       }
@@ -1760,12 +1554,6 @@ export default new Vuex.Store({
           state.userAddresses[userAddress].months.push(userAddressMonth)
         }
       }
-    },
-    emptyUserDataCalendar (state) {
-      state.userData.calendar.length = 0
-    },
-    pushUserDataCalendar (state, userDataCalendar) {
-      state.userData.calendar.push(userDataCalendar)
     },
     emptyUserDataMealplans (state) {
       state.userData.mealplans.length = 0

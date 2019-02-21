@@ -40,6 +40,7 @@ export default {
                         .onSnapshot(function (doc) {
                           var userAddress = doc.data()
                           store.commit('pushUserAddress', userAddress)
+                          store.commit('thisWeek')
                           db.collection('addresses').doc(addressID).collection('members')
                             .onSnapshot(function (querySnapshot) {
                               store.commit('emptyUserAddressMembers', addressID)
@@ -60,15 +61,6 @@ export default {
                     })
                 })
               })
-            // var start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
-            // db.collection('users').doc(user.uid).collection('calendar').where('date', '>=', Number(start.format('YYYYMMDD'))).where('date', '<', Number(start.add(7, 'days').format('YYYYMMDD'))).orderBy('date')
-            //   .onSnapshot(function (querySnapshot) {
-            //     store.commit('emptyUserDataCalendar')
-            //     querySnapshot.forEach(function (doc) {
-            //       var userDataCalendar = doc.data()
-            //       store.commit('pushUserDataCalendar', userDataCalendar)
-            //     })
-            //   })
             db.collection('users').doc(user.uid).collection('mealplans')
               .onSnapshot(function (querySnapshot) {
                 store.commit('emptyUserDataMealplans')
@@ -133,6 +125,7 @@ export default {
                         .onSnapshot(function (doc) {
                           var userAddress = doc.data()
                           store.commit('pushUserAddress', userAddress)
+                          store.commit('thisWeek')
                           db.collection('addresses').doc(addressID).collection('members')
                             .onSnapshot(function (querySnapshot) {
                               store.commit('emptyUserAddressMembers', addressID)
@@ -153,15 +146,6 @@ export default {
                     })
                 })
               })
-            // var start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
-            // db.collection('users').doc('default').collection('calendar').where('date', '>=', Number(start.format('YYYYMMDD'))).where('date', '<', Number(start.add(7, 'days').format('YYYYMMDD'))).orderBy('date')
-            //   .onSnapshot(function (querySnapshot) {
-            //     store.commit('emptyUserDataCalendar')
-            //     querySnapshot.forEach(function (doc) {
-            //       var userDataCalendar = doc.data()
-            //       store.commit('pushUserDataCalendar', userDataCalendar)
-            //     })
-            //   })
             db.collection('users').doc('default').collection('mealplans')
               .onSnapshot(function (querySnapshot) {
                 store.commit('emptyUserDataMealplans')

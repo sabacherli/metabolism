@@ -149,7 +149,6 @@ export default {
       this.newName = null
     },
     goCalendar () {
-      this.$store.commit('thisWeek')
       this.$router.push('/calendar')
     },
     recipiesFiltered (userData) {

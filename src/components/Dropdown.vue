@@ -56,7 +56,6 @@ export default {
       this.$forceUpdate()
     },
     goCalendar () {
-      this.$store.commit('thisWeek')
       this.$store.commit('setPage', 'calendar')
       this.$router.push('calendar')
       this.$forceUpdate()

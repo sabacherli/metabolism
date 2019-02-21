@@ -32,7 +32,7 @@
               </div>
             </div>
             <!-- eslint-disable-next-line -->
-            <div class="day" v-if="day.date >= today && dayPurchased(day)">
+            <div class="day" v-if="day.date >= today && !dayPurchased(day)">
               <p class="date"> {{ day.day }} </p>
               <p class="dayname"> {{ day.dayname }} </p>
               <div class="ingredients_break">
@@ -52,7 +52,7 @@
               </div>
             </div>
             <!-- eslint-disable-next-line -->
-            <div class="day" v-if="day.date >= today && !dayPurchased(day)">
+            <div class="day" v-show="day.date >= today && dayPurchased(day)">
               <p class="date"> {{ day.day }} </p>
               <div class="past">
 
@@ -164,10 +164,8 @@ export default {
   name: 'Calendar',
   created () {
     store.commit('setToday', moment().format('YYYYMMDD'))
+    store.commit('setCurrent')
     store.commit('setPage', 'calendar')
-    window.onload = function () {
-      store.commit('thisWeek')
-    }
   },
   computed: {
     ...mapState([
@@ -199,19 +197,21 @@ export default {
       }
     },
     dayPurchased (day) {
+      var isPurchased = true
       for (var address in this.userData.addresses) {
         if (this.userData.addresses[address].isActive) {
           for (var place in this.userAddresses) {
             if (this.userAddresses[place].uid === this.userData.addresses[address].uid) {
               for (var object in this.userAddresses[place].calendar) {
                 if (this.userAddresses[place].calendar[object].date === day.date) {
-                  return true
+                  isPurchased = false
                 }
               }
             }
           }
         }
       }
+      return isPurchased
     },
     goProfile () {
       this.$store.commit('setProfileFilters')
