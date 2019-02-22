@@ -64,12 +64,14 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import db from '@/database.js'
+import store from '../store'
+import moment from 'moment'
 
 export default {
   name: 'Shoppinglist',
   created () {
-    this.$store.commit('createList')
-    this.$store.commit('setPage', 'shoppinglist')
+    store.commit('createList')
+    store.commit('setPage', 'shoppinglist')
   },
   data () {
     return {
@@ -118,9 +120,15 @@ export default {
       document.getElementById('ingredient').focus()
     },
     deleteItems (place) {
+      var days = this.userData.shoppingListLength
       for (var ingredient in place.shoppingList) {
         if (place.shoppingList[ingredient].isActive) {
-
+          for (var d = 0; d < days; d++) {
+            var day = moment().add(d, 'days').format('YYYYMMDD')
+            db.collection('addresses').doc(place.uid).collection('calendar').doc(day).collection('breakfastIngredients').doc(place.shoppingList[ingredient].uid).delete()
+            db.collection('addresses').doc(place.uid).collection('calendar').doc(day).collection('lunchIngredients').doc(place.shoppingList[ingredient].uid).delete()
+            db.collection('addresses').doc(place.uid).collection('calendar').doc(day).collection('dinnerIngredients').doc(place.shoppingList[ingredient].uid).delete()
+          }
         }
       }
       for (var item in place.personalList) {
@@ -128,6 +136,8 @@ export default {
           db.collection('addresses').doc(place.uid).collection('personalList').doc(place.personalList[item].uid).delete()
         }
       }
+      store.commit('createList')
+      this.$forceUpdate()
     }
   }
 }

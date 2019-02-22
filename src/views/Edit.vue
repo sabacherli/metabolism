@@ -187,11 +187,6 @@ export default {
         placesList[p].blur()
       }
     },
-    returnToRecipies () {
-      this.$router.push('/recipies')
-      this.$store.commit('resetPointer')
-      this.$store.commit('changeFilters')
-    },
     editRecipe (userData, editor) {
       var editIngredients = []
       for (let r = 0; r < userData.mealplans[0].recipies.length; r++) {

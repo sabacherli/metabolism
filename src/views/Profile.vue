@@ -194,7 +194,7 @@
           <p class="sign" style="transform: rotate(45deg)">+</p>
         </div>
         <!-- eslint-disable-next-line -->
-        <div class="set_default" @click="setDefault(index)">
+        <div class="set_default" @click="setDefaultAddress(place)">
           <!-- eslint-disable-next-line -->
           <p class="dayname"> {{ place.name }} </p>
           <div class="box_default" v-if="!place.isDefault">
@@ -382,12 +382,18 @@ export default {
       'toggleSelected',
       'calcPrice',
       'addMonths',
-      'setDefault'
+      'setDefaultAddress'
     ]),
     updateCalories () {
-      db.collection('users').doc(this.userData.uid).update({
-        calories: Number(this.userData.calories)
+      var userData = this.userData
+      db.collection('users').doc(userData.uid).update({
+        calories: Number(userData.calories)
       })
+      for (var address in userData.addresses) {
+        db.collection('addresses').doc(userData.addresses[address].uid).collection('members').doc(userData.uid).update({
+          calories: Number(userData.calories)
+        })
+      }
     },
     updateLength () {
       db.collection('users').doc(this.userData.uid).update({
@@ -524,7 +530,8 @@ export default {
             db.collection('addresses').doc(place.uid).collection('members').doc(memberID).set({
               email: memberEmail,
               role: 'Member',
-              uid: memberID
+              uid: memberID,
+              calories: doc.data().calories
             })
           })
         })
@@ -555,7 +562,8 @@ export default {
             db.collection('addresses').doc(address.id).collection('members').doc(userData.uid).set({
               email: userData.email,
               role: 'Owner',
-              uid: userData.uid
+              uid: userData.uid,
+              calories: userData.calories
             })
             db.collection('addresses').doc(address.id).collection('calendar').doc('default').set({
               placeholder: 'default'
