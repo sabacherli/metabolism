@@ -24,6 +24,9 @@ service cloud.firestore {
       match /months/{document=**} {
         allow read, write: if true;
       }
+      match /personalList/{document=**} {
+        allow read, write: if true;
+      }
     }
 
     // Default should be accessible by the public

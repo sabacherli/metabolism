@@ -41,6 +41,7 @@ export default {
                           var userAddress = doc.data()
                           store.commit('pushUserAddress', userAddress)
                           store.commit('thisWeek')
+                          store.commit('createList')
                           db.collection('addresses').doc(addressID).collection('members')
                             .onSnapshot(function (querySnapshot) {
                               store.commit('emptyUserAddressMembers', addressID)
@@ -55,6 +56,14 @@ export default {
                               querySnapshot.forEach(function (doc) {
                                 var userAddressMonth = doc.data()
                                 store.commit('pushUserAddressMonth', { userAddressMonth, addressID })
+                              })
+                            })
+                          db.collection('addresses').doc(addressID).collection('personalList')
+                            .onSnapshot(function (querySnapshot) {
+                              store.commit('emptyUserAddressPersonalList', addressID)
+                              querySnapshot.forEach(function (doc) {
+                                var userAddressItem = doc.data()
+                                store.commit('pushUserAddressItem', { userAddressItem, addressID })
                               })
                             })
                         })
@@ -126,6 +135,7 @@ export default {
                           var userAddress = doc.data()
                           store.commit('pushUserAddress', userAddress)
                           store.commit('thisWeek')
+                          store.commit('createList')
                           db.collection('addresses').doc(addressID).collection('members')
                             .onSnapshot(function (querySnapshot) {
                               store.commit('emptyUserAddressMembers', addressID)
@@ -140,6 +150,14 @@ export default {
                               querySnapshot.forEach(function (doc) {
                                 var userAddressMonth = doc.data()
                                 store.commit('pushUserAddressMonth', { userAddressMonth, addressID })
+                              })
+                            })
+                          db.collection('addresses').doc(addressID).collection('personalList')
+                            .onSnapshot(function (querySnapshot) {
+                              store.commit('emptyUserAddressPersonalList', addressID)
+                              querySnapshot.forEach(function (doc) {
+                                var userAddressItem = doc.data()
+                                store.commit('pushUserAddressItem', { userAddressItem, addressID })
                               })
                             })
                         })

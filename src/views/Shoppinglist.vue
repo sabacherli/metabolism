@@ -39,20 +39,20 @@
 
             </div>
             <div class="" align="left">
-              <label style="margin-top: 40px" for="">Add item</label>
+              <label style="margin-top: 40px" for="">Item</label>
               <input id="ingredient" class="amount" type="text" autocomplete="off" @keyup.enter="focusAmount" v-model="newIngredient" required>
               <br>
               <label for="">Amount</label>
               <input id="amount" class="amount" type="number" autocomplete="off" @keyup.enter="focusUnit" v-model="newAmount" required>
               <br>
               <label for="">Unit</label>
-              <input id="unit" class="amount" type="text" autocomplete="off" @keyup.enter="addItem(userAddresses.indexOf(place))" v-model="newUnit" required>
+              <input id="unit" class="amount" type="text" autocomplete="off" @keyup.enter="addItem(place)" v-model="newUnit" required>
             </div>
           </div>
           <!-- eslint-disable-next-line  -->
-          <div class="add_button" style="margin-bottom: 40px" @click="addItem(userAddresses.indexOf(place))"><span class="add_text">Add Item</span></div>
+          <div class="add_button" style="margin-bottom: 40px" @click="addItem(place)"><span class="add_text">Add Item</span></div>
           <!-- eslint-disable-next-line  -->
-          <div class="confirm_button" style="margin-bottom: 70px" @click="groceriesDone(address.address)">
+          <div class="confirm_button" style="margin-bottom: 70px" @click="deleteItems(place)">
             <span class="confirm_text">Done</span>
           </div>
         </div>
@@ -63,51 +63,30 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
+import db from '@/database.js'
 
 export default {
   name: 'Shoppinglist',
   created () {
-    this.$store.commit('createShoppingList')
+    this.$store.commit('createList')
     this.$store.commit('setPage', 'shoppinglist')
+  },
+  data () {
+    return {
+      newName: null,
+      newIngredient: null,
+      newAmount: null,
+      newUnit: null
+    }
   },
   computed: {
     ...mapState([
-      'newIngredient',
-      'newAmount',
-      'newUnit',
       'userAddresses',
-      'tempCal',
-      'start',
       'userData'
-    ]),
-    newIngredient: {
-      get () {
-        return this.$store.state.newIngredient
-      },
-      set (value) {
-        this.$store.commit('syncIngredient', value)
-      }
-    },
-    newAmount: {
-      get () {
-        return this.$store.state.newAmount
-      },
-      set (value) {
-        this.$store.commit('syncAmount', value)
-      }
-    },
-    newUnit: {
-      get () {
-        return this.$store.state.newUnit
-      },
-      set (value) {
-        this.$store.commit('syncUnit', value)
-      }
-    }
+    ])
   },
   methods: {
     ...mapMutations([
-      'addItem',
       'toggleIsActive',
       'groceriesDone'
     ]),
@@ -116,6 +95,39 @@ export default {
     },
     focusUnit () {
       document.getElementById('unit').focus()
+    },
+    addItem (place) {
+      if (this.newIngredient !== null && this.newAmount !== null && this.newUnit !== null) {
+        db.collection('addresses').doc(place.uid).collection('personalList').add({
+          ingredient: this.newIngredient,
+          amount: this.newAmount,
+          unit: this.newUnit,
+          isActive: false,
+          isPurchased: false,
+          uid: ''
+        })
+          .then(function (doc) {
+            db.collection('addresses').doc(place.uid).collection('personalList').doc(doc.id).update({
+              uid: doc.id
+            })
+          })
+      }
+      this.newIngredient = null
+      this.newAmount = null
+      this.newUnit = null
+      document.getElementById('ingredient').focus()
+    },
+    deleteItems (place) {
+      for (var ingredient in place.shoppingList) {
+        if (place.shoppingList[ingredient].isActive) {
+
+        }
+      }
+      for (var item in place.personalList) {
+        if (place.personalList[item].isActive) {
+          db.collection('addresses').doc(place.uid).collection('personalList').doc(place.personalList[item].uid).delete()
+        }
+      }
     }
   }
 }

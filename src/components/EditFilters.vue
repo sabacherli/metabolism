@@ -14,6 +14,9 @@
 
 <script>
 import { mapState, mapMutations } from 'vuex'
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import db from '@/database.js'
 
 export default {
   name: 'EditFilters',
@@ -25,9 +28,22 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'toggleFilter',
-      'editFilter'
-    ])
+      'toggleFilter'
+    ]),
+    editFilter (state, filter) {
+      var userData = this.userData
+      var editor = this.editor
+      if (filter.isActive) {
+        db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[editor.index].uid).update({
+          tags: firebase.firestore.FieldValue.arrayRemove(filter.text)
+        })
+      } else {
+        db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[editor.index].uid).update({
+          tags: firebase.firestore.FieldValue.arrayUnion(filter.text)
+        })
+      }
+      filter.isActive = !filter.isActive
+    }
   }
 }
 </script>

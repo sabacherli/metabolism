@@ -164,7 +164,6 @@ export default {
   name: 'Calendar',
   created () {
     store.commit('setToday', moment().format('YYYYMMDD'))
-    store.commit('setCurrent')
     store.commit('setPage', 'calendar')
   },
   computed: {
