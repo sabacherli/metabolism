@@ -45,7 +45,10 @@
         </div>
         <div class="" align="left">
           <label for="">New Email</label>
-          <input class="amount" type="text" name="" value="" v-model="userData.email" @keyup.enter="updateEmail(); removeFocus()">
+          <input class="amount" type="text" name="" value="" v-model="userData.email" @keyup.enter="updateEmail()">
+          <br>
+          <label for="">Enter Password</label>
+          <input class="amount" type="password" v-model="emailPassword" autocomplete="off" @keyup.enter="updateEmail(); removeFocus()" required>
           <br>
         </div>
         <div class="purchase_button" @click="updateEmail(); removeFocus()" style="margin-top: 20px">
@@ -338,6 +341,7 @@ export default {
       newFilter: '',
       newPlace: '',
       newMember: '',
+      emailPassword: '',
       oldPassword: '',
       newPassword: '',
       checkPassword: '',
@@ -410,37 +414,27 @@ export default {
           'email': this.userData.email
         })
       }
-      var email = this.userData.email
-      user.updateEmail(this.userData.email)
+      var newEmail = this.userData.email
+      var emailPassword = this.emailPassword
+      const credential = firebase.auth.EmailAuthProvider.credential(
+        user.email,
+        emailPassword
+      )
+      user.reauthenticateAndRetrieveDataWithCredential(credential)
         .then(function () {
-          // Update successful.
-          console.log('Email successfully updated!')
+          // User re-authenticated.
+          user.updateEmail(newEmail)
+            .then(function () {
+              // Update successful.
+              console.log('Email successfully updated!')
+            })
+            .catch(function (error) {
+              console.log('There is still an error occuring.', error)
+            })
         })
         .catch(function (error) {
           // An error happened.
           console.log('Error: ', error)
-          // Prompt the user to re-provide their sign-in credentials
-          var password = prompt('Please reauthenticate before we can update your email.', 'Password')
-          const credential = firebase.auth.EmailAuthProvider.credential(
-            user.email,
-            password
-          )
-          user.reauthenticateAndRetrieveDataWithCredential(credential)
-            .then(function () {
-              // User re-authenticated.
-              user.updateEmail(email)
-                .then(function () {
-                  // Update successful.
-                  console.log('Email successfully updated!')
-                })
-                .catch(function (error) {
-                  console.log('There is still an error occuring.', error)
-                })
-            })
-            .catch(function (error) {
-              // An error happened.
-              console.log('Error: ', error)
-            })
         })
     },
     updatePassword () {

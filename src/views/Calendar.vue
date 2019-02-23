@@ -402,6 +402,12 @@ export default {
 .year_date {
   font-weight: 500;
 }
+.price {
+  margin-top: 40px;
+  background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 @media (min-width: 1000px) {
   .container {
     top: 240px;

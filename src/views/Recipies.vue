@@ -134,7 +134,7 @@ export default {
     },
     addIngredient () {
       var ingredient = this.newIngredient
-      var amount = this.newAmount
+      var amount = Number(this.newAmount)
       var unit = this.newUnit
       if (this.newIngredient !== null && this.newAmount !== null && this.newUnit !== null) {
         this.$store.commit('pushIngredient', { ingredient, amount, unit })
