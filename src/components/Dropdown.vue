@@ -40,6 +40,8 @@
 import { mapState } from 'vuex'
 import firebase from 'firebase/app'
 import 'firebase/auth'
+import store from '../store'
+import router from '../router'
 
 export default {
   name: 'Dropdown',
@@ -51,52 +53,52 @@ export default {
   },
   methods: {
     goBenefits () {
-      this.$store.commit('setPage', 'benefits')
-      this.$router.push('benefits')
+      store.commit('setPage', 'benefits')
+      router.push('benefits')
       this.$forceUpdate()
     },
     goCalendar () {
-      this.$store.commit('setPage', 'calendar')
-      this.$router.push('calendar')
+      store.commit('setPage', 'calendar')
+      router.push('calendar')
       this.$forceUpdate()
     },
     goRecipies () {
-      this.$store.commit('setPage', 'recipies')
-      this.$router.push('recipies')
-      this.$store.commit('resetPointer')
+      store.commit('setPage', 'recipies')
+      router.push('recipies')
+      store.commit('resetPointer')
       this.$forceUpdate()
     },
     goShoppinglist () {
-      this.$store.commit('setPage', 'shoppinglist')
-      this.$router.push('shoppinglist')
+      store.commit('setPage', 'shoppinglist')
+      router.push('shoppinglist')
       this.$forceUpdate()
     },
     goProfile () {
-      this.$store.commit('setPage', 'profile')
-      this.$router.push('profile')
+      store.commit('setPage', 'profile')
+      router.push('profile')
       this.$forceUpdate()
     },
     goLogin () {
-      this.$store.commit('setPage', 'login')
-      this.$router.push('login')
+      store.commit('setPage', 'login')
+      router.push('login')
       this.$forceUpdate()
     },
     goRegister () {
-      this.$store.commit('setPage', 'register')
-      this.$router.push('register')
+      store.commit('setPage', 'register')
+      router.push('register')
       this.$forceUpdate()
     },
     logout () {
       firebase.auth().signOut()
-        .then(success => {
-          this.$store.commit('setPage', 'login')
-          this.$router.push('login')
-          this.$forceUpdate()
+        .then(function () {
+          store.commit('setPage', 'login')
+          router.push('login')
         })
         .catch(error => {
           alert(error.message)
           console.log(error.code)
         })
+      this.$forceUpdate()
     },
     touchCome () {
       // no hover actions

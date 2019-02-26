@@ -40,6 +40,7 @@ export default {
                         .onSnapshot(function (doc) {
                           var userAddress = doc.data()
                           store.commit('pushUserAddress', userAddress)
+                          console.log(userAddress);
                           store.commit('thisWeek')
                           store.commit('createList')
                           db.collection('addresses').doc(addressID).collection('members')

@@ -63,8 +63,15 @@ export default {
     },
     createUser () {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
-        .then(user => {
+        .then(function (user) {
           store.commit('createUser', user)
+          firebase.auth().useDeviceLanguage()
+          firebase.auth().currentUser.sendEmailVerification()
+            .then(function () {
+              console.log('Sign-out successful.')
+              alert('Verification email sent. Please verify your email address.')
+              router.push('/login')
+            })
         })
         .catch(function (error) {
           alert(error)
@@ -77,7 +84,7 @@ export default {
       firebase.auth().getRedirectResult()
         .then(function (user) {
           if (user.additionalUserInfo.isNewUser) {
-            store.commit('createUser2', user)
+            store.commit('createUser', user)
           }
         })
         .catch(function (error) {
@@ -91,7 +98,6 @@ export default {
         .then(function (result) {
           // The signed-in user info.
           store.commit('createUser', result)
-          router.push('/calendar')
           // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
           // You can use these server side with your app's credentials to access the Twitter API.
           // var token = result.credential.accessToken
@@ -119,7 +125,8 @@ export default {
               alert('Another verification email has been sent.')
               firebase.auth().signOut()
                 .then(function () {
-                // Sign-out successful.
+                  // Sign-out successful.
+                  router.push('/login')
                 }).catch(function (error) {
                   // An error happened.
                   console.log(error.code)

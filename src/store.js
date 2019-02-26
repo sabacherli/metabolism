@@ -249,14 +249,20 @@ export default new Vuex.Store({
       }
     },
     setDefaultAddress (state, place) {
-      db.collection('users').doc(state.userData.uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD'))).update({
-        breakfastAddress: place.uid,
-        breakfastLocation: place.name,
-        lunchAddress: place.uid,
-        lunchLocation: place.name,
-        dinnerAddress: place.uid,
-        dinnerLocation: place.name
-      })
+      db.collection('users').doc(state.userData.uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD')))
+        .get()
+        .then(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            db.collection('users').doc(state.userData.uid).collection('calendar').doc(doc.id).update({
+              breakfastAddress: place.uid,
+              breakfastLocation: place.name,
+              lunchAddress: place.uid,
+              lunchLocation: place.name,
+              dinnerAddress: place.uid,
+              dinnerLocation: place.name
+            })
+          })
+        })
       for (var address in state.userData.addresses) {
         db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD'))).where('breakfastMembers', 'array-contains', state.userData.uid)
           .get()
@@ -267,6 +273,24 @@ export default new Vuex.Store({
               })
             })
           })
+        db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD'))).where('lunchMembers', 'array-contains', state.userData.uid)
+          .get()
+          .then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+              db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+                lunchMembers: firebase.firestore.FieldValue.arrayRemove(state.userData.uid)
+              })
+            })
+          })
+        db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD'))).where('dinnerMembers', 'array-contains', state.userData.uid)
+          .get()
+          .then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+              db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+                dinnerMembers: firebase.firestore.FieldValue.arrayRemove(state.userData.uid)
+              })
+            })
+          })
       }
       db.collection('addresses').doc(place.uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD')))
         .get()
@@ -274,6 +298,24 @@ export default new Vuex.Store({
           querySnapshot.forEach(function (doc) {
             db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
               breakfastMembers: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+            })
+          })
+        })
+      db.collection('addresses').doc(place.uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD')))
+        .get()
+        .then(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+              lunchMembers: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+            })
+          })
+        })
+      db.collection('addresses').doc(place.uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD')))
+        .get()
+        .then(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+              dinnerMembers: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
             })
           })
         })
@@ -511,10 +553,10 @@ export default new Vuex.Store({
       state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
     },
     thisWeek (state) {
-      state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
-      state.currentYear = state.start.format('YYYY')
-      state.currentYearMonth = state.start.format('YYYYMM')
       for (var address in state.userAddresses) {
+        state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
+        state.currentYear = state.start.format('YYYY')
+        state.currentYearMonth = state.start.format('YYYYMM')
         db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
           .onSnapshot(function (querySnapshot) {
             state.userAddresses[address].calendar.length = 0
@@ -1427,9 +1469,6 @@ export default new Vuex.Store({
             uid: 'default',
             calories: 2000
           })
-          db.collection('addresses').doc(address.id).collection('calendar').doc('default').set({
-            placeholder: 'default'
-          })
           var batchAddress = db.batch()
           for (let y = 0; y < 2; y++) {
             for (let m = 0; m < 12; m++) {
@@ -1470,7 +1509,7 @@ export default new Vuex.Store({
               })
               db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('filters').add({
                 text: 'Breakfast',
-                isActive: false,
+                isActive: true,
                 uid: ''
               })
                 .then(function (filter) {
@@ -1480,7 +1519,7 @@ export default new Vuex.Store({
                 })
               db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('filters').add({
                 text: 'Lunch',
-                isActive: false,
+                isActive: true,
                 uid: ''
               })
                 .then(function (filter) {
@@ -1490,7 +1529,7 @@ export default new Vuex.Store({
                 })
               db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('filters').add({
                 text: 'Dinner',
-                isActive: false,
+                isActive: true,
                 uid: ''
               })
                 .then(function (filter) {
@@ -1592,7 +1631,7 @@ export default new Vuex.Store({
         })
     },
     createUser (state, user) {
-      const object = JSON.parse(JSON.stringify(user))
+      const object = user
       db.collection('addresses').add({
         uid: '',
         personalList: [],
@@ -1608,11 +1647,8 @@ export default new Vuex.Store({
           db.collection('addresses').doc(address.id).collection('members').doc(object.user.uid).set({
             email: object.user.email,
             role: 'Owner',
-            userID: object.user.uid,
+            uid: object.user.uid,
             calories: 2000
-          })
-          db.collection('addresses').doc(address.id).collection('calendar').doc('default').set({
-            placeholder: 'default'
           })
           var batchAddress = db.batch()
           for (let y = 0; y < 2; y++) {
@@ -1654,17 +1690,20 @@ export default new Vuex.Store({
               })
               db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('filters').add({
                 text: 'Breakfast',
-                isActive: false,
+                isActive: true,
                 uid: ''
               })
                 .then(function (filter) {
                   db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('filters').doc(filter.id).update({
                     uid: filter.id
                   })
+                })
+                .catch(function (error) {
+                  console.log('Error: ', error)
                 })
               db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('filters').add({
                 text: 'Lunch',
-                isActive: false,
+                isActive: true,
                 uid: ''
               })
                 .then(function (filter) {
@@ -1672,15 +1711,21 @@ export default new Vuex.Store({
                     uid: filter.id
                   })
                 })
+                .catch(function (error) {
+                  console.log('Error: ', error)
+                })
               db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('filters').add({
                 text: 'Dinner',
-                isActive: false,
+                isActive: true,
                 uid: ''
               })
                 .then(function (filter) {
                   db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('filters').doc(filter.id).update({
                     uid: filter.id
                   })
+                })
+                .catch(function (error) {
+                  console.log('Error: ', error)
                 })
               db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('recipies').add({
                 name: 'Banana Smoothie',
@@ -1695,6 +1740,9 @@ export default new Vuex.Store({
                   db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('recipies').doc(recipe.id).update({
                     uid: recipe.id
                   })
+                    .catch(function (error) {
+                      console.log('Error: ', error)
+                    })
                   db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('recipies').doc(recipe.id).collection('ingredients').add({
                     ingredient: 'Milk',
                     amount: 200,
@@ -1707,6 +1755,9 @@ export default new Vuex.Store({
                       db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('recipies').doc(recipe.id).collection('ingredients').doc(ingredient.id).update({
                         uid: ingredient.id
                       })
+                    })
+                    .catch(function (error) {
+                      console.log('Error: ', error)
                     })
                   db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('recipies').doc(recipe.id).collection('ingredients').add({
                     ingredient: 'Banana',
@@ -1721,7 +1772,13 @@ export default new Vuex.Store({
                         uid: ingredient.id
                       })
                     })
+                    .catch(function (error) {
+                      console.log('Error: ', error)
+                    })
                 })
+            })
+            .catch(function (error) {
+              console.log('Error: ', error)
             })
           db.collection('users').doc(object.user.uid).collection('addresses').doc(address.id).set({
             name: 'Home',
@@ -1773,24 +1830,6 @@ export default new Vuex.Store({
           db.collection('users').doc(object.user.uid).update({
             months: months
           })
-          if (object.user.emailVerified === false) {
-            firebase.auth().useDeviceLanguage()
-            firebase.auth().currentUser.sendEmailVerification()
-              .then(function () {
-                alert('Verification email sent. Please verify your email address and then log in.')
-                firebase.auth().signOut()
-                  .then(function () {
-                    // Sign-out successful.
-                    router.push('/login')
-                  })
-                  .catch(function (error) {
-                    // An error happened.
-                    alert(error.code, ': ', error)
-                  })
-              })
-          } else {
-            router.push('/calendar')
-          }
         })
     },
     getUserData (state, userData) {

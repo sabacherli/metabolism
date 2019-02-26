@@ -469,26 +469,122 @@ export default {
         })
     },
     deleteAccount () {
-      const user = firebase.auth().currentUser
-      const credential = firebase.auth.EmailAuthProvider.credential(
-        user.email,
-        this.deleteConfirmation
-      )
-      user.reauthenticateAndRetrieveDataWithCredential(credential)
-        .then(() => {
-          new Promise(function (resolve, reject) {
-            store.commit('deleteAccount', user)
-            resolve()
-          })
-            .then(function () {
-              router.push('/register')
-              store.commit('setPage', 'register')
+      if (confirm('Are you sure you want to remove this place?')) {
+        const userData = this.userData
+        const userAddresses = this.userAddresses
+        const user = firebase.auth().currentUser
+        const credential = firebase.auth.EmailAuthProvider.credential(
+          user.email,
+          this.deleteConfirmation
+        )
+        user.reauthenticateAndRetrieveDataWithCredential(credential)
+          .then(function () {
+            user.delete()
+            store.commit('setPage', 'register')
+            router.push('/register')
+            for (var address in userAddresses) {
+              var isOwner = false
+              var batch = db.batch()
+              for (let member in userAddresses[address].members) {
+                if (userAddresses[address].members[member].role === 'Owner' && userAddresses[address].members[member].uid === userData.uid) {
+                  isOwner = true
+                }
+              }
+              if (isOwner) {
+                new Promise(function (resolve, reject) {
+                  for (let member in userAddresses[address].members) {
+                    var addressRef = db.collection('users').doc(userAddresses[address].members[member].uid).collection('addresses').doc(userAddresses[address].uid)
+                    batch.delete(addressRef)
+                  }
+                  resolve()
+                })
+                  .then(function () {
+                    new Promise(function (resolve, reject) {
+                      db.collection('addresses').doc(userAddresses[address].uid).collection('calendar')
+                        .onSnapshot(function (querySnapshot) {
+                          querySnapshot.forEach(function (doc) {
+                            var calendarRef = db.collection('addresses').doc(userAddresses[address].uid).collection('calendar').doc(doc.id)
+                            batch.delete(calendarRef)
+                          })
+                          resolve()
+                        })
+                    })
+                      .then(function () {
+                        new Promise(function (resolve, reject) {
+                          db.collection('addresses').doc(userAddresses[address].uid).collection('members')
+                            .onSnapshot(function (querySnapshot) {
+                              querySnapshot.forEach(function (doc) {
+                                var memberRef = db.collection('addresses').doc(userAddresses[address].uid).collection('members').doc(doc.id)
+                                batch.delete(memberRef)
+                              })
+                              resolve()
+                            })
+                        })
+                          .then(function () {
+                            new Promise(function (resolve, reject) {
+                              db.collection('addresses').doc(userAddresses[address].uid).collection('months')
+                                .onSnapshot(function (querySnapshot) {
+                                  querySnapshot.forEach(function (doc) {
+                                    var monthRef = db.collection('addresses').doc(userAddresses[address].uid).collection('months').doc(doc.id)
+                                    batch.delete(monthRef)
+                                  })
+                                  resolve()
+                                })
+                            })
+                              .then(function () {
+                                new Promise(function (resolve, reject) {
+                                  var docRef = db.collection('addresses').doc(userAddresses[address].uid)
+                                  batch.delete(docRef)
+                                  resolve()
+                                })
+                                  .then(function () {
+                                    batch.commit()
+                                  })
+                              })
+                          })
+                      })
+                  })
+              } else {
+                batch.delete(db.collection('addresses').doc(userAddresses[address].uid).collection('members').doc(userData.uid))
+                batch.delete(db.collection('users').doc(userData.uid).collection('addresses').doc(userAddresses[address].uid))
+                batch.commit()
+              }
+            }
+            new Promise(function (resolve, reject) {
+              for (var recipe in userData.mealplans[0].recipies) {
+                db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[recipe].uid).collection('ingredients')
+                  .onSnapshot(function (querySnapshot) {
+                    querySnapshot.forEach(function (doc) {
+                      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[recipe].uid).collection('ingredients').doc(doc.id).delete()
+                    })
+                    db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[recipe].uid).delete()
+                  })
+              }
+              resolve()
             })
-        })
-        .catch(function (error) {
-          alert(error)
-          console.log('Error: ', error)
-        })
+              .then(function () {
+                new Promise(function (resolve, reject) {
+                  db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('filters')
+                    .onSnapshot(function (querySnapshot) {
+                      querySnapshot.forEach(function (doc) {
+                        db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('filters').doc(doc.id).delete()
+                      })
+                      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).delete()
+                    })
+                  db.collection('users').doc(userData.uid).collection('calendar')
+                    .onSnapshot(function (querySnapshot) {
+                      querySnapshot.forEach(function (doc) {
+                        db.collection('users').doc(userData.uid).collection('calendar').doc(doc.id).delete()
+                      })
+                    })
+                  resolve()
+                })
+                  .then(function () {
+                    db.collection('users').doc(userData.uid).delete()
+                  })
+              })
+          })
+      }
     },
     updatePlace (place) {
       db.collection('users').doc(this.userData.uid).collection('addresses').doc(place.uid).update({
@@ -591,6 +687,7 @@ export default {
     },
     deletePlace (place, index) {
       if (confirm('Are you sure you want to remove this place?')) {
+        console.log(1)
         var userData = this.userData
         var userAddresses = this.userAddresses
         var isOwner = false
@@ -601,6 +698,7 @@ export default {
           }
         }
         if (isOwner) {
+          console.log(2)
           new Promise(function (resolve, reject) {
             for (let member in userAddresses[index].members) {
               var addressRef = db.collection('users').doc(userAddresses[index].members[member].uid).collection('addresses').doc(place.uid)
@@ -651,10 +749,23 @@ export default {
                               batch.commit()
                             })
                         })
+                        .catch(function (error) {
+                          console.log('Error: ', error)
+                        })
+                    })
+                    .catch(function (error) {
+                      console.log('Error: ', error)
                     })
                 })
+                .catch(function (error) {
+                  console.log('Error: ', error)
+                })
+            })
+            .catch(function (error) {
+              console.log('Error: ', error)
             })
         } else {
+          console.log(3)
           batch.delete(db.collection('addresses').doc(place.uid).collection('members').doc(userData.uid))
           batch.delete(db.collection('users').doc(userData.uid).collection('addresses').doc(place.uid))
         }

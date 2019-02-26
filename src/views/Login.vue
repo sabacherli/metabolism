@@ -58,16 +58,25 @@ export default {
       store.commit('createDefaultUser')
     },
     login () {
-      firebase.auth().signInWithEmailAndPassword(this.email, this.password)
-        .then(user => {
-          if (firebase.auth().currentUser.emailVerified) {
-            router.push('/calendar')
-          } else {
-            alert('You need to verify your email before you can log in.')
-          }
+      var email = this.email
+      var password = this.password
+      firebase.auth().signOut()
+        .then(function () {
+          firebase.auth().signInWithEmailAndPassword(email, password)
+            .then(user => {
+              if (firebase.auth().currentUser.emailVerified) {
+                router.push('/calendar')
+                // could add new days to user calender here (use 'array-contains' function from firebase)
+              } else {
+                alert('You need to verify your email before you can log in.')
+              }
+            })
+            .catch(function (error) {
+              alert(error.code, ': ', error)
+            })
         })
-        .catch(error => {
-          alert(error.code, ': ', error)
+        .catch(function (error) {
+          console.log('Error: ', error)
         })
     },
     signInWithGoogle () {

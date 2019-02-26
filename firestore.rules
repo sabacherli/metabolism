@@ -13,7 +13,7 @@ service cloud.firestore {
     }
 
     // Default should be accessible by the public
-    match /addresses/RsEbCmIPqUSxrITMxQvT {
+    match /addresses/minmR3KJhHGUvegpjOWP {
       allow read, write: if true;
       match /calendar/{document=**} {
         allow read, write: if true;
