@@ -3,10 +3,10 @@
 
     <!-- Remove meal from calendar if one has been chosen. -->
     <div class="day" v-if="pointer.meal">
-      <div class="box" @click="removeMeal(); goCalendar()">
+      <div class="box" @click="removeRecipe(); goCalendar()">
         <p class="sign_remove" style="transform: rotate(45deg)">+</p>
       </div>
-      <p class="dayname" @click="removeMeal(); goCalendar()">Remove Meal</p>
+      <p class="dayname" @click="removeRecipe(); goCalendar()">Remove Meal</p>
       <div class="ingredients_break">
 
       </div>
@@ -121,7 +121,7 @@ export default {
     ...mapMutations([
       'selectRecipe',
       'setEditor',
-      'removeMeal',
+      'removeRecipe',
       'addIngredient',
       'addRecipie'
     ]),

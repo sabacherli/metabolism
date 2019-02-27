@@ -557,26 +557,27 @@ export default new Vuex.Store({
         state.start = moment().subtract(moment().isoWeekday(), 'days').add(1, 'days')
         state.currentYear = state.start.format('YYYY')
         state.currentYearMonth = state.start.format('YYYYMM')
-        db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
+        var addressID = state.userAddresses[address].uid
+        db.collection('addresses').doc(addressID).collection('calendar').where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
           .onSnapshot(function (querySnapshot) {
             state.userAddresses[address].calendar.length = 0
             querySnapshot.forEach(function (doc) {
               var userAddressDay = doc.data()
-              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userAddressDay.date.toString()).collection('breakfastIngredients')
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('breakfastIngredients')
                 .onSnapshot(function (querySnapshot) {
                   querySnapshot.forEach(function (doc) {
                     let userAddressDayIngredient = doc.data()
                     userAddressDay.breakfastIngredients.push(userAddressDayIngredient)
                   })
                 })
-              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userAddressDay.date.toString()).collection('lunchIngredients')
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('lunchIngredients')
                 .onSnapshot(function (querySnapshot) {
                   querySnapshot.forEach(function (doc) {
                     let userAddressDayIngredient = doc.data()
                     userAddressDay.lunchIngredients.push(userAddressDayIngredient)
                   })
                 })
-              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userAddressDay.date.toString()).collection('dinnerIngredients')
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('dinnerIngredients')
                 .onSnapshot(function (querySnapshot) {
                   querySnapshot.forEach(function (doc) {
                     let userAddressDayIngredient = doc.data()
@@ -597,9 +598,9 @@ export default new Vuex.Store({
         })
     },
     nextWeek (state) {
-      state.currentYear = state.start.format('YYYY')
-      state.currentYearMonth = state.start.format('YYYYMM')
       for (var address in state.userAddresses) {
+        state.currentYear = state.start.format('YYYY')
+        state.currentYearMonth = state.start.format('YYYYMM')
         db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
           .onSnapshot(function (querySnapshot) {
             state.userAddresses[address].calendar.length = 0
@@ -629,8 +630,8 @@ export default new Vuex.Store({
               state.userAddresses[address].calendar.push(userAddressDay)
             })
           })
+        state.start = state.start.subtract(state.displayAmount, 'days')
       }
-      state.start = state.start.subtract(state.displayAmount, 'days')
       db.collection('users').doc(state.userData.uid).collection('calendar').where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
         .onSnapshot(function (querySnapshot) {
           state.userData.calendar.length = 0
@@ -641,9 +642,9 @@ export default new Vuex.Store({
     },
     previousWeek (state) {
       state.start = state.start.subtract(2 * state.displayAmount, 'days')
-      state.currentYear = state.start.format('YYYY')
-      state.currentYearMonth = state.start.format('YYYYMM')
       for (var address in state.userAddresses) {
+        state.currentYear = state.start.format('YYYY')
+        state.currentYearMonth = state.start.format('YYYYMM')
         db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
           .onSnapshot(function (querySnapshot) {
             state.userAddresses[address].calendar.length = 0
@@ -673,8 +674,8 @@ export default new Vuex.Store({
               state.userAddresses[address].calendar.push(userAddressDay)
             })
           })
+        state.start = state.start.subtract(state.displayAmount, 'days')
       }
-      state.start = state.start.subtract(state.displayAmount, 'days')
       db.collection('users').doc(state.userData.uid).collection('calendar').where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
         .onSnapshot(function (querySnapshot) {
           state.userData.calendar.length = 0
@@ -796,9 +797,15 @@ export default new Vuex.Store({
     },
     selectRecipe (state, recipe) {
       if (state.pointer.meal === 'Breakfast') {
-        db.collection('users').doc(state.userData.uid).collection('calendar').doc(state.pointer.doc.toString()).update({
-          breakfast: recipe.name
-        })
+        for (let address in state.userAddresses) {
+          if (state.userAddresses[address].uid === state.pointer.address) {
+            for (let member in state.userAddresses[address].members) {
+              db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
+                breakfast: recipe.name
+              })
+            }
+          }
+        }
         db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
           breakfastCaloriesOwner: state.userData.calories
         })
@@ -819,9 +826,15 @@ export default new Vuex.Store({
         }
       }
       if (state.pointer.meal === 'Lunch') {
-        db.collection('users').doc(state.userData.uid).collection('calendar').doc(state.pointer.doc.toString()).update({
-          lunch: recipe.name
-        })
+        for (let address in state.userAddresses) {
+          if (state.userAddresses[address].uid === state.pointer.address) {
+            for (let member in state.userAddresses[address].members) {
+              db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
+                lunch: recipe.name
+              })
+            }
+          }
+        }
         db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
           lunchCaloriesOwner: state.userData.calories
         })
@@ -837,9 +850,15 @@ export default new Vuex.Store({
         }
       }
       if (state.pointer.meal === 'Dinner') {
-        db.collection('users').doc(state.userData.uid).collection('calendar').doc(state.pointer.doc.toString()).update({
-          dinner: recipe.name
-        })
+        for (let address in state.userAddresses) {
+          if (state.userAddresses[address].uid === state.pointer.address) {
+            for (let member in state.userAddresses[address].members) {
+              db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
+                dinner: recipe.name
+              })
+            }
+          }
+        }
         db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
           dinnerCaloriesOwner: state.userData.calories
         })
@@ -855,11 +874,17 @@ export default new Vuex.Store({
         }
       }
     },
-    removeMeal (state) {
+    removeRecipe (state) {
       if (state.pointer.meal === 'Breakfast') {
-        db.collection('users').doc(state.userData.uid).collection('calendar').doc(state.pointer.doc.toString()).update({
-          breakfast: 'Breakfast'
-        })
+        for (let address in state.userAddresses) {
+          if (state.userAddresses[address].uid === state.pointer.address) {
+            for (let member in state.userAddresses[address].members) {
+              db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
+                breakfast: 'Breakfast'
+              })
+            }
+          }
+        }
         db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
           breakfastCaloriesOwner: null
         })
@@ -872,9 +897,15 @@ export default new Vuex.Store({
           })
       }
       if (state.pointer.meal === 'Lunch') {
-        db.collection('users').doc(state.userData.uid).collection('calendar').doc(state.pointer.doc.toString()).update({
-          lunch: 'Lunch'
-        })
+        for (let address in state.userAddresses) {
+          if (state.userAddresses[address].uid === state.pointer.address) {
+            for (let member in state.userAddresses[address].members) {
+              db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
+                lunch: 'Lunch'
+              })
+            }
+          }
+        }
         db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
           lunchCaloriesOwner: null
         })
@@ -887,9 +918,15 @@ export default new Vuex.Store({
           })
       }
       if (state.pointer.meal === 'Dinner') {
-        db.collection('users').doc(state.userData.uid).collection('calendar').doc(state.pointer.doc.toString()).update({
-          dinner: 'Dinner'
-        })
+        for (let address in state.userAddresses) {
+          if (state.userAddresses[address].uid === state.pointer.address) {
+            for (let member in state.userAddresses[address].members) {
+              db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
+                dinner: 'Dinner'
+              })
+            }
+          }
+        }
         db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
           dinnerCaloriesOwner: null
         })
@@ -1841,11 +1878,21 @@ export default new Vuex.Store({
     pushUserDataAddress (state, userDataAddress) {
       state.userData.addresses.push(userDataAddress)
     },
+    setUserDataAddresses (state, userDataAddressesArray) {
+      for (let userDataAddress in userDataAddressesArray) {
+        state.userData.addresses.push(userDataAddressesArray[userDataAddress])
+      }
+    },
     emptyUserAddresses (state) {
       state.userAddresses.length = 0
     },
     pushUserAddress (state, userAddress) {
       state.userAddresses.push(userAddress)
+    },
+    setUserAddresses (state, userAddressesArray) {
+      for (let userAddress in userAddressesArray) {
+        state.userAddresses.push(userAddressesArray[userAddress])
+      }
     },
     emptyUserAddressMembers (state, addressID) {
       for (var userAddress in state.userAddresses) {
@@ -1858,6 +1905,15 @@ export default new Vuex.Store({
       for (var userAddress in state.userAddresses) {
         if (state.userAddresses[userAddress].uid === addressID) {
           state.userAddresses[userAddress].members.push(userAddressMember)
+        }
+      }
+    },
+    setUserAddressMembers (state, { userAddressMembersArray, addressID }) {
+      for (let address in state.userAddresses) {
+        if (state.userAddresses[address].uid === addressID) {
+          for (let userAddressMember in userAddressMembersArray) {
+            state.userAddresses[address].members.push(userAddressMembersArray[userAddressMember])
+          }
         }
       }
     },
@@ -1875,7 +1931,16 @@ export default new Vuex.Store({
         }
       }
     },
-    emptyUserAddressPersonalList (state, addressID) {
+    setUserAddressMonths (state, { userAddressMonthsArray, addressID }) {
+      for (let address in state.userAddresses) {
+        if (state.userAddresses[address].uid === addressID) {
+          for (let userAddressMonth in userAddressMonthsArray) {
+            state.userAddresses[address].months.push(userAddressMonthsArray[userAddressMonth])
+          }
+        }
+      }
+    },
+    emptyUserAddressPersonalLists (state, addressID) {
       for (var userAddress in state.userAddresses) {
         if (state.userAddresses[userAddress].uid === addressID) {
           state.userAddresses[userAddress].personalList.length = 0
@@ -1889,11 +1954,25 @@ export default new Vuex.Store({
         }
       }
     },
+    setUserAddressPersonalLists (state, { userAddressPersonalListsArray, addressID }) {
+      for (let address in state.userAddresses) {
+        if (state.userAddresses[address].uid === addressID) {
+          for (let userAddressPersonalList in userAddressPersonalListsArray) {
+            state.userAddresses[address].members.push(userAddressPersonalListsArray[userAddressPersonalList])
+          }
+        }
+      }
+    },
     emptyUserDataMealplans (state) {
       state.userData.mealplans.length = 0
     },
     pushUserDataMealplan (state, userDataMealplan) {
       state.userData.mealplans.push(userDataMealplan)
+    },
+    setUserDataMealplans (state, userDataMealplansArray) {
+      for (let userDataMealplan in userDataMealplansArray) {
+        state.userData.mealplans.push(userDataMealplansArray[userDataMealplan])
+      }
     },
     emptyUserDataMealplanFilters (state, mealplanID) {
       for (var mealplan in state.userData.mealplans) {
@@ -1909,6 +1988,15 @@ export default new Vuex.Store({
         }
       }
     },
+    setUserDataMealplanFilters (state, { userDataMealplanFiltersArray, mealplanID }) {
+      for (let mealplan in state.userData.mealplans) {
+        if (state.userData.mealplans[mealplan].uid === mealplanID) {
+          for (let userDataMealplanFilter in userDataMealplanFiltersArray) {
+            state.userData.mealplans[mealplan].filters.push(userDataMealplanFiltersArray[userDataMealplanFilter])
+          }
+        }
+      }
+    },
     emptyUserDataMealplanRecipies (state, mealplanID) {
       for (var mealplan in state.userData.mealplans) {
         if (state.userData.mealplans[mealplan].uid === mealplanID) {
@@ -1920,6 +2008,15 @@ export default new Vuex.Store({
       for (var mealplan in state.userData.mealplans) {
         if (state.userData.mealplans[mealplan].uid === mealplanID) {
           state.userData.mealplans[mealplan].recipies.push(userDataMealplanRecipe)
+        }
+      }
+    },
+    setUserDataMealplanRecipies (state, { userDataMealplanRecipiesArray, mealplanID }) {
+      for (let mealplan in state.userData.mealplans) {
+        if (state.userData.mealplans[mealplan].uid === mealplanID) {
+          for (let userDataMealplanRecipe in userDataMealplanRecipiesArray) {
+            state.userData.mealplans[mealplan].recipies.push(userDataMealplanRecipiesArray[userDataMealplanRecipe])
+          }
         }
       }
     },
@@ -1940,6 +2037,19 @@ export default new Vuex.Store({
           for (var recipe in state.userData.mealplans[mealplan].recipies) {
             if (state.userData.mealplans[mealplan].recipies[recipe].uid === recipeID) {
               state.userData.mealplans[mealplan].recipies[recipe].ingredients.push(userDataMealplanRecipeIngredient)
+            }
+          }
+        }
+      }
+    },
+    setUserDataMealplanRecipeIngredient (state, { userDataMealplanRecipeIngredientsArray, mealplanID, recipeID }) {
+      for (let mealplan in state.userData.mealplans) {
+        if (state.userData.mealplans[mealplan].uid === mealplanID) {
+          for (let recipe in state.userData.mealplans[mealplan].recipies) {
+            if (state.userData.mealplans[mealplan].recipies[recipe].uid === recipeID) {
+              for (let userDataMealplanRecipeIngredient in userDataMealplanRecipeIngredientsArray) {
+                state.userData.mealplans[mealplan].recipies[recipe].ingredients.push(userDataMealplanRecipeIngredientsArray[userDataMealplanRecipeIngredient])
+              }
             }
           }
         }
