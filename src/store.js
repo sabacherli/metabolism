@@ -249,6 +249,16 @@ export default new Vuex.Store({
       }
     },
     setDefaultAddress (state, place) {
+      for (let address in state.userData.addresses) {
+        if (state.userData.addresses[address].isActive) {
+          db.collection('users').doc(state.userData.uid).collection('addresses').doc(state.userData.addresses[address].uid).update({
+            isDefault: false
+          })
+        }
+      }
+      db.collection('users').doc(state.userData.uid).collection('addresses').doc(place.uid).update({
+        isDefault: true
+      })
       db.collection('users').doc(state.userData.uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD')))
         .get()
         .then(function (querySnapshot) {
