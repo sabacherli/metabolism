@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view name="banner"></router-view>
-    <router-view name="dropdown"></router-view>
+    <router-view :key="rerender" name="dropdown"></router-view>
     <router-view></router-view>
   </div>
 </template>
@@ -15,7 +15,6 @@ import 'firebase/auth'
 import 'typeface-montserrat'
 
 export default {
-
   created () {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user && user.emailVerified && user.metadata.creationTime !== user.metadata.lastSignInTime) {
@@ -324,7 +323,8 @@ export default {
   computed: {
     ...mapState([
       'currentPage',
-      'userData'
+      'userData',
+      'rerender'
     ])
   }
 }
@@ -473,6 +473,9 @@ select:-webkit-autofill:focus {
   -webkit-text-fill-color: darkgrey;
   -webkit-box-shadow: 0 0 0px 1000px rgba(123, 251, 119, 0.20) inset;
   transition: background-color 5000s ease-in-out 0s;
+}
+input:invalid {
+    box-shadow: none;
 }
 ::-webkit-scrollbar {
   width: 0px;

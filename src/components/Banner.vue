@@ -18,7 +18,6 @@ import LocationFilters from '@/components/LocationFilters.vue'
 import MealFilters from '@/components/MealFilters.vue'
 import EditFilters from '@/components/EditFilters.vue'
 import ProfileFilters from '@/components/ProfileFilters.vue'
-import Dropdown from '@/components/Dropdown.vue'
 
 export default {
   name: 'Banner',
@@ -30,13 +29,7 @@ export default {
     'filters-shoppinglist': LocationFilters,
     'filters-profile': ProfileFilters,
     'filters-register': CalendarFilters,
-    'filters-login': CalendarFilters,
-    'dropdownComponent': Dropdown
-  },
-  data () {
-    return {
-      rerender: 0
-    }
+    'filters-login': CalendarFilters
   },
   computed: {
     ...mapState([
@@ -51,7 +44,6 @@ export default {
       this.$store.commit('thisWeek')
       this.$store.commit('setPage', 'calendar')
       this.$router.push('calendar')
-      this.rerender += 1
     }
   }
 }

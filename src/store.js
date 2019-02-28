@@ -19,7 +19,7 @@ export default new Vuex.Store({
     newUnit: null,
     currentPage: 'calendar',
     price: 0,
-    index: null,
+    rerender: 1,
     pricePerMonth: 5,
     today: null,
     start: null,
@@ -82,6 +82,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    rerender (state) {
+      state.rerender = state.rerender * (-1)
+    },
     // syncMealName (state, name) {
     //   state.newRecipe.name = name
     // },

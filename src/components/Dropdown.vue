@@ -45,6 +45,34 @@ import router from '../router'
 
 export default {
   name: 'Dropdown',
+  mounted () {
+    for (var i = 0; i < document.getElementsByClassName('dropdown_item_selected').length; i++) {
+      document.getElementsByClassName('dropdown_item_selected')[i].classList.add('dropdown_item')
+      document.getElementsByClassName('dropdown_item_selected')[i].classList.remove('dropdown_item_selected')
+    }
+    if (this.currentPage === 'benefits' && document.getElementById('benefits') !== null) {
+      document.getElementById('benefits').classList.remove('dropdown_item')
+      document.getElementById('benefits').classList.add('dropdown_item_selected')
+    } else if (this.currentPage === 'calendar' && document.getElementById('calendar') !== null) {
+      document.getElementById('calendar').classList.remove('dropdown_item')
+      document.getElementById('calendar').classList.add('dropdown_item_selected')
+    } else if (this.currentPage === 'recipies' && document.getElementById('recipies') !== null) {
+      document.getElementById('recipies').classList.remove('dropdown_item')
+      document.getElementById('recipies').classList.add('dropdown_item_selected')
+    } else if (this.currentPage === 'shoppinglist' && document.getElementById('shoppinglist') !== null) {
+      document.getElementById('shoppinglist').classList.remove('dropdown_item')
+      document.getElementById('shoppinglist').classList.add('dropdown_item_selected')
+    } else if (this.currentPage === 'profile' && document.getElementById('profile') !== null) {
+      document.getElementById('profile').classList.remove('dropdown_item')
+      document.getElementById('profile').classList.add('dropdown_item_selected')
+    } else if (this.currentPage === 'register' && document.getElementById('register') !== null) {
+      document.getElementById('register').classList.remove('dropdown_item')
+      document.getElementById('register').classList.add('dropdown_item_selected')
+    } else if (this.currentPage === 'login' && document.getElementById('login') !== null) {
+      document.getElementById('login').classList.remove('dropdown_item')
+      document.getElementById('login').classList.add('dropdown_item_selected')
+    }
+  },
   computed: {
     ...mapState([
       'currentPage',
@@ -55,37 +83,114 @@ export default {
     goBenefits () {
       store.commit('setPage', 'benefits')
       router.push('benefits')
+      // hover actions
+      document.getElementById('container').classList.add('remove_hover')
+      setTimeout(this.removeClass, 800)
+      // no hover actions
+      document.getElementById('dropdown_nav').classList.remove('dropdown_nav_touch')
+      document.getElementById('dropdown_icon').classList.remove('dropdown_icon_touch')
+      document.getElementById('dropdown_close').classList.remove('dropdown_close_touch')
+      document.getElementById('dropdown_nav').classList.add('dropdown_nav_t')
+      document.getElementById('dropdown_icon').classList.add('dropdown_icon')
+      document.getElementById('dropdown_close').classList.add('dropdown_close')
+      document.getElementById('background').classList.remove('background_t')
       this.$forceUpdate()
     },
     goCalendar () {
       store.commit('setPage', 'calendar')
       router.push('calendar')
+      // hover actions
+      document.getElementById('container').classList.add('remove_hover')
+      setTimeout(this.removeClass, 800)
+      // no hover actions
+      document.getElementById('dropdown_nav').classList.remove('dropdown_nav_touch')
+      document.getElementById('dropdown_icon').classList.remove('dropdown_icon_touch')
+      document.getElementById('dropdown_close').classList.remove('dropdown_close_touch')
+      document.getElementById('dropdown_nav').classList.add('dropdown_nav_t')
+      document.getElementById('dropdown_icon').classList.add('dropdown_icon')
+      document.getElementById('dropdown_close').classList.add('dropdown_close')
+      document.getElementById('background').classList.remove('background_t')
       this.$forceUpdate()
     },
     goRecipies () {
       store.commit('setPage', 'recipies')
       router.push('recipies')
       store.commit('resetPointer')
+      // hover actions
+      document.getElementById('container').classList.add('remove_hover')
+      setTimeout(this.removeClass, 800)
+      // no hover actions
+      document.getElementById('dropdown_nav').classList.remove('dropdown_nav_touch')
+      document.getElementById('dropdown_icon').classList.remove('dropdown_icon_touch')
+      document.getElementById('dropdown_close').classList.remove('dropdown_close_touch')
+      document.getElementById('dropdown_nav').classList.add('dropdown_nav_t')
+      document.getElementById('dropdown_icon').classList.add('dropdown_icon')
+      document.getElementById('dropdown_close').classList.add('dropdown_close')
+      document.getElementById('background').classList.remove('background_t')
       this.$forceUpdate()
     },
     goShoppinglist () {
       store.commit('setPage', 'shoppinglist')
       router.push('shoppinglist')
+      // hover actions
+      document.getElementById('container').classList.add('remove_hover')
+      setTimeout(this.removeClass, 800)
+      // no hover actions
+      document.getElementById('dropdown_nav').classList.remove('dropdown_nav_touch')
+      document.getElementById('dropdown_icon').classList.remove('dropdown_icon_touch')
+      document.getElementById('dropdown_close').classList.remove('dropdown_close_touch')
+      document.getElementById('dropdown_nav').classList.add('dropdown_nav_t')
+      document.getElementById('dropdown_icon').classList.add('dropdown_icon')
+      document.getElementById('dropdown_close').classList.add('dropdown_close')
+      document.getElementById('background').classList.remove('background_t')
       this.$forceUpdate()
     },
     goProfile () {
       store.commit('setPage', 'profile')
       router.push('profile')
+      // hover actions
+      document.getElementById('container').classList.add('remove_hover')
+      setTimeout(this.removeClass, 800)
+      // no hover actions
+      document.getElementById('dropdown_nav').classList.remove('dropdown_nav_touch')
+      document.getElementById('dropdown_icon').classList.remove('dropdown_icon_touch')
+      document.getElementById('dropdown_close').classList.remove('dropdown_close_touch')
+      document.getElementById('dropdown_nav').classList.add('dropdown_nav_t')
+      document.getElementById('dropdown_icon').classList.add('dropdown_icon')
+      document.getElementById('dropdown_close').classList.add('dropdown_close')
+      document.getElementById('background').classList.remove('background_t')
       this.$forceUpdate()
     },
     goLogin () {
       store.commit('setPage', 'login')
       router.push('login')
+      // hover actions
+      document.getElementById('container').classList.add('remove_hover')
+      setTimeout(this.removeClass, 800)
+      // no hover actions
+      document.getElementById('dropdown_nav').classList.remove('dropdown_nav_touch')
+      document.getElementById('dropdown_icon').classList.remove('dropdown_icon_touch')
+      document.getElementById('dropdown_close').classList.remove('dropdown_close_touch')
+      document.getElementById('dropdown_nav').classList.add('dropdown_nav_t')
+      document.getElementById('dropdown_icon').classList.add('dropdown_icon')
+      document.getElementById('dropdown_close').classList.add('dropdown_close')
+      document.getElementById('background').classList.remove('background_t')
       this.$forceUpdate()
     },
     goRegister () {
       store.commit('setPage', 'register')
       router.push('register')
+      // hover actions
+      document.getElementById('container').classList.add('remove_hover')
+      setTimeout(this.removeClass, 800)
+      // no hover actions
+      document.getElementById('dropdown_nav').classList.remove('dropdown_nav_touch')
+      document.getElementById('dropdown_icon').classList.remove('dropdown_icon_touch')
+      document.getElementById('dropdown_close').classList.remove('dropdown_close_touch')
+      document.getElementById('dropdown_nav').classList.add('dropdown_nav_t')
+      document.getElementById('dropdown_icon').classList.add('dropdown_icon')
+      document.getElementById('dropdown_close').classList.add('dropdown_close')
+      document.getElementById('background').classList.remove('background_t')
       this.$forceUpdate()
     },
     logout () {
@@ -93,12 +198,23 @@ export default {
         .then(function () {
           store.commit('setPage', 'login')
           router.push('login')
+          // hover actions
+          document.getElementById('container').classList.add('remove_hover')
+          setTimeout(this.removeClass, 800)
+          // no hover actions
+          document.getElementById('dropdown_nav').classList.remove('dropdown_nav_touch')
+          document.getElementById('dropdown_icon').classList.remove('dropdown_icon_touch')
+          document.getElementById('dropdown_close').classList.remove('dropdown_close_touch')
+          document.getElementById('dropdown_nav').classList.add('dropdown_nav_t')
+          document.getElementById('dropdown_icon').classList.add('dropdown_icon')
+          document.getElementById('dropdown_close').classList.add('dropdown_close')
+          document.getElementById('background').classList.remove('background_t')
+          this.$forceUpdate()
         })
         .catch(error => {
           alert(error.message)
           console.log(error.code)
         })
-      this.$forceUpdate()
     },
     touchCome () {
       // no hover actions
