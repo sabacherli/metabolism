@@ -168,201 +168,159 @@ export default {
                 }
               })
           })
+      } else {
+        userID = 'default'
+        db.collection('users').doc(userID)
+          .onSnapshot(function (doc) {
+            // get the data from the user
+            let userData = doc.data()
+            // set it as state.userData
+            store.commit('getUserData', userData)
+            // this requires the completetion of the setting of userData because it pushes it into state.userData.addresses
+            db.collection('users').doc(userID).collection('addresses')
+              .onSnapshot(function (querySnapshot) {
+                // empty userData
+                store.commit('emptyUserDataAddresses')
+                // assign the values to an array first
+                let userDataAddressesArray = []
+                // get the documents and push them into the array
+                querySnapshot.forEach(function (doc) {
+                  let userDataAddress = doc.data()
+                  userDataAddressesArray.push(userDataAddress)
+                })
+                // set the addresses in userData instead of pushing them sepeartely, doing it all at once now
+                store.commit('setUserDataAddresses', userDataAddressesArray)
+                // empty userAddresses
+                store.commit('emptyUserAddresses')
+                for (let userDataAddress in userDataAddressesArray) {
+                  var addressID = userDataAddressesArray[userDataAddress].uid
+                  db.collection('addresses').doc(addressID)
+                    .onSnapshot(function (doc) {
+                      // because its being looped through we don't need any forEach querySnapshots
+                      let userAddress = doc.data()
+                      // set the addresses in userData instead of pushing them sepeartely, doing it all at once now
+                      store.commit('pushUserAddress', userAddress)
+                      store.commit('thisWeek')
+                      store.commit('createList')
+                    })
+                  db.collection('addresses').doc(addressID).collection('members')
+                    .onSnapshot(function (querySnapshot) {
+                      // otherwise addressID not defined properly inside the snapshot
+                      var addressID = userDataAddressesArray[userDataAddress].uid
+                      // empty the subcollection
+                      store.commit('emptyUserAddressMembers')
+                      // assing the values to an array first
+                      let userAddressMembersArray = []
+                      // get the documents and push them into this array
+                      querySnapshot.forEach(function (doc) {
+                        let userAddressMember = doc.data()
+                        userAddressMembersArray.push(userAddressMember)
+                      })
+                      // set the members of this address
+                      store.commit('setUserAddressMembers', { userAddressMembersArray, addressID })
+                    })
+                  db.collection('addresses').doc(addressID).collection('months')
+                    .onSnapshot(function (querySnapshot) {
+                      // otherwise addressID not defined properly inside the snapshot
+                      var addressID = userDataAddressesArray[userDataAddress].uid
+                      // empty the subcollection
+                      store.commit('emptyUserAddressMonths')
+                      // assing the values to an array first
+                      let userAddressMonthsArray = []
+                      // get the documents and push them into this array
+                      querySnapshot.forEach(function (doc) {
+                        let userAddressMonth = doc.data()
+                        userAddressMonthsArray.push(userAddressMonth)
+                      })
+                      // set the months of this address
+                      store.commit('setUserAddressMonths', { userAddressMonthsArray, addressID })
+                    })
+                  db.collection('addresses').doc(addressID).collection('personalList')
+                    .onSnapshot(function (querySnapshot) {
+                      // otherwise addressID not defined properly inside the snapshot
+                      var addressID = userDataAddressesArray[userDataAddress].uid
+                      // empty the subcollection
+                      store.commit('emptyUserAddressPersonalLists')
+                      // assing the values to an array first
+                      let emptyUserAddressPersonalListsArray = []
+                      // get the documents and push them into this array
+                      querySnapshot.forEach(function (doc) {
+                        let userAddressPersonalList = doc.data()
+                        emptyUserAddressPersonalListsArray.push(userAddressPersonalList)
+                      })
+                      // set the personal list of this address
+                      store.commit('setUserAddressPersonalLists', { emptyUserAddressPersonalListsArray, addressID })
+                    })
+                }
+              })
+            db.collection('users').doc(userID).collection('mealplans')
+              .onSnapshot(function (querySnapshot) {
+                // empty userData
+                store.commit('emptyUserDataMealplans')
+                // assign the values to an array first
+                let userDataMealplansArray = []
+                // get the documents and push them into the array
+                querySnapshot.forEach(function (doc) {
+                  let userDataMealplan = doc.data()
+                  userDataMealplansArray.push(userDataMealplan)
+                })
+                // set the mealplans in userData instead of pushing them sepeartely, doing it all at once now
+                store.commit('setUserDataMealplans', userDataMealplansArray)
+                // loop through all mealplans to get collections thereof
+                for (let userDataMealplan in userDataMealplansArray) {
+                  var mealplanID = userDataMealplansArray[userDataMealplan].uid
+                  db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('filters')
+                    .onSnapshot(function (querySnapshot) {
+                      // empty the values
+                      store.commit('emptyUserDataMealplanFilters', mealplanID)
+                      // initialize an array
+                      let userDataMealplanFiltersArray = []
+                      // get the documents in the collection
+                      querySnapshot.forEach(function (doc) {
+                        let userDataMealplanFilter = doc.data()
+                        userDataMealplanFiltersArray.push(userDataMealplanFilter)
+                      })
+                      // set all filters once the array is complete
+                      store.commit('setUserDataMealplanFilters', { userDataMealplanFiltersArray, mealplanID })
+                    })
+                  db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('recipies')
+                    .onSnapshot(function (querySnapshot) {
+                      // empty the subcollection
+                      store.commit('emptyUserDataMealplanRecipies', mealplanID)
+                      // assing the values to an array first
+                      let userDataMealplanRecipiesArray = []
+                      // get the documents and push them into this array
+                      querySnapshot.forEach(function (doc) {
+                        let userDataMealplanRecipe = doc.data()
+                        userDataMealplanRecipiesArray.push(userDataMealplanRecipe)
+                      })
+                      // set the members of this address
+                      store.commit('setUserDataMealplanRecipies', { userDataMealplanRecipiesArray, mealplanID })
+                      // get ingredients in the recipe
+                      for (let userDataMealplanRecipeIngredient in userDataMealplanRecipiesArray) {
+                        var recipeID = userDataMealplanRecipiesArray[userDataMealplanRecipeIngredient].uid
+                        db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('recipies').doc(recipeID).collection('ingredients')
+                          .onSnapshot(function (querySnapshot) {
+                            // empty the values
+                            store.commit('emptyUserDataMealplanRecipeIngredients', { mealplanID, recipeID })
+                            // initialize an array
+                            let userDataMealplanRecipeIngredientsArray = []
+                            // get the documents in the collection
+                            querySnapshot.forEach(function (doc) {
+                              let userDataMealplanRecipeIngredient = doc.data()
+                              userDataMealplanRecipeIngredientsArray.push(userDataMealplanRecipeIngredient)
+                            })
+                            // set all filters once the array is complete
+                            store.commit('setUserDataMealplanRecipeIngredient', { userDataMealplanRecipeIngredientsArray, mealplanID, recipeID })
+                          })
+                      }
+                    })
+                }
+              })
+          })
       }
     })
   },
-
-  // created () {
-  //   firebase.auth().onAuthStateChanged(function (user) {
-  //     if (user && user.emailVerified && user.metadata.creationTime !== user.metadata.lastSignInTime) {
-  //       db.collection('users').doc(user.uid)
-  //         .onSnapshot(function (doc) {
-  //           var userData = doc.data()
-  //           var addressID = ''
-  //           var mealplanID = ''
-  //           store.commit('getUserData', userData)
-  //           db.collection('users').doc(user.uid).collection('addresses')
-  //             .onSnapshot(function (querySnapshot) {
-  //               store.commit('emptyUserDataAddresses')
-  //               store.commit('emptyUserAddresses')
-  //               querySnapshot.forEach(function (doc) {
-  //                   var userDataAddress = doc.data()
-  //                   addressID = userDataAddress.uid
-  //                   store.commit('pushUserDataAddress', userDataAddress)
-  //                   db.collection('addresses').doc(addressID)
-  //                     .onSnapshot(function (doc) {
-  //                       var userAddress = doc.data()
-  //                       console.log(userAddress);
-  //                       db.collection('addresses').doc(addressID).collection('members')
-  //                         .onSnapshot(function (querySnapshot) {
-  //                           store.commit('emptyUserAddressMembers', addressID)
-  //                           querySnapshot.forEach(function (doc) {
-  //                             var userAddressMember = doc.data()
-  //                             console.log(userAddressMember);
-  //                             store.commit('pushUserAddressMember', { userAddressMember, addressID })
-  //                           })
-  //                         })
-  //                       db.collection('addresses').doc(addressID).collection('months')
-  //                         .onSnapshot(function (querySnapshot) {
-  //                           store.commit('emptyUserAddressMonths', addressID)
-  //                           querySnapshot.forEach(function (doc) {
-  //                             var userAddressMonth = doc.data()
-  //                             console.log(userAddressMonth);
-  //                             store.commit('pushUserAddressMonth', { userAddressMonth, addressID })
-  //                           })
-  //                         })
-  //                       db.collection('addresses').doc(addressID).collection('personalList')
-  //                         .onSnapshot(function (querySnapshot) {
-  //                           store.commit('emptyUserAddressPersonalList', addressID)
-  //                           querySnapshot.forEach(function (doc) {
-  //                             var userAddressItem = doc.data()
-  //                             console.log(userAddressItem);
-  //                             store.commit('pushUserAddressItem', { userAddressItem, addressID })
-  //                           })
-  //                         })
-  //                       store.commit('pushUserAddress', userAddress)
-  //                       store.commit('thisWeek')
-  //                       store.commit('createList')
-  //                     })
-  //               })
-  //             })
-  //           db.collection('users').doc(user.uid).collection('mealplans')
-  //             .onSnapshot(function (querySnapshot) {
-  //               store.commit('emptyUserDataMealplans')
-  //               querySnapshot.forEach(function (doc) {
-  //                 new Promise(function (resolve, reject) {
-  //                   var userDataMealplan = doc.data()
-  //                   mealplanID = doc.id
-  //                   store.commit('pushUserDataMealplan', userDataMealplan)
-  //                   resolve()
-  //                 })
-  //                   .then(function () {
-  //                     db.collection('users').doc(user.uid).collection('mealplans').doc(mealplanID).collection('filters')
-  //                       .onSnapshot(function (querySnapshot) {
-  //                         store.commit('emptyUserDataMealplanFilters', mealplanID)
-  //                         querySnapshot.forEach(function (doc) {
-  //                           var userDataMealplanFilter = doc.data()
-  //                           store.commit('pushUserDataMealplanFilter', { userDataMealplanFilter, mealplanID })
-  //                         })
-  //                       })
-  //                     db.collection('users').doc(user.uid).collection('mealplans').doc(mealplanID).collection('recipies')
-  //                       .onSnapshot(function (querySnapshot) {
-  //                         store.commit('emptyUserDataMealplanRecipies', mealplanID)
-  //                         querySnapshot.forEach(function (doc) {
-  //                           var recipeID = doc.id
-  //                           var userDataMealplanRecipe = doc.data()
-  //                           store.commit('pushUserDataMealplanRecipe', { userDataMealplanRecipe, mealplanID })
-  //                           db.collection('users').doc(user.uid).collection('mealplans').doc(mealplanID).collection('recipies').doc(recipeID).collection('ingredients')
-  //                             .onSnapshot(function (querySnapshot) {
-  //                               store.commit('emptyUserDataMealplanRecipeIngredients', { mealplanID, recipeID })
-  //                               querySnapshot.forEach(function (doc) {
-  //                                 var userDataMealplanRecipeIngredient = doc.data()
-  //                                 store.commit('pushUserDataMealplanRecipeIngredient', { userDataMealplanRecipeIngredient, mealplanID, recipeID })
-  //                               })
-  //                             })
-  //                         })
-  //                       })
-  //                   })
-  //               })
-  //             })
-  //         })
-  //     } else {
-  //       db.collection('users').doc('default')
-  //         .onSnapshot(function (doc) {
-  //           var userData = doc.data()
-  //           var addressID = ''
-  //           var mealplanID = ''
-  //           var recipeID = ''
-  //           store.commit('getUserData', userData)
-  //           db.collection('users').doc('default').collection('addresses')
-  //             .onSnapshot(function (querySnapshot) {
-  //               store.commit('emptyUserDataAddresses')
-  //               store.commit('emptyUserAddresses')
-  //               querySnapshot.forEach(function (doc) {
-  //                 new Promise(function (resolve, reject) {
-  //                   var userDataAddress = doc.data()
-  //                   addressID = userDataAddress.uid
-  //                   store.commit('pushUserDataAddress', userDataAddress)
-  //                   resolve()
-  //                 })
-  //                   .then(function () {
-  //                     db.collection('addresses').doc(addressID)
-  //                       .onSnapshot(function (doc) {
-  //                         var userAddress = doc.data()
-  //                         store.commit('pushUserAddress', userAddress)
-  //                         store.commit('thisWeek')
-  //                         store.commit('createList')
-  //                         db.collection('addresses').doc(addressID).collection('members')
-  //                           .onSnapshot(function (querySnapshot) {
-  //                             store.commit('emptyUserAddressMembers', addressID)
-  //                             querySnapshot.forEach(function (doc) {
-  //                               var userAddressMember = doc.data()
-  //                               store.commit('pushUserAddressMember', { userAddressMember, addressID })
-  //                             })
-  //                           })
-  //                         db.collection('addresses').doc(addressID).collection('months')
-  //                           .onSnapshot(function (querySnapshot) {
-  //                             store.commit('emptyUserAddressMonths', addressID)
-  //                             querySnapshot.forEach(function (doc) {
-  //                               var userAddressMonth = doc.data()
-  //                               store.commit('pushUserAddressMonth', { userAddressMonth, addressID })
-  //                             })
-  //                           })
-  //                         db.collection('addresses').doc(addressID).collection('personalList')
-  //                           .onSnapshot(function (querySnapshot) {
-  //                             store.commit('emptyUserAddressPersonalList', addressID)
-  //                             querySnapshot.forEach(function (doc) {
-  //                               var userAddressItem = doc.data()
-  //                               store.commit('pushUserAddressItem', { userAddressItem, addressID })
-  //                             })
-  //                           })
-  //                       })
-  //                   })
-  //               })
-  //             })
-  //           db.collection('users').doc('default').collection('mealplans')
-  //             .onSnapshot(function (querySnapshot) {
-  //               store.commit('emptyUserDataMealplans')
-  //               querySnapshot.forEach(function (doc) {
-  //                 var userDataMealplan = doc.data()
-  //                 mealplanID = doc.id
-  //                 store.commit('pushUserDataMealplan', userDataMealplan)
-  //                 db.collection('users').doc('default').collection('mealplans').doc(mealplanID).collection('filters')
-  //                   .onSnapshot(function (querySnapshot) {
-  //                     store.commit('emptyUserDataMealplanFilters', mealplanID)
-  //                     querySnapshot.forEach(function (doc) {
-  //                       var userDataMealplanFilter = doc.data()
-  //                       store.commit('pushUserDataMealplanFilter', { userDataMealplanFilter, mealplanID })
-  //                     })
-  //                   })
-  //                 db.collection('users').doc('default').collection('mealplans').doc(mealplanID).collection('recipies')
-  //                   .onSnapshot(function (querySnapshot) {
-  //                     store.commit('emptyUserDataMealplanRecipies', mealplanID)
-  //                     querySnapshot.forEach(function (doc) {
-  //                       new Promise(function (resolve, reject) {
-  //                         var userDataMealplanRecipe = doc.data()
-  //                         recipeID = userDataMealplanRecipe.uid
-  //                         store.commit('pushUserDataMealplanRecipe', { userDataMealplanRecipe, mealplanID })
-  //                         resolve()
-  //                       })
-  //                         .then(function () {
-  //                           db.collection('users').doc('default').collection('mealplans').doc(mealplanID).collection('recipies').doc(recipeID).collection('ingredients')
-  //                             .onSnapshot(function (querySnapshot) {
-  //                               store.commit('emptyUserDataMealplanRecipeIngredients', { mealplanID, recipeID })
-  //                               querySnapshot.forEach(function (doc) {
-  //                                 var userDataMealplanRecipeIngredient = doc.data()
-  //                                 store.commit('pushUserDataMealplanRecipeIngredient', { userDataMealplanRecipeIngredient, mealplanID, recipeID })
-  //                               })
-  //                             })
-  //                         })
-  //                     })
-  //                   })
-  //               })
-  //             })
-  //         })
-  //     }
-  //   })
-  // },
   computed: {
     ...mapState([
       'currentPage',
