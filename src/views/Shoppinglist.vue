@@ -3,7 +3,7 @@
     <template v-for="place in userAddresses">
       <template v-for="address in userData.addresses">
         <!-- eslint-disable-next-line -->
-        <div v-if="address.address === place.address && address.isActive">
+        <div v-if="address.uid === place.uid && address.isActive">
           <!-- eslint-disable-next-line -->
           <div class="day">
             <div class="date">

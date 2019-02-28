@@ -1401,46 +1401,53 @@ export default new Vuex.Store({
     //   }
     // },
     createList (state) {
-      state.start = moment()
       for (var address in state.userAddresses) {
+        state.start = moment()
         state.userAddresses[address].shoppingList.length = 0
         db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.userData.shoppingListLength, 'days').format('YYYYMMDD'))).orderBy('date')
           .get()
           .then(function (querySnapshot) {
+            let userCalendarArray = []
             querySnapshot.forEach(function (doc) {
+              let userDay = doc.data()
+              userCalendarArray.push(userDay)
+            })
+            for (let day in userCalendarArray) {
               var breakfastTotal = 0
-              for (let calendarMember in doc.data().breakfastMembers) {
+              for (let calendarMember in userCalendarArray[day].breakfastMembers) {
                 for (let addressMember in state.userAddresses[address].members) {
-                  if (state.userAddresses[address].members[addressMember].uid === doc.data().breakfastMembers[calendarMember]) {
+                  if (state.userAddresses[address].members[addressMember].uid === userCalendarArray[day].breakfastMembers[calendarMember]) {
                     breakfastTotal += state.userAddresses[address].members[addressMember].calories
                   }
                 }
               }
               var lunchTotal = 0
-              for (let calendarMember in doc.data().lunchMembers) {
+              for (let calendarMember in userCalendarArray[day].lunchMembers) {
+                // console.log('inside: ', address);
                 for (let addressMember in state.userAddresses[address].members) {
-                  if (state.userAddresses[address].members[addressMember].uid === doc.data().lunchMembers[calendarMember]) {
+                  if (state.userAddresses[address].members[addressMember].uid === userCalendarArray[day].lunchMembers[calendarMember]) {
                     lunchTotal += state.userAddresses[address].members[addressMember].calories
                   }
                 }
               }
               var dinnerTotal = 0
-              for (let calendarMember in doc.data().dinnerMembers) {
+              for (let calendarMember in userCalendarArray[day].dinnerMembers) {
                 for (let addressMember in state.userAddresses[address].members) {
-                  if (state.userAddresses[address].members[addressMember].uid === doc.data().dinnerMembers[calendarMember]) {
+                  if (state.userAddresses[address].members[addressMember].uid === userCalendarArray[day].dinnerMembers[calendarMember]) {
                     dinnerTotal += state.userAddresses[address].members[addressMember].calories
                   }
                 }
               }
-              const breakfastRatio = breakfastTotal / doc.data().breakfastCaloriesOwner
-              const lunchRatio = lunchTotal / doc.data().lunchCaloriesOwner
-              const dinnerRatio = dinnerTotal / doc.data().dinnerCaloriesOwner
-              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(doc.data().date.toString()).collection('breakfastIngredients')
+              const breakfastRatio = breakfastTotal / userCalendarArray[day].breakfastCaloriesOwner
+              const lunchRatio = lunchTotal / userCalendarArray[day].lunchCaloriesOwner
+              const dinnerRatio = dinnerTotal / userCalendarArray[day].dinnerCaloriesOwner
+              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userCalendarArray[day].date.toString()).collection('breakfastIngredients')
                 .get()
                 .then(function (querySnapshot) {
                   querySnapshot.forEach(function (doc) {
                     let ingredient = doc.data()
                     if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
+                      ingredient.amount = ingredient.amount * breakfastRatio
                       state.userAddresses[address].shoppingList.push(ingredient)
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
@@ -1451,12 +1458,13 @@ export default new Vuex.Store({
                     }
                   })
                 })
-              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(doc.data().date.toString()).collection('lunchIngredients')
+              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userCalendarArray[day].date.toString()).collection('lunchIngredients')
                 .get()
                 .then(function (querySnapshot) {
                   querySnapshot.forEach(function (doc) {
                     let ingredient = doc.data()
                     if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
+                      ingredient.amount = ingredient.amount * lunchRatio
                       state.userAddresses[address].shoppingList.push(ingredient)
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
@@ -1467,12 +1475,13 @@ export default new Vuex.Store({
                     }
                   })
                 })
-              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(doc.data().date.toString()).collection('dinnerIngredients')
+              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userCalendarArray[day].date.toString()).collection('dinnerIngredients')
                 .get()
                 .then(function (querySnapshot) {
                   querySnapshot.forEach(function (doc) {
                     let ingredient = doc.data()
                     if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
+                      ingredient.amount = ingredient.amount * dinnerRatio
                       state.userAddresses[address].shoppingList.push(ingredient)
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
@@ -1483,7 +1492,7 @@ export default new Vuex.Store({
                     }
                   })
                 })
-            })
+            }
           })
       }
     },
