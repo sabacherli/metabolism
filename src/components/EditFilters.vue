@@ -30,7 +30,7 @@ export default {
     ...mapMutations([
       'toggleFilter'
     ]),
-    editFilter (state, filter) {
+    editFilter (filter) {
       var userData = this.userData
       var editor = this.editor
       if (filter.isActive) {

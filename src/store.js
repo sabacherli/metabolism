@@ -132,14 +132,10 @@ export default new Vuex.Store({
       for (let t = 0; t < state.userData.mealplans[0].filters.length; t++) {
         state.userData.mealplans[0].filters[t].isActive = false
       }
-      for (let f = 0; f < state.userData.mealplans[0].recipies.length; f++) {
-        if (state.userData.mealplans[0].recipies[f].id === state.editor.id) {
-          for (let t = 0; t < state.userData.mealplans[0].filters.length; t++) {
-            for (let tag = 0; tag < state.userData.mealplans[0].recipies[f].tags.length; tag++) {
-              if (state.userData.mealplans[0].recipies[f].tags[tag] === state.userData.mealplans[0].filters[t].text) {
-                state.userData.mealplans[0].filters[t].isActive = true
-              }
-            }
+      for (let t = 0; t < state.userData.mealplans[0].filters.length; t++) {
+        for (let tag = 0; tag < state.userData.mealplans[0].recipies[state.editor.index].tags.length; tag++) {
+          if (state.userData.mealplans[0].recipies[state.editor.index].tags[tag] === state.userData.mealplans[0].filters[t].text) {
+            state.userData.mealplans[0].filters[t].isActive = true
           }
         }
       }

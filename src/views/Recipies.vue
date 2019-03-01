@@ -17,7 +17,7 @@
       <!-- eslint-disable-next-line -->
       <div class="day">
         <!-- A user needs to be able to edit the recipe -->
-        <div class="box" v-if="userData.uid !== 'default'" @click="setEditor(recipe)">
+        <div class="box" v-if="userData.uid !== 'default'" @click="setEditor(recipe); setEditFilters()">
           <p class="date"> {{ recipe.id }} </p>
           <img class="edit_icon" src="../assets/icon-edit.png" alt="Edit">
         </div>
@@ -121,6 +121,7 @@ export default {
     ...mapMutations([
       'selectRecipe',
       'setEditor',
+      'setEditFilters',
       'removeRecipe',
       'addIngredient',
       'addRecipie'
