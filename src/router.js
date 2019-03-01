@@ -179,6 +179,26 @@ const router = new Router({
           }
         ]
       }
+    },
+    {
+      path: '/information',
+      name: 'information',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      components: {
+        default: () => import(/* webpackChunkName: "information" */ './views/Information.vue'),
+        dropdown: () => import(/* webpackChunkName: "dropdown" */ './components/Dropdown.vue')
+      },
+      meta: {
+        title: 'Metabolism',
+        metaTags: [
+          {
+            name: 'Meal Planner & Shopping List',
+            content: 'Automatically create shopping lists and plan meals for a healthy lifestyle, for you and the family.'
+          }
+        ]
+      }
     }
   ]
 })

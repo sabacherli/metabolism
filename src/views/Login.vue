@@ -137,7 +137,6 @@ export default {
   width: 100%;
   height: 100%;
   background: linear-gradient(to bottom right, lightpink, #ffdfa0);
-  animation: slideInDown 1.2s;
 }
 .container_icons {
   position: relative;
@@ -146,7 +145,7 @@ export default {
   text-align: center;
   opacity: 0;
   animation: fadeIn .8s;
-  animation-delay: 2s;
+  animation-delay: 1.2s;
   animation-fill-mode: forwards;
 }
 .icon {
@@ -161,7 +160,7 @@ export default {
    width: 100%;
    opacity: 0;
    animation: fadeIn .8s;
-   animation-delay: 2s;
+   animation-delay: 1.2s;
    animation-fill-mode: forwards;
 }
 .login_email,
@@ -227,7 +226,7 @@ input[type=password].login_password:focus {
     top: 150px;
     text-align: center;
     opacity: 0;
-    animation: slideInLeft .8s 1.2s forwards;
+    animation: slideInLeft .8s .4s forwards;
   }
   .brand_img {
     width: 50vw;
@@ -249,7 +248,7 @@ input[type=password].login_password:focus {
     letter-spacing: .05em;
     opacity: 0;
     transform: translateY(-150%);
-    animation: slideInLeft .8s 1.2s forwards;
+    animation: slideInLeft .8s .4s forwards;
   }
   .brand_small {
     display: none;

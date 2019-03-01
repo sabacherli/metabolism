@@ -54,6 +54,24 @@ export default new Vuex.Store({
         isActive: false
       }
     ],
+    informationFilters: [
+      {
+        text: 'FAQ',
+        isActive: true
+      },
+      {
+        text: 'Terms of Service',
+        isActive: false
+      },
+      {
+        text: 'Privacy Policy',
+        isActive: false
+      },
+      {
+        text: 'Contact',
+        isActive: false
+      }
+    ],
     menu: {
       text: 'Menu',
       isActive: true
@@ -346,6 +364,12 @@ export default new Vuex.Store({
     toggleProfileFilter (state, filter) {
       for (let p = 0; p < state.profileFilters.length; p++) {
         Vue.set(state.profileFilters[p], 'isActive', false)
+      }
+      Vue.set(filter, 'isActive', true)
+    },
+    toggleInformationFilter (state, filter) {
+      for (let p = 0; p < state.informationFilters.length; p++) {
+        Vue.set(state.informationFilters[p], 'isActive', false)
       }
       Vue.set(filter, 'isActive', true)
     },

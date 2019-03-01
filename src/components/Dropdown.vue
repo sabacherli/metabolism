@@ -23,6 +23,10 @@
       <div class="dropdown_item_break" v-if="userData.uid !== 'default'">
 
       </div>
+      <span id="information" class="dropdown_item" v-if="userData.uid === 'default'" v-on:click='goInformation()'>INFORMATION</span>
+      <div class="dropdown_item_break" v-if="userData.uid === 'default'">
+
+      </div>
       <span id="register" class="dropdown_item" v-if="userData.uid === 'default'" v-on:click='goRegister()'>REGISTER</span>
       <div class="dropdown_item_break" v-if="userData.uid === 'default'">
 
@@ -65,6 +69,9 @@ export default {
     } else if (this.currentPage === 'profile' && document.getElementById('profile') !== null) {
       document.getElementById('profile').classList.remove('dropdown_item')
       document.getElementById('profile').classList.add('dropdown_item_selected')
+    } else if (this.currentPage === 'information' && document.getElementById('information') !== null) {
+      document.getElementById('information').classList.remove('dropdown_item')
+      document.getElementById('information').classList.add('dropdown_item_selected')
     } else if (this.currentPage === 'register' && document.getElementById('register') !== null) {
       document.getElementById('register').classList.remove('dropdown_item')
       document.getElementById('register').classList.add('dropdown_item_selected')
@@ -177,6 +184,22 @@ export default {
       document.getElementById('background').classList.remove('background_t')
       this.$forceUpdate()
     },
+    goInformation () {
+      store.commit('setPage', 'information')
+      router.push('information')
+      // hover actions
+      document.getElementById('container').classList.add('remove_hover')
+      setTimeout(this.removeClass, 800)
+      // no hover actions
+      document.getElementById('dropdown_nav').classList.remove('dropdown_nav_touch')
+      document.getElementById('dropdown_icon').classList.remove('dropdown_icon_touch')
+      document.getElementById('dropdown_close').classList.remove('dropdown_close_touch')
+      document.getElementById('dropdown_nav').classList.add('dropdown_nav_t')
+      document.getElementById('dropdown_icon').classList.add('dropdown_icon')
+      document.getElementById('dropdown_close').classList.add('dropdown_close')
+      document.getElementById('background').classList.remove('background_t')
+      this.$forceUpdate()
+    },
     goRegister () {
       store.commit('setPage', 'register')
       router.push('register')
@@ -253,6 +276,9 @@ export default {
       } else if (this.currentPage === 'profile' && document.getElementById('profile') !== null) {
         document.getElementById('profile').classList.remove('dropdown_item')
         document.getElementById('profile').classList.add('dropdown_item_selected')
+      } else if (this.currentPage === 'information' && document.getElementById('information') !== null) {
+        document.getElementById('information').classList.remove('dropdown_item')
+        document.getElementById('information').classList.add('dropdown_item_selected')
       } else if (this.currentPage === 'register' && document.getElementById('register') !== null) {
         document.getElementById('register').classList.remove('dropdown_item')
         document.getElementById('register').classList.add('dropdown_item_selected')

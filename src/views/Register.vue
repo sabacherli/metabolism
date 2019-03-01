@@ -160,7 +160,6 @@ export default {
   width: 100%;
   height: 100%;
   background: linear-gradient(to bottom right, lightpink, #ffdfa0);
-  animation: slideInDown 1.2s;
 }
 .brand_large {
   text-align: center;
@@ -173,7 +172,7 @@ export default {
   top: 150px;
   opacity: 0;
   transform: translateY(-150%);
-  animation: slideInLeft .8s 1.2s forwards;
+  animation: slideInLeft .8s .4s forwards;
 }
 .container_costs {
   position: relative;
@@ -183,7 +182,7 @@ export default {
   width: 50%;
   opacity: 0;
   animation: fadeIn .8s;
-  animation-delay: 2s;
+  animation-delay: 1.2s;
   animation-fill-mode: forwards;
 }
 .costs_explanation {
@@ -200,7 +199,7 @@ export default {
   text-align: center;
   opacity: 0;
   animation: fadeIn .8s;
-  animation-delay: 3s;
+  animation-delay: 2s;
   animation-fill-mode: forwards;
 }
 .icon {
@@ -215,7 +214,7 @@ export default {
    width: 100%;
    opacity: 0;
    animation: fadeIn .8s;
-   animation-delay: 3s;
+   animation-delay: 2s;
    animation-fill-mode: forwards;
 }
 .register_email,
