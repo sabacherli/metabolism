@@ -948,6 +948,7 @@ export default new Vuex.Store({
           db.collection('users').doc('default').collection('mealplans').add({
             name: 'Personal',
             isActive: true,
+            isPurchased: true,
             recipies: [],
             filters: [],
             uid: ''
@@ -1129,6 +1130,7 @@ export default new Vuex.Store({
           db.collection('users').doc(object.user.uid).collection('mealplans').add({
             name: 'Personal',
             isActive: true,
+            isPurchased: true,
             recipies: [],
             filters: [],
             uid: ''

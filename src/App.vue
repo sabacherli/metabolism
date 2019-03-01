@@ -120,6 +120,8 @@ export default {
                   var mealplanID = userDataMealplansArray[userDataMealplan].uid
                   db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('filters')
                     .onSnapshot(function (querySnapshot) {
+                      // otherwise mealplanID not defined properly inside the snapshot
+                      var mealplanID = userDataMealplansArray[userDataMealplan].uid
                       // empty the values
                       store.commit('emptyUserDataMealplanFilters', mealplanID)
                       // initialize an array
@@ -134,6 +136,8 @@ export default {
                     })
                   db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('recipies')
                     .onSnapshot(function (querySnapshot) {
+                      // otherwise mealplanID not defined properly inside the snapshot
+                      var mealplanID = userDataMealplansArray[userDataMealplan].uid
                       // empty the subcollection
                       store.commit('emptyUserDataMealplanRecipies', mealplanID)
                       // assing the values to an array first
@@ -146,10 +150,14 @@ export default {
                       // set the members of this address
                       store.commit('setUserDataMealplanRecipies', { userDataMealplanRecipiesArray, mealplanID })
                       // get ingredients in the recipe
-                      for (let userDataMealplanRecipeIngredient in userDataMealplanRecipiesArray) {
-                        var recipeID = userDataMealplanRecipiesArray[userDataMealplanRecipeIngredient].uid
+                      for (let userDataMealplanRecipe in userDataMealplanRecipiesArray) {
+                        var recipeID = userDataMealplanRecipiesArray[userDataMealplanRecipe].uid
                         db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('recipies').doc(recipeID).collection('ingredients')
                           .onSnapshot(function (querySnapshot) {
+                            // otherwise mealplanID not defined properly inside the snapshot
+                            var mealplanID = userDataMealplansArray[userDataMealplan].uid
+                            // otherwise recipeID not defined properly inside the snapshot
+                            var recipeID = userDataMealplanRecipiesArray[userDataMealplanRecipe].uid
                             // empty the values
                             store.commit('emptyUserDataMealplanRecipeIngredients', { mealplanID, recipeID })
                             // initialize an array
