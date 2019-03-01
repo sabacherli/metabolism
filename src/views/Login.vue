@@ -21,6 +21,8 @@
           <button id="reset_button" class="login_email" style="margin-top: 10px; height: auto; width: 100px; font-size: 0.65em; text-algin: center; color: darkgrey; padding: 5px" type="button" name="button" @click="resetPassword()">Reset Password</button>
         </form>
         <div class="login_button" @click="login()">Login</div>
+        <br>
+        <div class="login_button" @click="createDefaultUser()">Create Default User</div>
       </div>
     </div>
   </div>

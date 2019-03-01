@@ -147,7 +147,7 @@ export default {
                         // names must be equal
                         return 0
                       })
-                      userDataMealplanFiltersArray = bld.concact(rest)
+                      userDataMealplanFiltersArray = bld.concat(rest)
                       // set all filters once the array is complete
                       store.commit('setUserDataMealplanFilters', { userDataMealplanFiltersArray, mealplanID })
                     })
@@ -321,6 +321,8 @@ export default {
                   var mealplanID = userDataMealplansArray[userDataMealplan].uid
                   db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('filters')
                     .onSnapshot(function (querySnapshot) {
+                      // otherwise mealplanID not defined properly inside the snapshot
+                      var mealplanID = userDataMealplansArray[userDataMealplan].uid
                       // empty the values
                       store.commit('emptyUserDataMealplanFilters', mealplanID)
                       // initialize an array
@@ -346,12 +348,14 @@ export default {
                         // names must be equal
                         return 0
                       })
-                      userDataMealplanFiltersArray = bld.concact(rest)
+                      userDataMealplanFiltersArray = bld.concat(rest)
                       // set all filters once the array is complete
                       store.commit('setUserDataMealplanFilters', { userDataMealplanFiltersArray, mealplanID })
                     })
                   db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('recipies')
                     .onSnapshot(function (querySnapshot) {
+                      // otherwise mealplanID not defined properly inside the snapshot
+                      var mealplanID = userDataMealplansArray[userDataMealplan].uid
                       // empty the subcollection
                       store.commit('emptyUserDataMealplanRecipies', mealplanID)
                       // assing the values to an array first
@@ -361,7 +365,6 @@ export default {
                         let userDataMealplanRecipe = doc.data()
                         userDataMealplanRecipiesArray.push(userDataMealplanRecipe)
                       })
-                      // remove breakfast, lunch, and dinner from the array
                       // sort the recipies alphabetically
                       userDataMealplanRecipiesArray.sort(function (a, b) {
                         var nameA = a.name.toUpperCase() // ignore upper and lowercase
@@ -378,10 +381,14 @@ export default {
                       // set the members of this address
                       store.commit('setUserDataMealplanRecipies', { userDataMealplanRecipiesArray, mealplanID })
                       // get ingredients in the recipe
-                      for (let userDataMealplanRecipeIngredient in userDataMealplanRecipiesArray) {
-                        var recipeID = userDataMealplanRecipiesArray[userDataMealplanRecipeIngredient].uid
+                      for (let userDataMealplanRecipe in userDataMealplanRecipiesArray) {
+                        var recipeID = userDataMealplanRecipiesArray[userDataMealplanRecipe].uid
                         db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('recipies').doc(recipeID).collection('ingredients')
                           .onSnapshot(function (querySnapshot) {
+                            // otherwise mealplanID not defined properly inside the snapshot
+                            var mealplanID = userDataMealplansArray[userDataMealplan].uid
+                            // otherwise recipeID not defined properly inside the snapshot
+                            var recipeID = userDataMealplanRecipiesArray[userDataMealplanRecipe].uid
                             // empty the values
                             store.commit('emptyUserDataMealplanRecipeIngredients', { mealplanID, recipeID })
                             // initialize an array
@@ -391,7 +398,7 @@ export default {
                               let userDataMealplanRecipeIngredient = doc.data()
                               userDataMealplanRecipeIngredientsArray.push(userDataMealplanRecipeIngredient)
                             })
-                            // sort the ingredients alphabetically
+                            // sort the filters alphabetically
                             userDataMealplanRecipeIngredientsArray.sort(function (a, b) {
                               var nameA = a.ingredient.toUpperCase() // ignore upper and lowercase
                               var nameB = b.ingredient.toUpperCase() // ignore upper and lowercase
@@ -404,7 +411,7 @@ export default {
                               // names must be equal
                               return 0
                             })
-                            // set all ingredients once the array is complete
+                            // set all filters once the array is complete
                             store.commit('setUserDataMealplanRecipeIngredient', { userDataMealplanRecipeIngredientsArray, mealplanID, recipeID })
                           })
                       }

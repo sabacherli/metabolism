@@ -290,7 +290,7 @@ input[type=password].register_password:focus {
     letter-spacing: .05em;
     opacity: 0;
     transform: translateY(-150%);
-    animation: slideInLeft .8s 1.2s forwards;
+    animation: slideInLeft .8s .4s forwards;
   }
   .container_costs {
     width: 70%;
