@@ -133,7 +133,7 @@ export default {
                       })
                       // remove breakfast, lunch, and dinner from the array
                       var bld = userDataMealplanFiltersArray.splice(0, 3)
-                      var rest = userDataMealplanFiltersArray.splice(2, userDataMealplanFiltersArray.length)
+                      var rest = userDataMealplanFiltersArray.splice(0, userDataMealplanFiltersArray.length)
                       // sort the filters alphabetically
                       rest.sort(function (a, b) {
                         var nameA = a.text.toUpperCase() // ignore upper and lowercase
@@ -334,7 +334,7 @@ export default {
                       })
                       // remove breakfast, lunch, and dinner from the array
                       var bld = userDataMealplanFiltersArray.splice(0, 3)
-                      var rest = userDataMealplanFiltersArray.splice(2, userDataMealplanFiltersArray.length)
+                      var rest = userDataMealplanFiltersArray.splice(0, userDataMealplanFiltersArray.length)
                       // sort the filters alphabetically
                       rest.sort(function (a, b) {
                         var nameA = a.text.toUpperCase() // ignore upper and lowercase
