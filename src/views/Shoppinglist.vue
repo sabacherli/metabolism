@@ -52,7 +52,7 @@
           <!-- eslint-disable-next-line  -->
           <div class="add_button" style="margin-bottom: 40px" @click="addItem(place)"><span class="add_text">Add Item</span></div>
           <!-- eslint-disable-next-line  -->
-          <div class="confirm_button" style="margin-bottom: 70px" @click="deleteItems(place)">
+          <div class="confirm_button" style="margin-bottom: 70px" @click="deleteItems(place)" v-if="purchasedItems > 0">
             <span class="confirm_text">Done</span>
           </div>
         </div>
@@ -84,13 +84,13 @@ export default {
   computed: {
     ...mapState([
       'userAddresses',
-      'userData'
+      'userData',
+      'purchasedItems'
     ])
   },
   methods: {
     ...mapMutations([
-      'toggleIsActive',
-      'groceriesDone'
+      'toggleIsActive'
     ]),
     focusAmount () {
       document.getElementById('amount').focus()

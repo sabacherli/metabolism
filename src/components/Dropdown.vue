@@ -198,18 +198,6 @@ export default {
         .then(function () {
           store.commit('setPage', 'login')
           router.push('login')
-          // hover actions
-          document.getElementById('container').classList.add('remove_hover')
-          setTimeout(this.removeClass, 800)
-          // no hover actions
-          document.getElementById('dropdown_nav').classList.remove('dropdown_nav_touch')
-          document.getElementById('dropdown_icon').classList.remove('dropdown_icon_touch')
-          document.getElementById('dropdown_close').classList.remove('dropdown_close_touch')
-          document.getElementById('dropdown_nav').classList.add('dropdown_nav_t')
-          document.getElementById('dropdown_icon').classList.add('dropdown_icon')
-          document.getElementById('dropdown_close').classList.add('dropdown_close')
-          document.getElementById('background').classList.remove('background_t')
-          this.$forceUpdate()
         })
         .catch(error => {
           alert(error.message)

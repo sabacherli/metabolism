@@ -45,7 +45,7 @@
         <p class="add">+</p>
       </div>
       <p class="dayname" v-if="newName"> {{ newName }} </p>
-      <p class="dayname" v-else>Add Meal</p>
+      <p class="dayname" v-else>Add Recipe</p>
       <div class="ingredients_break">
 
       </div>
@@ -86,7 +86,7 @@
         </div>
         <br>
         <div class="confirm_button" style="margin-bottom: 70px" v-if="newRecipe.ingredients.length > 0" @click="addRecipe()">
-          <span class="confirm_text">Add Meal</span>
+          <span class="confirm_text">Add Recipe</span>
         </div>
       </div>
     </div>
