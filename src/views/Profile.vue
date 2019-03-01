@@ -355,31 +355,31 @@ export default {
       'userData',
       'userAddresses',
       'price'
-    ]),
-    userEmail: {
-      get () {
-        return store.state.userData.email
-      },
-      set (value) {
-        store.commit('syncUserEmail', value)
-      }
-    },
-    shoppingListLength: {
-      get () {
-        return store.state.userData.shoppingListLength
-      },
-      set (value) {
-        store.commit('syncShoppingListLength', value)
-      }
-    },
-    calories: {
-      get () {
-        return store.state.userData.calories
-      },
-      set (value) {
-        store.commit('syncCalories', value)
-      }
-    }
+    ])
+    // userEmail: {
+    //   get () {
+    //     return store.state.userData.email
+    //   },
+    //   set (value) {
+    //     store.commit('syncUserEmail', value)
+    //   }
+    // },
+    // shoppingListLength: {
+    //   get () {
+    //     return store.state.userData.shoppingListLength
+    //   },
+    //   set (value) {
+    //     store.commit('syncShoppingListLength', value)
+    //   }
+    // },
+    // calories: {
+    //   get () {
+    //     return store.state.userData.calories
+    //   },
+    //   set (value) {
+    //     store.commit('syncCalories', value)
+    //   }
+    // }
   },
   methods: {
     ...mapMutations([
@@ -390,6 +390,26 @@ export default {
     ]),
     updateCalories () {
       var userData = this.userData
+      var oldCalories = null
+      db.collection('users').doc(userData.uid)
+        .get()
+        .then(function (doc) {
+          oldCalories = doc.data().calories
+          var calorieRatio = userData.calories / oldCalories
+          for (let mealplan in userData.mealplans) {
+            var mealplanID = userData.mealplans[mealplan].uid
+            for (let recipe in userData.mealplans[mealplan].recipies) {
+              var recipeID = userData.mealplans[mealplan].recipies[recipe].uid
+              for (let ingredient in userData.mealplans[mealplan].recipies[recipe].ingredients) {
+                var ingredientID = userData.mealplans[mealplan].recipies[recipe].ingredients[ingredient].uid
+                var newAmount = userData.mealplans[mealplan].recipies[recipe].ingredients[ingredient].amount * calorieRatio
+                db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplanID).collection('recipies').doc(recipeID).collection('ingredients').doc(ingredientID).update({
+                  amount: newAmount
+                })
+              }
+            }
+          }
+        })
       db.collection('users').doc(userData.uid).update({
         calories: Number(userData.calories)
       })

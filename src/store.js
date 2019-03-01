@@ -108,15 +108,15 @@ export default new Vuex.Store({
     // syncUnit (state, unit) {
     //   state.newUnit = unit
     // },
-    syncUserEmail (state, email) {
-      state.userData.email = email
-    },
-    syncShoppingListLength (state, days) {
-      state.userData.shoppingListLength = days
-    },
-    syncCalories (state, calories) {
-      state.userData.calories = calories
-    },
+    // syncUserEmail (state, email) {
+    //   state.userData.email = email
+    // },
+    // syncShoppingListLength (state, days) {
+    //   state.userData.shoppingListLength = days
+    // },
+    // syncCalories (state, calories) {
+    //   state.userData.calories = calories
+    // },
     // syncCurrentYearMonth (state, calories) {
     //   state.currentYearMonth = calories
     // },

@@ -57,6 +57,12 @@ export default {
     ...mapState([
     ])
   },
+  created () {
+    store.commit('setPage', 'register')
+    setTimeout(function () {
+      store.commit('rerender')
+    }, 800)
+  },
   methods: {
     focusEmailInput () {
       document.getElementById('emailInput').focus()

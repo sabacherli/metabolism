@@ -2,6 +2,7 @@
   <!-- The first empty div is required because all templates need one encompassing div -->
   <div class="">
     <div class="banner">
+      <p class="version" v-if="userData.uid === 'default'" @click="goRegister()">Public Demo Version</p>
       <h1 class="brand_large target" @click="goCalendar()">METABOLISM</h1>
       <h1 class="brand_small target" @click="goCalendar()">ME</h1>
       <transition name="slide" mode="out-in" appear>
@@ -33,7 +34,8 @@ export default {
   },
   computed: {
     ...mapState([
-      'currentPage'
+      'currentPage',
+      'userData'
     ]),
     currentPageComponent () {
       return 'filters-' + this.currentPage
@@ -44,6 +46,10 @@ export default {
       this.$store.commit('thisWeek')
       this.$store.commit('setPage', 'calendar')
       this.$router.push('calendar')
+    },
+    goRegister () {
+      this.$store.commit('setPage', 'register')
+      this.$router.push('register')
     }
   }
 }
@@ -64,6 +70,22 @@ export default {
 .brand_small:hover {
   cursor: pointer;
 }
+.version {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  height: auto;
+  padding: 5px 10px 5px 10px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 1.3em;
+  color: #ffc1b8;
+  background: white;
+}
+.version:hover {
+  cursor: pointer;
+}
 @media (max-width: 650px) {
   .brand_large {
     display: none;
@@ -80,6 +102,19 @@ export default {
     letter-spacing: .1em;
     border: 5px solid white;
     padding: 20px 10px 20px 10px;
+  }
+  .version {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    height: auto;
+    padding: 5px 9.5px 5px 9.5px;
+    text-align: center;
+    font-weight: 500;
+    font-size: .7em;
+    color: #ffc1b8;
+    background: white;
   }
 }
 @media (min-width: 650px) {
