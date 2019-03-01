@@ -181,15 +181,6 @@ export default {
   width: 40px;
   margin: 0px 20px 0 20px;
 }
-.container_information {
-   position: relative;
-   top: 300px;
-   width: 100%;
-   opacity: 0;
-   animation: fadeIn .8s;
-   animation-delay: 3s;
-   animation-fill-mode: forwards;
-}
 .information_email,
 .information_password {
    position: relative;
@@ -258,7 +249,7 @@ input[type=password].information_password:focus {
     letter-spacing: .05em;
     opacity: 0;
     transform: translateY(-150%);
-    animation: slideInLeft .8s 1.2s forwards;
+    animation: slideInLeft .8s .6s forwards;
   }
   .container_faq {
     width: 70%;

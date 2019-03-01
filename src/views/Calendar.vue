@@ -165,7 +165,9 @@ export default {
   created () {
     store.commit('setToday', moment().format('YYYYMMDD'))
     store.commit('setPage', 'calendar')
-    store.commit('rerender')
+    setTimeout(function () {
+      store.commit('rerender')
+    }, 800)
   },
   computed: {
     ...mapState([
