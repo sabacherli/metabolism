@@ -352,7 +352,17 @@ export default new Vuex.Store({
       Vue.set(address, 'isActive', true)
     },
     toggleFilter (state, filter) {
-      filter.isActive = !filter.isActive
+      var check = JSON.parse(JSON.stringify(filter))
+      if (check.isActive) {
+        filter.isActive = !filter.isActive
+        filter.isRequired = !filter.isRequired
+      }
+      if (check.isRequired) {
+        filter.isRequired = !filter.isRequired
+      }
+      if (!check.isActive && !check.isRequired) {
+        filter.isActive = !filter.isActive
+      }
     },
     toggleMenu (state, menu) {
       menu.isActive = !menu.isActive
@@ -975,42 +985,21 @@ export default new Vuex.Store({
               db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('filters').doc('00000000000000000001').set({
                 text: 'Breakfast',
                 isActive: true,
+                isRequired: false,
                 uid: '00000000000000000001'
               })
-              // .then(function (filter) {
-              //   db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('filters').doc(filter.id).update({
-              //     uid: filter.id
-              //   })
-              // })
-              // .catch(function (error) {
-              //   console.log('Error: ', error)
-              // })
               db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('filters').doc('00000000000000000002').set({
                 text: 'Lunch',
                 isActive: true,
+                isRequired: false,
                 uid: '00000000000000000002'
               })
-              // .then(function (filter) {
-              //   db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('filters').doc(filter.id).update({
-              //     uid: filter.id
-              //   })
-              // })
-              // .catch(function (error) {
-              //   console.log('Error: ', error)
-              // })
               db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('filters').doc('00000000000000000003').set({
                 text: 'Dinner',
                 isActive: true,
+                isRequired: false,
                 uid: '00000000000000000003'
               })
-              // .then(function (filter) {
-              //   db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('filters').doc(filter.id).update({
-              //     uid: filter.id
-              //   })
-              // })
-              // .catch(function (error) {
-              //   console.log('Error: ', error)
-              // })
               db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('recipies').add({
                 name: 'Banana Smoothie',
                 id: 'Ba',
@@ -1178,42 +1167,21 @@ export default new Vuex.Store({
               db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('filters').doc('00000000000000000001').set({
                 text: 'Breakfast',
                 isActive: true,
+                isRequired: false,
                 uid: '00000000000000000001'
               })
-              // .then(function (filter) {
-              //   db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('filters').doc(filter.id).update({
-              //     uid: filter.id
-              //   })
-              // })
-              // .catch(function (error) {
-              //   console.log('Error: ', error)
-              // })
               db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('filters').doc('00000000000000000002').set({
                 text: 'Lunch',
                 isActive: true,
+                isRequired: false,
                 uid: '00000000000000000002'
               })
-              // .then(function (filter) {
-              //   db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('filters').doc(filter.id).update({
-              //     uid: filter.id
-              //   })
-              // })
-              // .catch(function (error) {
-              //   console.log('Error: ', error)
-              // })
               db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('filters').doc('00000000000000000003').set({
                 text: 'Dinner',
                 isActive: true,
+                isRequired: false,
                 uid: '00000000000000000003'
               })
-              // .then(function (filter) {
-              //   db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('filters').doc(filter.id).update({
-              //     uid: filter.id
-              //   })
-              // })
-              // .catch(function (error) {
-              //   console.log('Error: ', error)
-              // })
               db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('recipies').add({
                 name: 'Banana Smoothie',
                 id: 'Ba',

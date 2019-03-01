@@ -797,6 +797,7 @@ export default {
         db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('filters').add({
           text: newFilter,
           isActive: false,
+          isRequired: false,
           uid: ''
         })
           .then(function (filter) {

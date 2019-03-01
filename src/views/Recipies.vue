@@ -153,21 +153,33 @@ export default {
       this.$router.push('/calendar')
     },
     recipiesFiltered (userData) {
-      var filteredMeals = []
+      var filteredRecipes = []
       var activeFilters = []
+      var requiredFilters = []
+      function containsAll (tags, requiredFilters) {
+        for (let filter in requiredFilters) {
+          if (!tags.includes(requiredFilters[filter])) {
+            return false
+          }
+        }
+        return true
+      }
       for (let f = 0; f < userData.mealplans[0].filters.length; f++) {
         if (userData.mealplans[0].filters[f].isActive) {
           activeFilters.push(userData.mealplans[0].filters[f].text)
         }
+        if (userData.mealplans[0].filters[f].isRequired) {
+          requiredFilters.push(userData.mealplans[0].filters[f].text)
+        }
       }
       for (let r = 0; r < userData.mealplans[0].recipies.length; r++) {
         for (let t = 0; t < userData.mealplans[0].recipies[r].tags.length; t++) {
-          if ((activeFilters.includes(userData.mealplans[0].recipies[r].tags[t])) && (!filteredMeals.includes(userData.mealplans[0].recipies[r]))) {
-            filteredMeals.push(userData.mealplans[0].recipies[r])
+          if (activeFilters.includes(userData.mealplans[0].recipies[r].tags[t]) && containsAll(userData.mealplans[0].recipies[r].tags, requiredFilters) && !filteredRecipes.includes(userData.mealplans[0].recipies[r])) {
+            filteredRecipes.push(userData.mealplans[0].recipies[r])
           }
         }
       }
-      return filteredMeals
+      return filteredRecipes
     },
     focusIngredient () {
       document.getElementById('newIngredient').focus()

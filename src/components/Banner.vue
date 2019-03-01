@@ -16,7 +16,7 @@
 import { mapState } from 'vuex'
 import CalendarFilters from '@/components/CalendarFilters.vue'
 import LocationFilters from '@/components/LocationFilters.vue'
-import MealFilters from '@/components/MealFilters.vue'
+import RecipeFilters from '@/components/RecipeFilters.vue'
 import EditFilters from '@/components/EditFilters.vue'
 import ProfileFilters from '@/components/ProfileFilters.vue'
 
@@ -25,7 +25,7 @@ export default {
   components: {
     'filters-benefits': CalendarFilters,
     'filters-calendar': CalendarFilters,
-    'filters-recipies': MealFilters,
+    'filters-recipies': RecipeFilters,
     'filters-edit': EditFilters,
     'filters-shoppinglist': LocationFilters,
     'filters-profile': ProfileFilters,

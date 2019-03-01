@@ -4,9 +4,9 @@
       <!-- eslint-disable-next-line -->
       <div class="filter" @click="toggleFilter(filter)">
         <p> {{ filter.text }} </p>
-        <div :class="{ filter_selected: filter.isActive }">
-
-        </div>
+        <div :class="{ filter_selected: filter.isActive }"></div>
+        <div :class="{ filter_required: filter.isRequired }"></div>
+        <div :class="{ filter_required2: filter.isRequired }"></div>
       </div>
     </template>
   </div>
@@ -16,7 +16,7 @@
 import { mapState, mapMutations } from 'vuex'
 
 export default {
-  name: 'MealFilters',
+  name: 'RecipeFilters',
   computed: {
     ...mapState([
       'userData',
@@ -53,6 +53,24 @@ export default {
 .filter_selected {
   position: relative;
   bottom: 15px;
+  margin: auto;
+  height: 2px;
+  background-color: white;
+  animation: expand .4s;
+  animation-fill-mode: forwards;
+}
+.filter_required {
+  position: relative;
+  bottom: 15px;
+  margin: auto;
+  height: 2px;
+  background-color: white;
+  animation: expand .4s;
+  animation-fill-mode: forwards;
+}
+.filter_required2 {
+  position: relative;
+  bottom: 14px;
   margin: auto;
   height: 2px;
   background-color: white;
