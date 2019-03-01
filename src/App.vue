@@ -131,6 +131,23 @@ export default {
                         let userDataMealplanFilter = doc.data()
                         userDataMealplanFiltersArray.push(userDataMealplanFilter)
                       })
+                      // remove breakfast, lunch, and dinner from the array
+                      var bld = userDataMealplanFiltersArray.splice(0, 3)
+                      var rest = userDataMealplanFiltersArray.splice(2, userDataMealplanFiltersArray.length)
+                      // sort the filters alphabetically
+                      rest.sort(function (a, b) {
+                        var nameA = a.text.toUpperCase() // ignore upper and lowercase
+                        var nameB = b.text.toUpperCase() // ignore upper and lowercase
+                        if (nameA < nameB) {
+                          return -1
+                        }
+                        if (nameA > nameB) {
+                          return 1
+                        }
+                        // names must be equal
+                        return 0
+                      })
+                      userDataMealplanFiltersArray = bld.concact(rest)
                       // set all filters once the array is complete
                       store.commit('setUserDataMealplanFilters', { userDataMealplanFiltersArray, mealplanID })
                     })
@@ -146,6 +163,19 @@ export default {
                       querySnapshot.forEach(function (doc) {
                         let userDataMealplanRecipe = doc.data()
                         userDataMealplanRecipiesArray.push(userDataMealplanRecipe)
+                      })
+                      // sort the recipies alphabetically
+                      userDataMealplanRecipiesArray.sort(function (a, b) {
+                        var nameA = a.name.toUpperCase() // ignore upper and lowercase
+                        var nameB = b.name.toUpperCase() // ignore upper and lowercase
+                        if (nameA < nameB) {
+                          return -1
+                        }
+                        if (nameA > nameB) {
+                          return 1
+                        }
+                        // names must be equal
+                        return 0
                       })
                       // set the members of this address
                       store.commit('setUserDataMealplanRecipies', { userDataMealplanRecipiesArray, mealplanID })
@@ -166,6 +196,19 @@ export default {
                             querySnapshot.forEach(function (doc) {
                               let userDataMealplanRecipeIngredient = doc.data()
                               userDataMealplanRecipeIngredientsArray.push(userDataMealplanRecipeIngredient)
+                            })
+                            // sort the filters alphabetically
+                            userDataMealplanRecipeIngredientsArray.sort(function (a, b) {
+                              var nameA = a.ingredient.toUpperCase() // ignore upper and lowercase
+                              var nameB = b.ingredient.toUpperCase() // ignore upper and lowercase
+                              if (nameA < nameB) {
+                                return -1
+                              }
+                              if (nameA > nameB) {
+                                return 1
+                              }
+                              // names must be equal
+                              return 0
                             })
                             // set all filters once the array is complete
                             store.commit('setUserDataMealplanRecipeIngredient', { userDataMealplanRecipeIngredientsArray, mealplanID, recipeID })
@@ -287,6 +330,23 @@ export default {
                         let userDataMealplanFilter = doc.data()
                         userDataMealplanFiltersArray.push(userDataMealplanFilter)
                       })
+                      // remove breakfast, lunch, and dinner from the array
+                      var bld = userDataMealplanFiltersArray.splice(0, 3)
+                      var rest = userDataMealplanFiltersArray.splice(2, userDataMealplanFiltersArray.length)
+                      // sort the filters alphabetically
+                      rest.sort(function (a, b) {
+                        var nameA = a.text.toUpperCase() // ignore upper and lowercase
+                        var nameB = b.text.toUpperCase() // ignore upper and lowercase
+                        if (nameA < nameB) {
+                          return -1
+                        }
+                        if (nameA > nameB) {
+                          return 1
+                        }
+                        // names must be equal
+                        return 0
+                      })
+                      userDataMealplanFiltersArray = bld.concact(rest)
                       // set all filters once the array is complete
                       store.commit('setUserDataMealplanFilters', { userDataMealplanFiltersArray, mealplanID })
                     })
@@ -300,6 +360,20 @@ export default {
                       querySnapshot.forEach(function (doc) {
                         let userDataMealplanRecipe = doc.data()
                         userDataMealplanRecipiesArray.push(userDataMealplanRecipe)
+                      })
+                      // remove breakfast, lunch, and dinner from the array
+                      // sort the recipies alphabetically
+                      userDataMealplanRecipiesArray.sort(function (a, b) {
+                        var nameA = a.name.toUpperCase() // ignore upper and lowercase
+                        var nameB = b.name.toUpperCase() // ignore upper and lowercase
+                        if (nameA < nameB) {
+                          return -1
+                        }
+                        if (nameA > nameB) {
+                          return 1
+                        }
+                        // names must be equal
+                        return 0
                       })
                       // set the members of this address
                       store.commit('setUserDataMealplanRecipies', { userDataMealplanRecipiesArray, mealplanID })
@@ -317,7 +391,20 @@ export default {
                               let userDataMealplanRecipeIngredient = doc.data()
                               userDataMealplanRecipeIngredientsArray.push(userDataMealplanRecipeIngredient)
                             })
-                            // set all filters once the array is complete
+                            // sort the ingredients alphabetically
+                            userDataMealplanRecipeIngredientsArray.sort(function (a, b) {
+                              var nameA = a.ingredient.toUpperCase() // ignore upper and lowercase
+                              var nameB = b.ingredient.toUpperCase() // ignore upper and lowercase
+                              if (nameA < nameB) {
+                                return -1
+                              }
+                              if (nameA > nameB) {
+                                return 1
+                              }
+                              // names must be equal
+                              return 0
+                            })
+                            // set all ingredients once the array is complete
                             store.commit('setUserDataMealplanRecipeIngredient', { userDataMealplanRecipeIngredientsArray, mealplanID, recipeID })
                           })
                       }

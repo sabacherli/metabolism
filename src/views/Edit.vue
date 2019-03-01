@@ -85,18 +85,6 @@ export default {
   name: 'Edit',
   created () {
     store.commit('setPage', 'edit')
-    var userData = this.userDataAddress
-    var editor = this.editor
-    for (let t = 0; t < userData.mealplans[0].filters.length; t++) {
-      userData.mealplans[0].filters[t].isActive = false
-    }
-    for (let t = 0; t < userData.mealplans[0].recipies[editor.index].filters.length; t++) {
-      for (let tag = 0; tag < userData.mealplans[0].recipies[editor.index].tags.length; tag++) {
-        if (userData.mealplans[0].recipies[editor.index].tags[tag] === userData.mealplans[0].filters[t].text) {
-          userData.mealplans[0].recipies[editor.index].filters[t].isActive = true
-        }
-      }
-    }
   },
   data () {
     return {
