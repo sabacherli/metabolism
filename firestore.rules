@@ -43,7 +43,7 @@ service cloud.firestore {
         match /filters/{document=**} {
           allow read, write: if true;
         }
-        match /recipies/{document=**} {
+        match /recipes/{document=**} {
           allow read, write: if true;
 
           match /ingredients/{document=**} {

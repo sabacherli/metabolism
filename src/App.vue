@@ -151,7 +151,7 @@ export default {
                       // set all filters once the array is complete
                       store.commit('setUserDataMealplanFilters', { userDataMealplanFiltersArray, mealplanID })
                     })
-                  db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('recipies')
+                  db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('recipes')
                     .onSnapshot(function (querySnapshot) {
                       // otherwise mealplanID not defined properly inside the snapshot
                       var mealplanID = userDataMealplansArray[userDataMealplan].uid
@@ -164,7 +164,7 @@ export default {
                         let userDataMealplanRecipe = doc.data()
                         userDataMealplanRecipiesArray.push(userDataMealplanRecipe)
                       })
-                      // sort the recipies alphabetically
+                      // sort the recipes alphabetically
                       userDataMealplanRecipiesArray.sort(function (a, b) {
                         var nameA = a.name.toUpperCase() // ignore upper and lowercase
                         var nameB = b.name.toUpperCase() // ignore upper and lowercase
@@ -182,7 +182,7 @@ export default {
                       // get ingredients in the recipe
                       for (let userDataMealplanRecipe in userDataMealplanRecipiesArray) {
                         var recipeID = userDataMealplanRecipiesArray[userDataMealplanRecipe].uid
-                        db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('recipies').doc(recipeID).collection('ingredients')
+                        db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('recipes').doc(recipeID).collection('ingredients')
                           .onSnapshot(function (querySnapshot) {
                             // otherwise mealplanID not defined properly inside the snapshot
                             var mealplanID = userDataMealplansArray[userDataMealplan].uid
@@ -352,7 +352,7 @@ export default {
                       // set all filters once the array is complete
                       store.commit('setUserDataMealplanFilters', { userDataMealplanFiltersArray, mealplanID })
                     })
-                  db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('recipies')
+                  db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('recipes')
                     .onSnapshot(function (querySnapshot) {
                       // otherwise mealplanID not defined properly inside the snapshot
                       var mealplanID = userDataMealplansArray[userDataMealplan].uid
@@ -365,7 +365,7 @@ export default {
                         let userDataMealplanRecipe = doc.data()
                         userDataMealplanRecipiesArray.push(userDataMealplanRecipe)
                       })
-                      // sort the recipies alphabetically
+                      // sort the recipes alphabetically
                       userDataMealplanRecipiesArray.sort(function (a, b) {
                         var nameA = a.name.toUpperCase() // ignore upper and lowercase
                         var nameB = b.name.toUpperCase() // ignore upper and lowercase
@@ -383,7 +383,7 @@ export default {
                       // get ingredients in the recipe
                       for (let userDataMealplanRecipe in userDataMealplanRecipiesArray) {
                         var recipeID = userDataMealplanRecipiesArray[userDataMealplanRecipe].uid
-                        db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('recipies').doc(recipeID).collection('ingredients')
+                        db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('recipes').doc(recipeID).collection('ingredients')
                           .onSnapshot(function (querySnapshot) {
                             // otherwise mealplanID not defined properly inside the snapshot
                             var mealplanID = userDataMealplansArray[userDataMealplan].uid

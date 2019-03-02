@@ -15,7 +15,7 @@
       <div class="dropdown_item_break">
 
       </div>
-      <span id="recipies" class="dropdown_item" v-on:click='goRecipies()'>RECIPIES</span>
+      <span id="recipes" class="dropdown_item" v-on:click='goRecipies()'>RECIPIES</span>
       <div class="dropdown_item_break">
 
       </div>
@@ -60,9 +60,9 @@ export default {
     } else if (this.currentPage === 'calendar' && document.getElementById('calendar') !== null) {
       document.getElementById('calendar').classList.remove('dropdown_item')
       document.getElementById('calendar').classList.add('dropdown_item_selected')
-    } else if (this.currentPage === 'recipies' && document.getElementById('recipies') !== null) {
-      document.getElementById('recipies').classList.remove('dropdown_item')
-      document.getElementById('recipies').classList.add('dropdown_item_selected')
+    } else if (this.currentPage === 'recipes' && document.getElementById('recipes') !== null) {
+      document.getElementById('recipes').classList.remove('dropdown_item')
+      document.getElementById('recipes').classList.add('dropdown_item_selected')
     } else if (this.currentPage === 'shoppinglist' && document.getElementById('shoppinglist') !== null) {
       document.getElementById('shoppinglist').classList.remove('dropdown_item')
       document.getElementById('shoppinglist').classList.add('dropdown_item_selected')
@@ -120,8 +120,8 @@ export default {
       this.$forceUpdate()
     },
     goRecipies () {
-      store.commit('setPage', 'recipies')
-      router.push('recipies')
+      store.commit('setPage', 'recipes')
+      router.push('recipes')
       store.commit('resetPointer')
       // hover actions
       document.getElementById('container').classList.add('remove_hover')
@@ -267,9 +267,9 @@ export default {
       } else if (this.currentPage === 'calendar' && document.getElementById('calendar') !== null) {
         document.getElementById('calendar').classList.remove('dropdown_item')
         document.getElementById('calendar').classList.add('dropdown_item_selected')
-      } else if (this.currentPage === 'recipies' && document.getElementById('recipies') !== null) {
-        document.getElementById('recipies').classList.remove('dropdown_item')
-        document.getElementById('recipies').classList.add('dropdown_item_selected')
+      } else if (this.currentPage === 'recipes' && document.getElementById('recipes') !== null) {
+        document.getElementById('recipes').classList.remove('dropdown_item')
+        document.getElementById('recipes').classList.add('dropdown_item_selected')
       } else if (this.currentPage === 'shoppinglist' && document.getElementById('shoppinglist') !== null) {
         document.getElementById('shoppinglist').classList.remove('dropdown_item')
         document.getElementById('shoppinglist').classList.add('dropdown_item_selected')

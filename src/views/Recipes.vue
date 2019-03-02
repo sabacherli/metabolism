@@ -98,9 +98,9 @@
 import { mapState, mapMutations } from 'vuex'
 
 export default {
-  name: 'Recipies',
+  name: 'Recipes',
   created () {
-    this.$store.commit('setPage', 'recipies')
+    this.$store.commit('setPage', 'recipes')
   },
   data () {
     return {
@@ -172,10 +172,10 @@ export default {
           requiredFilters.push(userData.mealplans[0].filters[f].text)
         }
       }
-      for (let r = 0; r < userData.mealplans[0].recipies.length; r++) {
-        for (let t = 0; t < userData.mealplans[0].recipies[r].tags.length; t++) {
-          if (activeFilters.includes(userData.mealplans[0].recipies[r].tags[t]) && containsAll(userData.mealplans[0].recipies[r].tags, requiredFilters) && !filteredRecipes.includes(userData.mealplans[0].recipies[r])) {
-            filteredRecipes.push(userData.mealplans[0].recipies[r])
+      for (let r = 0; r < userData.mealplans[0].recipes.length; r++) {
+        for (let t = 0; t < userData.mealplans[0].recipes[r].tags.length; t++) {
+          if (activeFilters.includes(userData.mealplans[0].recipes[r].tags[t]) && containsAll(userData.mealplans[0].recipes[r].tags, requiredFilters) && !filteredRecipes.includes(userData.mealplans[0].recipes[r])) {
+            filteredRecipes.push(userData.mealplans[0].recipes[r])
           }
         }
       }

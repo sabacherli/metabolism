@@ -34,11 +34,11 @@ export default {
       var userData = this.userData
       var editor = this.editor
       if (filter.isActive) {
-        db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[editor.index].uid).update({
+        db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[editor.index].uid).update({
           tags: firebase.firestore.FieldValue.arrayRemove(filter.text)
         })
       } else {
-        db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[editor.index].uid).update({
+        db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[editor.index].uid).update({
           tags: firebase.firestore.FieldValue.arrayUnion(filter.text)
         })
       }

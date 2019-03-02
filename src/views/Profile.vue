@@ -398,12 +398,12 @@ export default {
           var calorieRatio = userData.calories / oldCalories
           for (let mealplan in userData.mealplans) {
             var mealplanID = userData.mealplans[mealplan].uid
-            for (let recipe in userData.mealplans[mealplan].recipies) {
-              var recipeID = userData.mealplans[mealplan].recipies[recipe].uid
-              for (let ingredient in userData.mealplans[mealplan].recipies[recipe].ingredients) {
-                var ingredientID = userData.mealplans[mealplan].recipies[recipe].ingredients[ingredient].uid
-                var newAmount = userData.mealplans[mealplan].recipies[recipe].ingredients[ingredient].amount * calorieRatio
-                db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplanID).collection('recipies').doc(recipeID).collection('ingredients').doc(ingredientID).update({
+            for (let recipe in userData.mealplans[mealplan].recipes) {
+              var recipeID = userData.mealplans[mealplan].recipes[recipe].uid
+              for (let ingredient in userData.mealplans[mealplan].recipes[recipe].ingredients) {
+                var ingredientID = userData.mealplans[mealplan].recipes[recipe].ingredients[ingredient].uid
+                var newAmount = userData.mealplans[mealplan].recipes[recipe].ingredients[ingredient].amount * calorieRatio
+                db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplanID).collection('recipes').doc(recipeID).collection('ingredients').doc(ingredientID).update({
                   amount: newAmount
                 })
               }
@@ -571,13 +571,13 @@ export default {
               }
             }
             new Promise(function (resolve, reject) {
-              for (var recipe in userData.mealplans[0].recipies) {
-                db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[recipe].uid).collection('ingredients')
+              for (var recipe in userData.mealplans[0].recipes) {
+                db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[recipe].uid).collection('ingredients')
                   .onSnapshot(function (querySnapshot) {
                     querySnapshot.forEach(function (doc) {
-                      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[recipe].uid).collection('ingredients').doc(doc.id).delete()
+                      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[recipe].uid).collection('ingredients').doc(doc.id).delete()
                     })
-                    db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[recipe].uid).delete()
+                    db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[recipe].uid).delete()
                   })
               }
               resolve()

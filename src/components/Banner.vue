@@ -25,7 +25,7 @@ export default {
   components: {
     'filters-benefits': CalendarFilters,
     'filters-calendar': CalendarFilters,
-    'filters-recipies': RecipeFilters,
+    'filters-recipes': RecipeFilters,
     'filters-edit': EditFilters,
     'filters-shoppinglist': LocationFilters,
     'filters-profile': ProfileFilters,

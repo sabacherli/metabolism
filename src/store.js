@@ -121,7 +121,7 @@ export default new Vuex.Store({
     //   state.currentYearMonth = calories
     // },
     setEditor (state, recipe) {
-      state.editor.index = state.userData.mealplans[0].recipies.indexOf(recipe)
+      state.editor.index = state.userData.mealplans[0].recipes.indexOf(recipe)
       router.push('/edit')
     },
     resetPointer (state) {
@@ -133,8 +133,8 @@ export default new Vuex.Store({
         state.userData.mealplans[0].filters[t].isActive = false
       }
       for (let t = 0; t < state.userData.mealplans[0].filters.length; t++) {
-        for (let tag = 0; tag < state.userData.mealplans[0].recipies[state.editor.index].tags.length; tag++) {
-          if (state.userData.mealplans[0].recipies[state.editor.index].tags[tag] === state.userData.mealplans[0].filters[t].text) {
+        for (let tag = 0; tag < state.userData.mealplans[0].recipes[state.editor.index].tags.length; tag++) {
+          if (state.userData.mealplans[0].recipes[state.editor.index].tags[tag] === state.userData.mealplans[0].filters[t].text) {
             state.userData.mealplans[0].filters[t].isActive = true
           }
         }
@@ -398,7 +398,7 @@ export default new Vuex.Store({
           state.newRecipe.tags.push(state.userData.mealplans[0].filters[f].text)
         }
       }
-      db.collection('users').doc(state.userData.uid).collection('mealplans').doc(state.userData.mealplans[0].uid).collection('recipies').add({
+      db.collection('users').doc(state.userData.uid).collection('mealplans').doc(state.userData.mealplans[0].uid).collection('recipes').add({
         id: state.newRecipe.name.slice(0, 2),
         ingredients: [],
         name: state.newRecipe.name,
@@ -407,11 +407,11 @@ export default new Vuex.Store({
       })
         .then(function (doc) {
           var recipeID = doc.id
-          db.collection('users').doc(state.userData.uid).collection('mealplans').doc(state.userData.mealplans[0].uid).collection('recipies').doc(recipeID).update({
+          db.collection('users').doc(state.userData.uid).collection('mealplans').doc(state.userData.mealplans[0].uid).collection('recipes').doc(recipeID).update({
             uid: recipeID
           })
           for (var ingredient in state.newRecipe.ingredients) {
-            db.collection('users').doc(state.userData.uid).collection('mealplans').doc(state.userData.mealplans[0].uid).collection('recipies').doc(recipeID).collection('ingredients').add({
+            db.collection('users').doc(state.userData.uid).collection('mealplans').doc(state.userData.mealplans[0].uid).collection('recipes').doc(recipeID).collection('ingredients').add({
               ingredient: state.newRecipe.ingredients[ingredient].ingredient,
               amount: state.newRecipe.ingredients[ingredient].amount,
               unit: state.newRecipe.ingredients[ingredient].unit,
@@ -420,7 +420,7 @@ export default new Vuex.Store({
               uid: ''
             })
               .then(function (doc) {
-                db.collection('users').doc(state.userData.uid).collection('mealplans').doc(state.userData.mealplans[0].uid).collection('recipies').doc(recipeID).collection('ingredients').doc(doc.id).update({
+                db.collection('users').doc(state.userData.uid).collection('mealplans').doc(state.userData.mealplans[0].uid).collection('recipes').doc(recipeID).collection('ingredients').doc(doc.id).update({
                   uid: doc.id
                 })
                 state.newRecipe = {
@@ -974,7 +974,7 @@ export default new Vuex.Store({
             name: 'Personal',
             isActive: true,
             isPurchased: true,
-            recipies: [],
+            recipes: [],
             filters: [],
             uid: ''
           })
@@ -1000,7 +1000,7 @@ export default new Vuex.Store({
                 isRequired: false,
                 uid: '00000000000000000003'
               })
-              db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('recipies').add({
+              db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('recipes').add({
                 name: 'Banana Smoothie',
                 id: 'Ba',
                 ingredients: [],
@@ -1010,13 +1010,13 @@ export default new Vuex.Store({
                 ]
               })
                 .then(function (recipe) {
-                  db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('recipies').doc(recipe.id).update({
+                  db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('recipes').doc(recipe.id).update({
                     uid: recipe.id
                   })
                     .catch(function (error) {
                       console.log('Error: ', error)
                     })
-                  db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('recipies').doc(recipe.id).collection('ingredients').add({
+                  db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('recipes').doc(recipe.id).collection('ingredients').add({
                     ingredient: 'Milk',
                     amount: 200,
                     unit: 'g',
@@ -1025,14 +1025,14 @@ export default new Vuex.Store({
                     uid: ''
                   })
                     .then(function (ingredient) {
-                      db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('recipies').doc(recipe.id).collection('ingredients').doc(ingredient.id).update({
+                      db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('recipes').doc(recipe.id).collection('ingredients').doc(ingredient.id).update({
                         uid: ingredient.id
                       })
                     })
                     .catch(function (error) {
                       console.log('Error: ', error)
                     })
-                  db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('recipies').doc(recipe.id).collection('ingredients').add({
+                  db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('recipes').doc(recipe.id).collection('ingredients').add({
                     ingredient: 'Banana',
                     amount: 1,
                     unit: 'medium',
@@ -1041,7 +1041,7 @@ export default new Vuex.Store({
                     uid: ''
                   })
                     .then(function (ingredient) {
-                      db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('recipies').doc(recipe.id).collection('ingredients').doc(ingredient.id).update({
+                      db.collection('users').doc('default').collection('mealplans').doc(mealplan.id).collection('recipes').doc(recipe.id).collection('ingredients').doc(ingredient.id).update({
                         uid: ingredient.id
                       })
                     })
@@ -1156,7 +1156,7 @@ export default new Vuex.Store({
             name: 'Personal',
             isActive: true,
             isPurchased: true,
-            recipies: [],
+            recipes: [],
             filters: [],
             uid: ''
           })
@@ -1182,7 +1182,7 @@ export default new Vuex.Store({
                 isRequired: false,
                 uid: '00000000000000000003'
               })
-              db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('recipies').add({
+              db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('recipes').add({
                 name: 'Banana Smoothie',
                 id: 'Ba',
                 ingredients: [],
@@ -1192,13 +1192,13 @@ export default new Vuex.Store({
                 ]
               })
                 .then(function (recipe) {
-                  db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('recipies').doc(recipe.id).update({
+                  db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('recipes').doc(recipe.id).update({
                     uid: recipe.id
                   })
                     .catch(function (error) {
                       console.log('Error: ', error)
                     })
-                  db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('recipies').doc(recipe.id).collection('ingredients').add({
+                  db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('recipes').doc(recipe.id).collection('ingredients').add({
                     ingredient: 'Milk',
                     amount: 200,
                     unit: 'g',
@@ -1207,14 +1207,14 @@ export default new Vuex.Store({
                     uid: ''
                   })
                     .then(function (ingredient) {
-                      db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('recipies').doc(recipe.id).collection('ingredients').doc(ingredient.id).update({
+                      db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('recipes').doc(recipe.id).collection('ingredients').doc(ingredient.id).update({
                         uid: ingredient.id
                       })
                     })
                     .catch(function (error) {
                       console.log('Error: ', error)
                     })
-                  db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('recipies').doc(recipe.id).collection('ingredients').add({
+                  db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('recipes').doc(recipe.id).collection('ingredients').add({
                     ingredient: 'Banana',
                     amount: 1,
                     unit: 'medium',
@@ -1223,7 +1223,7 @@ export default new Vuex.Store({
                     uid: ''
                   })
                     .then(function (ingredient) {
-                      db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('recipies').doc(recipe.id).collection('ingredients').doc(ingredient.id).update({
+                      db.collection('users').doc(object.user.uid).collection('mealplans').doc(mealplan.id).collection('recipes').doc(recipe.id).collection('ingredients').doc(ingredient.id).update({
                         uid: ingredient.id
                       })
                     })
@@ -1418,14 +1418,14 @@ export default new Vuex.Store({
     emptyUserDataMealplanRecipies (state, mealplanID) {
       for (var mealplan in state.userData.mealplans) {
         if (state.userData.mealplans[mealplan].uid === mealplanID) {
-          state.userData.mealplans[mealplan].recipies.length = 0
+          state.userData.mealplans[mealplan].recipes.length = 0
         }
       }
     },
     pushUserDataMealplanRecipe (state, { userDataMealplanRecipe, mealplanID }) {
       for (var mealplan in state.userData.mealplans) {
         if (state.userData.mealplans[mealplan].uid === mealplanID) {
-          state.userData.mealplans[mealplan].recipies.push(userDataMealplanRecipe)
+          state.userData.mealplans[mealplan].recipes.push(userDataMealplanRecipe)
         }
       }
     },
@@ -1433,7 +1433,7 @@ export default new Vuex.Store({
       for (let mealplan in state.userData.mealplans) {
         if (state.userData.mealplans[mealplan].uid === mealplanID) {
           for (let userDataMealplanRecipe in userDataMealplanRecipiesArray) {
-            state.userData.mealplans[mealplan].recipies.push(userDataMealplanRecipiesArray[userDataMealplanRecipe])
+            state.userData.mealplans[mealplan].recipes.push(userDataMealplanRecipiesArray[userDataMealplanRecipe])
           }
         }
       }
@@ -1441,9 +1441,9 @@ export default new Vuex.Store({
     emptyUserDataMealplanRecipeIngredients (state, { mealplanID, recipeID }) {
       for (var mealplan in state.userData.mealplans) {
         if (state.userData.mealplans[mealplan].uid === mealplanID) {
-          for (var recipe in state.userData.mealplans[mealplan].recipies) {
-            if (state.userData.mealplans[mealplan].recipies[recipe].uid === recipeID) {
-              state.userData.mealplans[mealplan].recipies[recipe].ingredients.length = 0
+          for (var recipe in state.userData.mealplans[mealplan].recipes) {
+            if (state.userData.mealplans[mealplan].recipes[recipe].uid === recipeID) {
+              state.userData.mealplans[mealplan].recipes[recipe].ingredients.length = 0
             }
           }
         }
@@ -1452,9 +1452,9 @@ export default new Vuex.Store({
     pushUserDataMealplanRecipeIngredient (state, { userDataMealplanRecipeIngredient, mealplanID, recipeID }) {
       for (var mealplan in state.userData.mealplans) {
         if (state.userData.mealplans[mealplan].uid === mealplanID) {
-          for (var recipe in state.userData.mealplans[mealplan].recipies) {
-            if (state.userData.mealplans[mealplan].recipies[recipe].uid === recipeID) {
-              state.userData.mealplans[mealplan].recipies[recipe].ingredients.push(userDataMealplanRecipeIngredient)
+          for (var recipe in state.userData.mealplans[mealplan].recipes) {
+            if (state.userData.mealplans[mealplan].recipes[recipe].uid === recipeID) {
+              state.userData.mealplans[mealplan].recipes[recipe].ingredients.push(userDataMealplanRecipeIngredient)
             }
           }
         }
@@ -1463,10 +1463,10 @@ export default new Vuex.Store({
     setUserDataMealplanRecipeIngredient (state, { userDataMealplanRecipeIngredientsArray, mealplanID, recipeID }) {
       for (let mealplan in state.userData.mealplans) {
         if (state.userData.mealplans[mealplan].uid === mealplanID) {
-          for (let recipe in state.userData.mealplans[mealplan].recipies) {
-            if (state.userData.mealplans[mealplan].recipies[recipe].uid === recipeID) {
+          for (let recipe in state.userData.mealplans[mealplan].recipes) {
+            if (state.userData.mealplans[mealplan].recipes[recipe].uid === recipeID) {
               for (let userDataMealplanRecipeIngredient in userDataMealplanRecipeIngredientsArray) {
-                state.userData.mealplans[mealplan].recipies[recipe].ingredients.push(userDataMealplanRecipeIngredientsArray[userDataMealplanRecipeIngredient])
+                state.userData.mealplans[mealplan].recipes[recipe].ingredients.push(userDataMealplanRecipeIngredientsArray[userDataMealplanRecipeIngredient])
               }
             }
           }

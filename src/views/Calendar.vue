@@ -195,7 +195,7 @@ export default {
     ]),
     openMenu () {
       if (this.menu.isActive) {
-        this.$router.push('/recipies')
+        this.$router.push('/recipes')
       }
     },
     dayPurchased (day) {

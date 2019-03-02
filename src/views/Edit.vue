@@ -2,17 +2,17 @@
   <div class="container_recipies">
 
     <!-- eslint-disable-next-line -->
-    <div class="recipies">
+    <div class="recipes">
       <div class="number" @click="deleteRecipe()">
         <p class="add_recipe" style="transform: rotate(45deg)">+</p>
       </div>
-      <p class="recipe_name"> {{ userData.mealplans[0].recipies[editor.index].name }} </p>
+      <p class="recipe_name"> {{ userData.mealplans[0].recipes[editor.index].name }} </p>
       <div class="square square_recipies">
 
       </div>
       <div class="" align="left">
         <label for="">Recipe Name</label>
-        <input id="mealName" class="amount editPlace" type="text" @keyup.enter="updateName()" v-model="userData.mealplans[0].recipies[editor.index].name" required>
+        <input id="mealName" class="amount editPlace" type="text" @keyup.enter="updateName()" v-model="userData.mealplans[0].recipes[editor.index].name" required>
       </div>
       <br>
       <div class="add_button" @click="updateName()" style="margin-top: 20px; margin-bottom: 40px">
@@ -21,9 +21,9 @@
     </div>
 
     <!-- eslint-disable-next-line -->
-    <template v-for="ingredient in userData.mealplans[0].recipies[editor.index].ingredients">
+    <template v-for="ingredient in userData.mealplans[0].recipes[editor.index].ingredients">
       <!-- eslint-disable-next-line -->
-      <div class="recipies">
+      <div class="recipes">
         <div class="number" @click="deleteIngredient(ingredient)">
           <p class="add_recipe" style="transform: rotate(45deg)">+</p>
         </div>
@@ -47,7 +47,7 @@
       </div>
     </template>
 
-    <div class="recipies">
+    <div class="recipes">
       <div class="number">
         <p class="add_recipe" @click="addIngredient(); resetData()">+</p>
       </div>
@@ -107,7 +107,7 @@ export default {
       var unit = this.newUnit
       var userData = this.userData
       var editor = this.editor
-      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[editor.index].uid).collection('ingredients').add({
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[editor.index].uid).collection('ingredients').add({
         ingredient: ingredient,
         amount: amount,
         unit: unit,
@@ -116,7 +116,7 @@ export default {
         uid: ''
       })
         .then(function (doc) {
-          db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[editor.index].uid).collection('ingredients').doc(doc.id).update({
+          db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[editor.index].uid).collection('ingredients').doc(doc.id).update({
             uid: doc.id
           })
         })
@@ -130,7 +130,7 @@ export default {
     },
     updateIngredient (ingredient) {
       var userData = this.userData
-      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[this.editor.index].uid).collection('ingredients').doc(ingredient.uid).update({
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[this.editor.index].uid).collection('ingredients').doc(ingredient.uid).update({
         ingredient: ingredient.ingredient,
         amount: ingredient.amount,
         unit: ingredient.unit
@@ -138,25 +138,25 @@ export default {
     },
     deleteIngredient (ingredient) {
       var userData = this.userData
-      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[this.editor.index].uid).collection('ingredients').doc(ingredient.uid).delete()
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[this.editor.index].uid).collection('ingredients').doc(ingredient.uid).delete()
     },
     updateName () {
       var userData = this.userData
       var editor = this.editor
-      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[this.editor.index].uid).update({
-        name: userData.mealplans[0].recipies[editor.index].name
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[this.editor.index].uid).update({
+        name: userData.mealplans[0].recipes[editor.index].name
       })
     },
     deleteRecipe () {
       var userData = this.userData
       var editor = this.editor
-      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[editor.index].uid).collection('ingredients')
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[editor.index].uid).collection('ingredients')
         .onSnapshot(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
-            db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[editor.index].uid).collection('ingredients').doc(doc.id).delete()
+            db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[editor.index].uid).collection('ingredients').doc(doc.id).delete()
           })
-          db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipies').doc(userData.mealplans[0].recipies[editor.index].uid).delete()
-          router.push('/recipies')
+          db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[editor.index].uid).delete()
+          router.push('/recipes')
           store.commit('resetPointer')
         })
     },
@@ -177,9 +177,9 @@ export default {
     },
     editRecipe (userData, editor) {
       var editIngredients = []
-      for (let r = 0; r < userData.mealplans[0].recipies.length; r++) {
-        if (userData.mealplans[0].recipies[r].id === editor.id) {
-          editIngredients.push(userData.mealplans[0].recipies[r])
+      for (let r = 0; r < userData.mealplans[0].recipes.length; r++) {
+        if (userData.mealplans[0].recipes[r].id === editor.id) {
+          editIngredients.push(userData.mealplans[0].recipes[r])
         }
       }
       return editIngredients
@@ -232,7 +232,7 @@ export default {
     overflow: hidden;
     animation: fadeIn .8s;
   }
-  .recipies {
+  .recipes {
     color: black;
     text-align: center;
     font-size: 20px;
@@ -329,7 +329,7 @@ export default {
     overflow-y: hidden;
     animation: fadeIn .8s;
   }
-  .recipies {
+  .recipes {
     color: black;
     text-align: center;
     font-size: 20px;
