@@ -1376,7 +1376,7 @@ export default new Vuex.Store({
       for (let address in state.userAddresses) {
         if (state.userAddresses[address].uid === addressID) {
           for (let userAddressPersonalList in userAddressPersonalListsArray) {
-            state.userAddresses[address].members.push(userAddressPersonalListsArray[userAddressPersonalList])
+            state.userAddresses[address].personalList.push(userAddressPersonalListsArray[userAddressPersonalList])
           }
         }
       }
