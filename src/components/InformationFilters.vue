@@ -32,10 +32,16 @@ export default {
 
 <style lang="css" scoped>
 .filters {
-  position: absolute;
-  top: 25px;
+  position: fixed;
+  top: 45px;
+  left: 50%;
+  transform: translateX(-50%);
   height: 25px;
-  width: 100%;
+  width: 70%;
+  margin-left: 30px;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
   text-align: center;
 }
 .filter {

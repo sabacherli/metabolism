@@ -290,16 +290,16 @@ export default {
                       // otherwise addressID not defined properly inside the snapshot
                       var addressID = userDataAddressesArray[userDataAddress].uid
                       // empty the subcollection
-                      store.commit('emptyUserAddressPersonalLists')
+                      store.commit('emptyUserAddressPersonalLists', addressID)
                       // assing the values to an array first
-                      let emptyUserAddressPersonalListsArray = []
+                      let userAddressPersonalListsArray = []
                       // get the documents and push them into this array
                       querySnapshot.forEach(function (doc) {
                         let userAddressPersonalList = doc.data()
-                        emptyUserAddressPersonalListsArray.push(userAddressPersonalList)
+                        userAddressPersonalListsArray.push(userAddressPersonalList)
                       })
                       // set the personal list of this address
-                      store.commit('setUserAddressPersonalLists', { emptyUserAddressPersonalListsArray, addressID })
+                      store.commit('setUserAddressPersonalLists', { userAddressPersonalListsArray, addressID })
                     })
                 }
               })

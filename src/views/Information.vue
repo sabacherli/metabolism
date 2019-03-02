@@ -4,7 +4,7 @@
       <transition name="slide" mode="out-in" appear>
       <component :is="currentPageComponent"></component>
       </transition>
-      <div v-if="informationFilters[0].isActive">
+      <div class="content" v-if="informationFilters[0].isActive">
         <div class="title">
           FREQUENTLY
           <br>
@@ -12,7 +12,7 @@
           <br>
           QUESTIONS
         </div>
-        <div class="container_faq">
+        <div style="margin-bottom: 70px" class="container_faq">
           <div class="break"></div>
           <p class="question">What is the calorie setting for?</p>
           <p class="answer">It is used to calculate the ratio of ingredients for the shoppinglist when multiple people are eating at one address.</p>
@@ -21,13 +21,13 @@
           <p class="answer">No. The entire payment flow is handled by Stripe. No credit card data is stored on our servers.</p>
         </div>
       </div>
-      <div v-if="informationFilters[1].isActive">
+      <div class="content" v-if="informationFilters[1].isActive">
         <div class="title">
           TERMS OF
           <br>
           SERVICE
         </div>
-        <div class="container_faq">
+        <div style="margin-bottom: 70px" class="container_faq">
           <div class="break"></div>
           <p class="question">What is the calorie setting for?</p>
           <p class="answer">It is used to calculate the ratio of ingredients for the shoppinglist when multiple people are eating at one address.</p>
@@ -36,13 +36,13 @@
           <p class="answer">No. The entire payment flow is handled by Stripe. No credit card data is stored on our servers.</p>
         </div>
       </div>
-      <div v-if="informationFilters[2].isActive">
+      <div class="content" v-if="informationFilters[2].isActive">
         <div class="title">
           PRIVACY
           <br>
           POLICY
         </div>
-        <div class="container_faq">
+        <div style="margin-bottom: 70px" class="container_faq">
           <div class="break"></div>
           <p class="question">What is the calorie setting for?</p>
           <p class="answer">It is used to calculate the ratio of ingredients for the shoppinglist when multiple people are eating at one address.</p>
@@ -51,13 +51,13 @@
           <p class="answer">No. The entire payment flow is handled by Stripe. No credit card data is stored on our servers.</p>
         </div>
       </div>
-      <div v-if="informationFilters[3].isActive">
+      <div class="content" v-if="informationFilters[3].isActive">
         <div class="title">
           REACH
           <br>
           OUT
         </div>
-        <div class="container_faq">
+        <div style="margin-bottom: 70px" class="container_faq">
           <div class="break"></div>
           <p class="question">We want to continously improve.</p>
           <p class="answer">To give us your feedback or to get in contact with us, message us on Twitter.</p>
@@ -104,14 +104,20 @@ export default {
 }
 .background {
   position: fixed;
-  display: block;
-  overflow: scroll;
-  -webkit-overflow-scrolling: touch;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background: linear-gradient(to bottom right, lightpink, #ffdfa0);
+
+}
+.content {
+  position: fixed;
+  height: calc(100% - 110px);
+  overflow: scroll;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  margin: 110px 0 0 0;
 }
 .title {
   text-align: left;
@@ -123,14 +129,14 @@ export default {
   width: 90%;
   margin-left: 10%;
   position: relative;
-  top: 150px;
+  top: 80px;
   opacity: 0;
   transform: translateY(-150%);
   animation: slideInLeft .8s .6s forwards;
 }
 .container_faq {
   position: relative;
-  top: 190px;
+  top: 120px;
   width: 80%;
   margin-left: 10%;
   text-align: left;
@@ -181,54 +187,6 @@ export default {
   width: 40px;
   margin: 0px 20px 0 20px;
 }
-.information_email,
-.information_password {
-   position: relative;
-   display: inline-block;
-   top: 15%;
-   left: 50%;
-   transform: translateX(-50%);
-   height: 30px;
-   width: 35%;
-   text-align: center;
-   color: darkgray;
-   font-size: 14px;
-   font-family: Montserrat;
-   letter-spacing: .2px;
-   border-style: none;
-   border-radius: 25px;
-   border-width: 2px;
-   background: white;
- }
-input[type=email].information_email:focus,
-input[type=password].information_password:focus {
-  background-color: #F8F8F8;
-  outline: none;
-  letter-spacing: .2px;
-  font-size: 14px;
-}
-.information_button {
-  position: relative;
-  display: inline-block;
-  top: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-bottom: 50px;
-  color: white;
-  font-size: 1em;
-  border: 2px solid white;
-  border-radius: 20px 20px;
-  padding: 5px 10px 5px 10px;
-}
-.information_button:active {
-  transition: 0s;
-  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
-}
-#resend_button:active {
-  transition: 0s;
-  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
-  outline: none;
-}
 ::placeholder {
   font-size: 14px;
   font-family: Montserrat;
@@ -238,13 +196,13 @@ input[type=password].information_password:focus {
 @media (max-width: 700px) {
   .title {
     position: relative;
-    top: 180px;
+    top: 20px;
     width: 90%;
     margin-left: 10%;
     text-align: left;
     line-height: 1em;
     color: white;
-    font-size: 4em;
+    font-size: 3em;
     font-weight: 800;
     letter-spacing: .05em;
     opacity: 0;
@@ -252,32 +210,14 @@ input[type=password].information_password:focus {
     animation: slideInLeft .8s .6s forwards;
   }
   .container_faq {
-    width: 70%;
+    width: 80%;
+    top: 50px;
   }
   .question {
     font-size: 1.5em;
   }
-  .information_email,
-  .information_password {
-   width: 60%;
- }
 }
 @media (hover:hover) {
-  .information_button:hover {
-    cursor: pointer;
-    color: #ffdeb9;
-    font-weight: 400;
-    background: white;
-    transition: .4s ease-in-out;
-  }
-  #resend_button {
-    cursor: pointer;
-    color: #ffdeb9;
-    font-weight: 400;
-    background: white;
-    transition: .4s ease-in-out;
-    outline: none;
-  }
   .icon:hover {
     cursor: pointer;
   }
