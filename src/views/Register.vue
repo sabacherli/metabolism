@@ -12,7 +12,7 @@
       </div>
       <div class="container_icons">
         <img src="../assets/icons8-email.png" alt="Email" class="icon" @click="focusEmailInput()">
-        <img src="../assets/icons8-google.png" alt="Google" class="icon" @click="createUserWithGoogle()">
+        <!-- <img src="../assets/icons8-google.png" alt="Google" class="icon" @click="createUserWithGoogle()"> -->
         <!-- <img src="../assets/icons8-twitter.png" alt="Twitter" class="icon" @click="createUserWithTwitter()"> -->
       </div>
       <div class="container_register">

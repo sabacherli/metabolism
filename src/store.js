@@ -1415,7 +1415,7 @@ export default new Vuex.Store({
         }
       }
     },
-    emptyUserDataMealplanRecipies (state, mealplanID) {
+    emptyUserDataMealplanRecipes (state, mealplanID) {
       for (var mealplan in state.userData.mealplans) {
         if (state.userData.mealplans[mealplan].uid === mealplanID) {
           state.userData.mealplans[mealplan].recipes.length = 0
@@ -1429,11 +1429,11 @@ export default new Vuex.Store({
         }
       }
     },
-    setUserDataMealplanRecipies (state, { userDataMealplanRecipiesArray, mealplanID }) {
+    setUserDataMealplanRecipes (state, { userDataMealplanRecipesArray, mealplanID }) {
       for (let mealplan in state.userData.mealplans) {
         if (state.userData.mealplans[mealplan].uid === mealplanID) {
-          for (let userDataMealplanRecipe in userDataMealplanRecipiesArray) {
-            state.userData.mealplans[mealplan].recipes.push(userDataMealplanRecipiesArray[userDataMealplanRecipe])
+          for (let userDataMealplanRecipe in userDataMealplanRecipesArray) {
+            state.userData.mealplans[mealplan].recipes.push(userDataMealplanRecipesArray[userDataMealplanRecipe])
           }
         }
       }

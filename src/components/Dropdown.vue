@@ -15,7 +15,7 @@
       <div class="dropdown_item_break">
 
       </div>
-      <span id="recipes" class="dropdown_item" v-on:click='goRecipies()'>RECIPIES</span>
+      <span id="recipes" class="dropdown_item" v-on:click='goRecipes()'>RECIPES</span>
       <div class="dropdown_item_break">
 
       </div>
@@ -119,7 +119,7 @@ export default {
       document.getElementById('background').classList.remove('background_t')
       this.$forceUpdate()
     },
-    goRecipies () {
+    goRecipes () {
       store.commit('setPage', 'recipes')
       router.push('recipes')
       store.commit('resetPointer')

@@ -13,7 +13,7 @@
     </div>
 
     <!-- Display filtered list of meals. -->
-    <template v-for="recipe in recipiesFiltered(userData)">
+    <template v-for="recipe in recipesFiltered(userData)">
       <!-- eslint-disable-next-line -->
       <div class="day">
         <!-- A user needs to be able to edit the recipe -->
@@ -152,7 +152,7 @@ export default {
     goCalendar () {
       this.$router.push('/calendar')
     },
-    recipiesFiltered (userData) {
+    recipesFiltered (userData) {
       var filteredRecipes = []
       var activeFilters = []
       var requiredFilters = []

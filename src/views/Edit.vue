@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="container_recipies">
+  <div class="container_recipes">
 
     <!-- eslint-disable-next-line -->
     <div class="recipes">
@@ -7,7 +7,7 @@
         <p class="add_recipe" style="transform: rotate(45deg)">+</p>
       </div>
       <p class="recipe_name"> {{ userData.mealplans[0].recipes[editor.index].name }} </p>
-      <div class="square square_recipies">
+      <div class="square square_recipes">
 
       </div>
       <div class="" align="left">
@@ -56,7 +56,7 @@
       <div class="">
         <p class="amount"> {{ newAmount }} <span> {{ newUnit }} </span></p>
       </div>
-      <div class="square square_recipies">
+      <div class="square square_recipes">
 
       </div>
       <div class="" align="left">
@@ -224,7 +224,7 @@ export default {
   font-size: 10px;
 }
 @media (max-width: 850px) and (min-height: 400px) {
-  .container_recipies {
+  .container_recipes {
     position: absolute;
     top: 210px;
     height: inherit;
@@ -270,7 +270,7 @@ export default {
     height: 1px;
     margin-top: 20px;
   }
-  .square_recipies {
+  .square_recipes {
     margin-top: 30px;
     margin-bottom: 30px;
   }
@@ -317,7 +317,7 @@ export default {
   }
 }
 @media (min-width: 850px) {
-  .container_recipies {
+  .container_recipes {
     position: relative;
     top: 210px;
     height: 570px;
@@ -369,7 +369,7 @@ export default {
     width: 15px;
     height: 1px;
   }
-  .square_recipies {
+  .square_recipes {
     margin-top: 30px;
     margin-bottom: 30px;
   }

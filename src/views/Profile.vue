@@ -489,123 +489,207 @@ export default {
         })
     },
     deleteAccount () {
-      if (confirm('Are you sure you want to remove this place?')) {
-        const userData = this.userData
-        const userAddresses = this.userAddresses
+      // get data to be deleted
+      var oldUserData = JSON.parse(JSON.stringify(this.userData))
+      var oldUserAddresses = JSON.parse(JSON.stringify(this.userAddresses))
+      if (confirm('Are you sure you want to delete your account? This will also delete all places you are the owner of.')) {
+        // get authetication details
         const user = firebase.auth().currentUser
         const credential = firebase.auth.EmailAuthProvider.credential(
           user.email,
           this.deleteConfirmation
         )
+        // delete user, sign out and redirect to register page
         user.reauthenticateAndRetrieveDataWithCredential(credential)
           .then(function () {
             user.delete()
-            store.commit('setPage', 'register')
-            router.push('/register')
-            for (var address in userAddresses) {
-              var isOwner = false
-              var batch = db.batch()
-              for (let member in userAddresses[address].members) {
-                if (userAddresses[address].members[member].role === 'Owner' && userAddresses[address].members[member].uid === userData.uid) {
-                  isOwner = true
-                }
-              }
-              if (isOwner) {
-                new Promise(function (resolve, reject) {
-                  for (let member in userAddresses[address].members) {
-                    var addressRef = db.collection('users').doc(userAddresses[address].members[member].uid).collection('addresses').doc(userAddresses[address].uid)
-                    batch.delete(addressRef)
-                  }
-                  resolve()
-                })
-                  .then(function () {
-                    new Promise(function (resolve, reject) {
-                      db.collection('addresses').doc(userAddresses[address].uid).collection('calendar')
-                        .onSnapshot(function (querySnapshot) {
-                          querySnapshot.forEach(function (doc) {
-                            var calendarRef = db.collection('addresses').doc(userAddresses[address].uid).collection('calendar').doc(doc.id)
-                            batch.delete(calendarRef)
-                          })
-                          resolve()
-                        })
-                    })
-                      .then(function () {
-                        new Promise(function (resolve, reject) {
-                          db.collection('addresses').doc(userAddresses[address].uid).collection('members')
-                            .onSnapshot(function (querySnapshot) {
-                              querySnapshot.forEach(function (doc) {
-                                var memberRef = db.collection('addresses').doc(userAddresses[address].uid).collection('members').doc(doc.id)
-                                batch.delete(memberRef)
-                              })
-                              resolve()
-                            })
-                        })
-                          .then(function () {
-                            new Promise(function (resolve, reject) {
-                              db.collection('addresses').doc(userAddresses[address].uid).collection('months')
-                                .onSnapshot(function (querySnapshot) {
-                                  querySnapshot.forEach(function (doc) {
-                                    var monthRef = db.collection('addresses').doc(userAddresses[address].uid).collection('months').doc(doc.id)
-                                    batch.delete(monthRef)
-                                  })
-                                  resolve()
-                                })
-                            })
-                              .then(function () {
-                                new Promise(function (resolve, reject) {
-                                  var docRef = db.collection('addresses').doc(userAddresses[address].uid)
-                                  batch.delete(docRef)
-                                  resolve()
-                                })
-                                  .then(function () {
-                                    batch.commit()
-                                  })
-                              })
-                          })
-                      })
-                  })
-              } else {
-                batch.delete(db.collection('addresses').doc(userAddresses[address].uid).collection('members').doc(userData.uid))
-                batch.delete(db.collection('users').doc(userData.uid).collection('addresses').doc(userAddresses[address].uid))
-                batch.commit()
-              }
-            }
-            new Promise(function (resolve, reject) {
-              for (var recipe in userData.mealplans[0].recipes) {
-                db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[recipe].uid).collection('ingredients')
-                  .onSnapshot(function (querySnapshot) {
-                    querySnapshot.forEach(function (doc) {
-                      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[recipe].uid).collection('ingredients').doc(doc.id).delete()
-                    })
-                    db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[recipe].uid).delete()
-                  })
-              }
-              resolve()
-            })
+            firebase.auth().signOut()
               .then(function () {
-                new Promise(function (resolve, reject) {
-                  db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('filters')
-                    .onSnapshot(function (querySnapshot) {
-                      querySnapshot.forEach(function (doc) {
-                        db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('filters').doc(doc.id).delete()
-                      })
-                      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).delete()
-                    })
-                  db.collection('users').doc(userData.uid).collection('calendar')
-                    .onSnapshot(function (querySnapshot) {
-                      querySnapshot.forEach(function (doc) {
-                        db.collection('users').doc(userData.uid).collection('calendar').doc(doc.id).delete()
-                      })
-                    })
-                  resolve()
-                })
-                  .then(function () {
-                    db.collection('users').doc(userData.uid).delete()
-                  })
+                store.commit('setPage', 'register')
+                router.push('register')
+              })
+              .catch(error => {
+                alert(error.message)
+                console.log(error.code)
               })
           })
+        console.log('oldUSerData: ', oldUserData);
+        console.log('oldUserAddresses: ', oldUserAddresses);
+        for (let address in oldUserAddresses) {
+          // check owner of the addresses
+          var isOwner = false
+          for (let member in oldUserAddresses[address].members) {
+            if (oldUserAddresses[address].members[member].role === 'Owner' && oldUserAddresses[address].members[member].uid === oldUserData.uid) {
+              isOwner = true
+            }
+          }
+          if (isOwner) {
+            for (let member in oldUserAddresses[address].members) {
+              db.collection('users').doc(oldUserAddresses[address].members[member].uid).collection('addresses').doc(oldUserAddresses[address].uid).delete()
+            }
+            for (let month in oldUserAddresses[address].months) {
+              db.collection('addresses').doc(oldUserAddresses[address].uid).collection('months').doc(oldUserAddresses[address].months[month].month).delete()
+            }
+            for (let item in oldUserAddresses[address].personalList) {
+              db.collection('addresses').doc(oldUserAddresses[address].uid).collection('personalList').doc(oldUserAddresses[address].personalList[item].uid).delete()
+            }
+            for (let day in oldUserAddresses[address].calendar) {
+              for (let ingredient in oldUserAddresses[address].calendar[day].breakfastIngredients) {
+                db.collection('addresses').doc(oldUserAddresses[address].uid).collection('calendar').doc(oldUserAddresses[address].calendar[day].date.toString()).collection('breakfastIngredients').doc(oldUserAddresses[address].calendar[day].breakfastIngredients[ingredient].uid).delete()
+              }
+              for (let ingredient in oldUserAddresses[address].calendar[day].lunchIngredients) {
+                db.collection('addresses').doc(oldUserAddresses[address].uid).collection('calendar').doc(oldUserAddresses[address].calendar[day].date.toString()).collection('lunchIngredients').doc(oldUserAddresses[address].calendar[day].lunchIngredients[ingredient].uid).delete()
+              }
+              for (let ingredient in oldUserAddresses[address].calendar[day].dinnerIngredients) {
+                db.collection('addresses').doc(oldUserAddresses[address].uid).collection('calendar').doc(oldUserAddresses[address].calendar[day].date.toString()).collection('dinnerIngredients').doc(oldUserAddresses[address].calendar[day].dinnerIngredients[ingredient].uid).delete()
+              }
+              db.collection('addresses').doc(oldUserAddresses[address].uid).collection('calendar').doc(oldUserAddresses[address].calendar[day].date.toString()).delete()
+            }
+          } else {
+            db.collection('addresses').doc(oldUserAddresses[address].uid).collection('members').doc(oldUserData.uid).delete()
+          }
+        }
+        for (let address in oldUserData.addresses) {
+          db.collection('users').doc(oldUserData.uid).collection('addresses').doc(oldUserData.addresses[address].uid).delete()
+        }
+        for (let day in oldUserData.calendar) {
+          db.collection('users').doc(oldUserData.uid).collection('calendar').doc(oldUserData.calendar[day].date.toString()).delete()
+        }
+        for (let mealplan in oldUserData.mealplans) {
+          for (let filter in oldUserData.mealplans[mealplan].filters) {
+            var mealplanID = oldUserData.mealplans[mealplan].uid
+            db.collection('users').doc(oldUserData.uid).collection('mealplans').doc(mealplanID).collection('filters').doc(oldUserData.mealplans[mealplan].filters[filter].uid).delete()
+          }
+          for (let recipe in oldUserData.mealplans[mealplan].recipes) {
+            for (let ingredient in oldUserData.mealplans[mealplan].recipes[recipe].ingredients) {
+              mealplanID = oldUserData.mealplans[mealplan].uid
+              var recipeID = oldUserData.mealplans[mealplan].recipes[recipe].uid
+              db.collection('users').doc(oldUserData.uid).collection('mealplans').doc(mealplanID).collection('recipes').doc(recipeID).collection('ingredients').doc(oldUserData.mealplans[mealplan].recipes[recipe].ingredients[ingredient].uid).delete()
+            }
+            db.collection('users').doc(oldUserData.uid).collection('mealplans').doc(mealplanID).collection('recipes').doc(oldUserData.mealplans[mealplan].recipes[recipe].uid).delete()
+          }
+          db.collection('users').doc(oldUserData.uid).collection('mealplans').doc(oldUserData.mealplans[mealplan].uid).delete()
+        }
       }
     },
+    // deleteAccount2 () {
+    //   if (confirm('Are you sure you want to remove this place?')) {
+    //     const userData = JSON.parse(JSON.stringify(this.userData))
+    //     const userAddresses = JSON.parse(JSON.stringify(this.userAddresses))
+    //     const user = firebase.auth().currentUser
+    //     const credential = firebase.auth.EmailAuthProvider.credential(
+    //       user.email,
+    //       this.deleteConfirmation
+    //     )
+    //     user.reauthenticateAndRetrieveDataWithCredential(credential)
+    //       .then(function () {
+    //         user.delete()
+    //         store.commit('setPage', 'register')
+    //         router.push('/register')
+    //         for (var address in userAddresses) {
+    //           var isOwner = false
+    //           var batch = db.batch()
+    //           for (let member in userAddresses[address].members) {
+    //             if (userAddresses[address].members[member].role === 'Owner' && userAddresses[address].members[member].uid === userData.uid) {
+    //               isOwner = true
+    //             }
+    //           }
+    //           if (isOwner) {
+    //             new Promise(function (resolve, reject) {
+    //               for (let member in userAddresses[address].members) {
+    //                 var addressRef = db.collection('users').doc(userAddresses[address].members[member].uid).collection('addresses').doc(userAddresses[address].uid)
+    //                 batch.delete(addressRef)
+    //               }
+    //               resolve()
+    //             })
+    //               .then(function () {
+    //                 new Promise(function (resolve, reject) {
+    //                   db.collection('addresses').doc(userAddresses[address].uid).collection('calendar')
+    //                     .onSnapshot(function (querySnapshot) {
+    //                       querySnapshot.forEach(function (doc) {
+    //                         var calendarRef = db.collection('addresses').doc(userAddresses[address].uid).collection('calendar').doc(doc.id)
+    //                         batch.delete(calendarRef)
+    //                       })
+    //                       resolve()
+    //                     })
+    //                 })
+    //                   .then(function () {
+    //                     new Promise(function (resolve, reject) {
+    //                       db.collection('addresses').doc(userAddresses[address].uid).collection('members')
+    //                         .onSnapshot(function (querySnapshot) {
+    //                           querySnapshot.forEach(function (doc) {
+    //                             var memberRef = db.collection('addresses').doc(userAddresses[address].uid).collection('members').doc(doc.id)
+    //                             batch.delete(memberRef)
+    //                           })
+    //                           resolve()
+    //                         })
+    //                     })
+    //                       .then(function () {
+    //                         new Promise(function (resolve, reject) {
+    //                           db.collection('addresses').doc(userAddresses[address].uid).collection('months')
+    //                             .onSnapshot(function (querySnapshot) {
+    //                               querySnapshot.forEach(function (doc) {
+    //                                 var monthRef = db.collection('addresses').doc(userAddresses[address].uid).collection('months').doc(doc.id)
+    //                                 batch.delete(monthRef)
+    //                               })
+    //                               resolve()
+    //                             })
+    //                         })
+    //                           .then(function () {
+    //                             new Promise(function (resolve, reject) {
+    //                               var docRef = db.collection('addresses').doc(userAddresses[address].uid)
+    //                               batch.delete(docRef)
+    //                               resolve()
+    //                             })
+    //                               .then(function () {
+    //                                 batch.commit()
+    //                               })
+    //                           })
+    //                       })
+    //                   })
+    //               })
+    //           } else {
+    //             batch.delete(db.collection('addresses').doc(userAddresses[address].uid).collection('members').doc(userData.uid))
+    //             batch.delete(db.collection('users').doc(userData.uid).collection('addresses').doc(userAddresses[address].uid))
+    //             batch.commit()
+    //           }
+    //         }
+    //         new Promise(function (resolve, reject) {
+    //           for (var recipe in userData.mealplans[0].recipes) {
+    //             db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[recipe].uid).collection('ingredients')
+    //               .onSnapshot(function (querySnapshot) {
+    //                 querySnapshot.forEach(function (doc) {
+    //                   db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[recipe].uid).collection('ingredients').doc(doc.id).delete()
+    //                 })
+    //                 db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[recipe].uid).delete()
+    //               })
+    //           }
+    //           resolve()
+    //         })
+    //           .then(function () {
+    //             new Promise(function (resolve, reject) {
+    //               db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('filters')
+    //                 .onSnapshot(function (querySnapshot) {
+    //                   querySnapshot.forEach(function (doc) {
+    //                     db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('filters').doc(doc.id).delete()
+    //                   })
+    //                   db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).delete()
+    //                 })
+    //               db.collection('users').doc(userData.uid).collection('calendar')
+    //                 .onSnapshot(function (querySnapshot) {
+    //                   querySnapshot.forEach(function (doc) {
+    //                     db.collection('users').doc(userData.uid).collection('calendar').doc(doc.id).delete()
+    //                   })
+    //                 })
+    //               resolve()
+    //             })
+    //               .then(function () {
+    //                 db.collection('users').doc(userData.uid).delete()
+    //               })
+    //           })
+    //       })
+    //   }
+    // },
     updatePlace (place) {
       db.collection('users').doc(this.userData.uid).collection('addresses').doc(place.uid).update({
         name: place.name
