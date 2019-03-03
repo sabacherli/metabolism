@@ -59,6 +59,9 @@ export default {
   },
   created () {
     store.commit('setPage', 'discover')
+    setTimeout(function () {
+      store.commit('rerender')
+    }, 800)
   },
   computed: {
     ...mapState([

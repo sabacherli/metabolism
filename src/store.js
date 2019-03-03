@@ -78,7 +78,7 @@ export default new Vuex.Store({
     ],
     discoverFilters: [
       {
-        text: 'Most Viewed',
+        text: 'Most Purchased',
         isActive: true
       },
       {
@@ -1008,6 +1008,7 @@ export default new Vuex.Store({
             recipes: [],
             filters: [],
             price: 0,
+            purchases: 0,
             currency: 'CHF',
             uid: ''
           })
@@ -1202,6 +1203,7 @@ export default new Vuex.Store({
             recipes: [],
             filters: [],
             price: 0,
+            purchases: 0,
             currency: 'CHF',
             uid: ''
           })

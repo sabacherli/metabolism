@@ -322,13 +322,13 @@
     <div class="animated" v-if="profileFilters[4].isActive" style="padding-bottom: 100px">
       <div class="">
         <div class="box" @click="goDiscover()">
-          <img class="edit_icon" src="../assets/icon-edit.png" alt="Edit">
+          <img class="edit_icon" src="../assets/icons8-binoculars-52.png" alt="Edit">
         </div>
         <p class="dayname">Discover Mealplans</p>
         <div class="ingredients_break">
 
         </div>
-        <div class="" align="left">
+        <div class="mealplan_explanation" align="left">
           <p>Discover pre-made mealplans to alleviate you from the burden of adding your own recipes.</p>
           <br>
         </div>
@@ -349,13 +349,44 @@
         </div>
         <!-- eslint-disable-next-line -->
         <div class="" align="left">
-          <label for="">Edit Name</label>
+          <label for="">Mealplan Name</label>
           <input class="amount" type="text" name="" value="" @keyup.enter="updateMealplan(mealplan)" v-model="mealplan.name" required>
           <br>
         </div>
         <!-- eslint-disable-next-line -->
         <div class="purchase_button" @click="updateMealplan(mealplan)" style="margin-top: 20px">
           <span class="purchase_text">Update Name</span>
+        </div>
+        <!-- eslint-disable-next-line -->
+        <div v-if="mealplan.isPublic" class="" align="left" style="margin-top: 40px">
+          <label for="">ID</label>
+          <input class="amount" type="text" name="" value="" @keyup.enter="" v-model="mealplan.uid" readonly>
+          <br>
+        </div>
+        <!-- eslint-disable-next-line -->
+        <div v-if="mealplan.isPublic" class="" align="left">
+          <label for="">Price</label>
+          <input class="amount" type="text" name="" value="" @keyup.enter="" v-model="mealplan.price" required>
+          <br>
+        </div>
+        <!-- eslint-disable-next-line -->
+        <div v-if="mealplan.isPublic" class="" align="left">
+          <label for="">Currency</label>
+          <input class="amount" type="text" name="" value="" @keyup.enter="" v-model="mealplan.currency" required>
+          <br>
+        </div>
+        <!-- eslint-disable-next-line -->
+        <div v-if="mealplan.isPublic" class="purchase_button" @click="updatePrice(mealplan)" style="margin-top: 20px">
+          <span class="purchase_text">Update Price & Currency</span>
+        </div>
+        <!-- eslint-disable-next-line -->
+        <br>
+        <div v-if="!mealplan.isPublic" class="public_button" @click="makePublic(mealplan)" style="margin-top: 20px">
+          <span class="public_text">Make Public</span>
+        </div>
+        <!-- eslint-disable-next-line -->
+        <div v-if="mealplan.isPublic" class="public_button" @click="makePrivate(mealplan)" style="margin-top: 20px">
+          <span class="public_text">Make Private</span>
         </div>
       </template>
       <div class="" style="margin-bottom: 100px">
@@ -1001,6 +1032,33 @@ export default {
     deleteMealplan (mealplan) {
       var userData = this.userData
       db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).delete()
+    },
+    makePrivate (mealplan) {
+      var userData = this.userData
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).update({
+        isPublic: false
+      })
+    },
+    makePublic (mealplan) {
+      var userData = this.userData
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).update({
+        isPublic: true
+      })
+      // db.collection('mealplans').doc(mealplan.uid).set({
+      //   uid: mealplan.uid,
+      //   owner: userData.uid,
+      //   price: mealplan.price,
+      //   currency: mealplan.currency,
+      //   name: mealplan.name,
+      //   purchases: mealplan.purchases
+      // })
+    },
+    updatePrice (mealplan) {
+      var userData = this.userData
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).update({
+        price: Number(mealplan.price),
+        currency: mealplan.currency
+      })
     }
   }
 }
@@ -1096,6 +1154,23 @@ export default {
   transition: 0s;
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
 }
+.public_button {
+  position: relative;
+  display: inline-block;
+  margin-top: -20px;
+  font-size: .85em;
+  border: 1.2px solid linear-gradient(315deg, #ffdeb9, lightpink 100%);
+  background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+  border-radius: 20px 20px;
+  padding: 5px 10px 5px 10px;
+}
+.public_button:active {
+  transition: 0s;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+}
+.public_text {
+  color: white;
+}
 .container {
   position: relative;
   top: 210px;
@@ -1139,6 +1214,13 @@ export default {
   font-weight: 400;
   border: 1.4px solid black;
   border-radius: 20px 20px;
+}
+.mealplan_explanation {
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  text-align: center;
 }
 input[type=text].amount,
 input[type=number].amount,
@@ -1225,6 +1307,11 @@ label {
     box-shadow: 1px 1px 1px rgba(0,0,0,0.4);
     transition: .2s;
   }
+    .public_button:hover {
+      cursor: pointer;
+      box-shadow: 1px 1px 1px rgba(0,0,0,0.4);
+      transition: .2s;
+    }
   .inline_date:hover {
     cursor: pointer;
   }
