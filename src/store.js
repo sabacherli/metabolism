@@ -52,6 +52,10 @@ export default new Vuex.Store({
       {
         text: 'Filters',
         isActive: false
+      },
+      {
+        text: 'Mealplans',
+        isActive: false
       }
     ],
     informationFilters: [
@@ -69,6 +73,20 @@ export default new Vuex.Store({
       },
       {
         text: 'Contact',
+        isActive: false
+      }
+    ],
+    discoverFilters: [
+      {
+        text: 'Most Viewed',
+        isActive: true
+      },
+      {
+        text: 'Healthy',
+        isActive: false
+      },
+      {
+        text: 'Cheap',
         isActive: false
       }
     ],
@@ -376,6 +394,12 @@ export default new Vuex.Store({
     toggleInformationFilter (state, filter) {
       for (let p = 0; p < state.informationFilters.length; p++) {
         Vue.set(state.informationFilters[p], 'isActive', false)
+      }
+      Vue.set(filter, 'isActive', true)
+    },
+    toggleDiscoverFilter (state, filter) {
+      for (let p = 0; p < state.discoverFilters.length; p++) {
+        Vue.set(state.discoverFilters[p], 'isActive', false)
       }
       Vue.set(filter, 'isActive', true)
     },
@@ -943,6 +967,9 @@ export default new Vuex.Store({
             uid: 'default',
             calories: 2000
           })
+            .catch(function (error) {
+              console.log("db.collection('addresses').doc(address.id).collection('members').doc('default').set({", error);
+            })
           var batchAddress = db.batch()
           for (let y = 0; y < 2; y++) {
             for (let m = 0; m < 12; m++) {
@@ -970,12 +997,18 @@ export default new Vuex.Store({
             addresses: [],
             mealplans: []
           })
+            .catch(function (error) {
+              console.log("db.collection('users').doc('default').set({", error);
+            })
           db.collection('users').doc('default').collection('mealplans').add({
             name: 'Personal',
             isActive: true,
             isPurchased: true,
+            isPublic: false,
             recipes: [],
             filters: [],
+            price: 0,
+            currency: 'CHF',
             uid: ''
           })
             .then(function (mealplan) {
@@ -1051,7 +1084,7 @@ export default new Vuex.Store({
                 })
             })
             .catch(function (error) {
-              console.log('Error: ', error)
+              console.log("db.collection('users').doc('default').collection('mealplans').add({", error)
             })
           db.collection('users').doc('default').collection('addresses').doc(address.id).set({
             name: 'Home',
@@ -1059,6 +1092,9 @@ export default new Vuex.Store({
             isDefault: true,
             uid: address.id
           })
+            .catch(function (error) {
+              console.log("db.collection('users').doc('default').collection('addresses').doc(address.id).set({", error)
+            })
           var months = []
           var batchUser = db.batch()
           for (var month = 0; month < 12; month++) {
@@ -1103,6 +1139,12 @@ export default new Vuex.Store({
           db.collection('users').doc('default').update({
             months: months
           })
+            .catch(function (error) {
+              console.log("db.collection('users').doc('default').update({", error)
+            })
+        })
+        .catch(function (error) {
+          console.log("db.collection('addresses').doc(address.id).update({", error);
         })
     },
     createUser (state, user) {
@@ -1155,9 +1197,12 @@ export default new Vuex.Store({
           db.collection('users').doc(object.user.uid).collection('mealplans').add({
             name: 'Personal',
             isActive: true,
+            isPublic: false,
             isPurchased: true,
             recipes: [],
             filters: [],
+            price: 0,
+            currency: 'CHF',
             uid: ''
           })
             .then(function (mealplan) {

@@ -319,6 +319,62 @@
         </div>
       </div>
     </div>
+    <div class="animated" v-if="profileFilters[4].isActive" style="padding-bottom: 100px">
+      <div class="">
+        <div class="box" @click="goDiscover()">
+          <img class="edit_icon" src="../assets/icon-edit.png" alt="Edit">
+        </div>
+        <p class="dayname">Discover Mealplans</p>
+        <div class="ingredients_break">
+
+        </div>
+        <div class="" align="left">
+          <p>Discover pre-made mealplans to alleviate you from the burden of adding your own recipes.</p>
+          <br>
+        </div>
+        <div class="purchase_button" @click="goDiscover()" style="margin-top: 20px">
+          <span class="purchase_text">Discover Mealplans</span>
+        </div>
+      </div>
+      <template v-for="mealplan in userData.mealplans">
+        <!-- eslint-disable-next-line -->
+        <div class="box" @click="deleteMealplan(mealplan)">
+          <p class="sign" style="transform: rotate(45deg)">+</p>
+        </div>
+        <!-- eslint-disable-next-line -->
+        <p class="dayname"> {{ mealplan.name }} </p>
+        <!-- eslint-disable-next-line -->
+        <div class="ingredients_break">
+
+        </div>
+        <!-- eslint-disable-next-line -->
+        <div class="" align="left">
+          <label for="">Edit Name</label>
+          <input class="amount" type="text" name="" value="" @keyup.enter="updateMealplan(mealplan)" v-model="mealplan.name" required>
+          <br>
+        </div>
+        <!-- eslint-disable-next-line -->
+        <div class="purchase_button" @click="updateMealplan(mealplan)" style="margin-top: 20px">
+          <span class="purchase_text">Update Name</span>
+        </div>
+      </template>
+      <div class="" style="margin-bottom: 100px">
+        <div class="box">
+          <p class="sign" @click="addMealplan(newMealplan)">+</p>
+        </div>
+        <p class="dayname">New Mealplan</p>
+        <div class="ingredients_break">
+
+        </div>
+        <div class="" align="left">
+          <label for="">New Mealplan</label>
+          <input class="amount" id="newMealplan" type="text" name="" value="" @keyup.enter="addMealplan(newMealplan)" v-model="newMealplan" required>
+        </div>
+        <div class="purchase_button" @click="addMealplan(newMealplan)" style="margin-top: 40px">
+          <span class="purchase_text">Add Mealplan</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -339,6 +395,7 @@ export default {
   data () {
     return {
       newFilter: '',
+      newMealplan: '',
       newPlace: '',
       newMember: '',
       emailPassword: '',
@@ -388,6 +445,10 @@ export default {
       'addMonths',
       'setDefaultAddress'
     ]),
+    goDiscover () {
+      store.commit('setPage', 'discover')
+      router.push('discover')
+    },
     updateCalories () {
       var userData = this.userData
       var oldCalories = null
@@ -904,6 +965,42 @@ export default {
     deleteFilter (filter) {
       var userData = this.userData
       db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('filters').doc(filter.uid).delete()
+    },
+    addMealplan (newMealplan) {
+      var newMP = newMealplan
+      if (this.newMealplan !== '') {
+        var userData = this.userData
+        db.collection('users').doc(userData.uid).collection('mealplans').add({
+          name: newMP,
+          isActive: false,
+          isPublic: false,
+          isPurchased: true,
+          recipes: [],
+          filters: [],
+          price: 0,
+          currency: 'CHF',
+          uid: ''
+        })
+          .then(function (mealplan) {
+            db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.id).update({
+              uid: mealplan.id
+            })
+          })
+        this.newMealplan = ''
+        document.getElementById('newMealplan').focus()
+      } else {
+        alert('Add a name first.')
+      }
+    },
+    updateMealplan (mealplan) {
+      var userData = this.userData
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).update({
+        name: mealplan.name
+      })
+    },
+    deleteMealplan (mealplan) {
+      var userData = this.userData
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).delete()
     }
   }
 }

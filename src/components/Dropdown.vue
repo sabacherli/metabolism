@@ -19,6 +19,10 @@
       <div class="dropdown_item_break">
 
       </div>
+      <span id="discover" class="dropdown_item" v-on:click='goDiscover()'>DISCOVER</span>
+      <div class="dropdown_item_break">
+
+      </div>
       <span id="profile" class="dropdown_item" v-if="userData.uid !== 'default'" v-on:click='goProfile()'>PROFILE</span>
       <div class="dropdown_item_break" v-if="userData.uid !== 'default'">
 
@@ -66,6 +70,9 @@ export default {
     } else if (this.currentPage === 'shoppinglist' && document.getElementById('shoppinglist') !== null) {
       document.getElementById('shoppinglist').classList.remove('dropdown_item')
       document.getElementById('shoppinglist').classList.add('dropdown_item_selected')
+    } else if (this.currentPage === 'discover' && document.getElementById('discover') !== null) {
+      document.getElementById('discover').classList.remove('dropdown_item')
+      document.getElementById('discover').classList.add('dropdown_item_selected')
     } else if (this.currentPage === 'profile' && document.getElementById('profile') !== null) {
       document.getElementById('profile').classList.remove('dropdown_item')
       document.getElementById('profile').classList.add('dropdown_item_selected')
@@ -139,6 +146,22 @@ export default {
     goShoppinglist () {
       store.commit('setPage', 'shoppinglist')
       router.push('shoppinglist')
+      // hover actions
+      document.getElementById('container').classList.add('remove_hover')
+      setTimeout(this.removeClass, 800)
+      // no hover actions
+      document.getElementById('dropdown_nav').classList.remove('dropdown_nav_touch')
+      document.getElementById('dropdown_icon').classList.remove('dropdown_icon_touch')
+      document.getElementById('dropdown_close').classList.remove('dropdown_close_touch')
+      document.getElementById('dropdown_nav').classList.add('dropdown_nav_t')
+      document.getElementById('dropdown_icon').classList.add('dropdown_icon')
+      document.getElementById('dropdown_close').classList.add('dropdown_close')
+      document.getElementById('background').classList.remove('background_t')
+      this.$forceUpdate()
+    },
+    goDiscover () {
+      store.commit('setPage', 'discover')
+      router.push('discover')
       // hover actions
       document.getElementById('container').classList.add('remove_hover')
       setTimeout(this.removeClass, 800)
@@ -273,6 +296,9 @@ export default {
       } else if (this.currentPage === 'shoppinglist' && document.getElementById('shoppinglist') !== null) {
         document.getElementById('shoppinglist').classList.remove('dropdown_item')
         document.getElementById('shoppinglist').classList.add('dropdown_item_selected')
+      } else if (this.currentPage === 'discover' && document.getElementById('discover') !== null) {
+        document.getElementById('discover').classList.remove('dropdown_item')
+        document.getElementById('discover').classList.add('dropdown_item_selected')
       } else if (this.currentPage === 'profile' && document.getElementById('profile') !== null) {
         document.getElementById('profile').classList.remove('dropdown_item')
         document.getElementById('profile').classList.add('dropdown_item_selected')

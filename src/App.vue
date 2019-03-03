@@ -16,9 +16,32 @@ import 'typeface-montserrat'
 
 export default {
   created () {
+    var unsubscribeUserData
+    var unsubscribeUserDataAddresses
+    var unsubscribeUserAddresses
+    var unsubscribeUserAddressesMembers
+    var unsubscribeUserAddressesMonths
+    var unsubscribeUserAddressesPersonalList
+    var unsubscribeUserDataMealplans
+    var unsubscribeUserDataMealplanFilters
+    var unsubscribeUserDataMealplanRecipes
+    var unsubscribeUserDataMealplanRecipeIngredients
     firebase.auth().onAuthStateChanged(function (user) {
       if (user && user.emailVerified && user.metadata.creationTime !== user.metadata.lastSignInTime) {
         var userID = user.uid
+        if (unsubscribeUserData) {
+          unsubscribeUserData()
+          unsubscribeUserDataAddresses()
+          unsubscribeUserAddresses()
+          unsubscribeUserAddressesMembers()
+          unsubscribeUserAddressesMonths()
+          unsubscribeUserAddressesPersonalList()
+          unsubscribeUserDataMealplans()
+          unsubscribeUserDataMealplanFilters()
+          unsubscribeUserDataMealplanRecipes()
+          unsubscribeUserDataMealplanRecipeIngredients()
+        }
+        unsubscribeUserData =
         db.collection('users').doc(userID)
           .onSnapshot(function (doc) {
             // get the data from the user
@@ -26,6 +49,7 @@ export default {
             // set it as state.userData
             store.commit('getUserData', userData)
             // this requires the completetion of the setting of userData because it pushes it into state.userData.addresses
+            unsubscribeUserDataAddresses =
             db.collection('users').doc(userID).collection('addresses')
               .onSnapshot(function (querySnapshot) {
                 // empty userData
@@ -43,6 +67,7 @@ export default {
                 store.commit('emptyUserAddresses')
                 for (let userDataAddress in userDataAddressesArray) {
                   var addressID = userDataAddressesArray[userDataAddress].uid
+                  unsubscribeUserAddresses =
                   db.collection('addresses').doc(addressID)
                     .onSnapshot(function (doc) {
                       // because its being looped through we don't need any forEach querySnapshots
@@ -52,6 +77,7 @@ export default {
                       store.commit('thisWeek')
                       store.commit('createList')
                     })
+                  unsubscribeUserAddressesMembers =
                   db.collection('addresses').doc(addressID).collection('members')
                     .onSnapshot(function (querySnapshot) {
                       // otherwise addressID not defined properly inside the snapshot
@@ -68,6 +94,7 @@ export default {
                       // set the members of this address
                       store.commit('setUserAddressMembers', { userAddressMembersArray, addressID })
                     })
+                  unsubscribeUserAddressesMonths =
                   db.collection('addresses').doc(addressID).collection('months')
                     .onSnapshot(function (querySnapshot) {
                       // otherwise addressID not defined properly inside the snapshot
@@ -84,6 +111,7 @@ export default {
                       // set the months of this address
                       store.commit('setUserAddressMonths', { userAddressMonthsArray, addressID })
                     })
+                  unsubscribeUserAddressesPersonalList =
                   db.collection('addresses').doc(addressID).collection('personalList')
                     .onSnapshot(function (querySnapshot) {
                       // otherwise addressID not defined properly inside the snapshot
@@ -102,6 +130,7 @@ export default {
                     })
                 }
               })
+            unsubscribeUserDataMealplans =
             db.collection('users').doc(userID).collection('mealplans')
               .onSnapshot(function (querySnapshot) {
                 // empty userData
@@ -118,6 +147,7 @@ export default {
                 // loop through all mealplans to get collections thereof
                 for (let userDataMealplan in userDataMealplansArray) {
                   var mealplanID = userDataMealplansArray[userDataMealplan].uid
+                  unsubscribeUserDataMealplanFilters =
                   db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('filters')
                     .onSnapshot(function (querySnapshot) {
                       // otherwise mealplanID not defined properly inside the snapshot
@@ -151,6 +181,7 @@ export default {
                       // set all filters once the array is complete
                       store.commit('setUserDataMealplanFilters', { userDataMealplanFiltersArray, mealplanID })
                     })
+                  unsubscribeUserDataMealplanRecipes =
                   db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('recipes')
                     .onSnapshot(function (querySnapshot) {
                       // otherwise mealplanID not defined properly inside the snapshot
@@ -182,6 +213,7 @@ export default {
                       // get ingredients in the recipe
                       for (let userDataMealplanRecipe in userDataMealplanRecipesArray) {
                         var recipeID = userDataMealplanRecipesArray[userDataMealplanRecipe].uid
+                        unsubscribeUserDataMealplanRecipeIngredients =
                         db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('recipes').doc(recipeID).collection('ingredients')
                           .onSnapshot(function (querySnapshot) {
                             // otherwise mealplanID not defined properly inside the snapshot
@@ -220,6 +252,19 @@ export default {
           })
       } else {
         userID = 'default'
+        if (unsubscribeUserData) {
+          unsubscribeUserData()
+          unsubscribeUserDataAddresses()
+          unsubscribeUserAddresses()
+          unsubscribeUserAddressesMembers()
+          unsubscribeUserAddressesMonths()
+          unsubscribeUserAddressesPersonalList()
+          unsubscribeUserDataMealplans()
+          unsubscribeUserDataMealplanFilters()
+          unsubscribeUserDataMealplanRecipes()
+          unsubscribeUserDataMealplanRecipeIngredients()
+        }
+        unsubscribeUserData =
         db.collection('users').doc(userID)
           .onSnapshot(function (doc) {
             // get the data from the user
@@ -227,6 +272,7 @@ export default {
             // set it as state.userData
             store.commit('getUserData', userData)
             // this requires the completetion of the setting of userData because it pushes it into state.userData.addresses
+            unsubscribeUserDataAddresses =
             db.collection('users').doc(userID).collection('addresses')
               .onSnapshot(function (querySnapshot) {
                 // empty userData
@@ -244,6 +290,7 @@ export default {
                 store.commit('emptyUserAddresses')
                 for (let userDataAddress in userDataAddressesArray) {
                   var addressID = userDataAddressesArray[userDataAddress].uid
+                  unsubscribeUserAddresses =
                   db.collection('addresses').doc(addressID)
                     .onSnapshot(function (doc) {
                       // because its being looped through we don't need any forEach querySnapshots
@@ -253,6 +300,7 @@ export default {
                       store.commit('thisWeek')
                       store.commit('createList')
                     })
+                  unsubscribeUserAddressesMembers =
                   db.collection('addresses').doc(addressID).collection('members')
                     .onSnapshot(function (querySnapshot) {
                       // otherwise addressID not defined properly inside the snapshot
@@ -269,6 +317,7 @@ export default {
                       // set the members of this address
                       store.commit('setUserAddressMembers', { userAddressMembersArray, addressID })
                     })
+                  unsubscribeUserAddressesMonths =
                   db.collection('addresses').doc(addressID).collection('months')
                     .onSnapshot(function (querySnapshot) {
                       // otherwise addressID not defined properly inside the snapshot
@@ -285,6 +334,7 @@ export default {
                       // set the months of this address
                       store.commit('setUserAddressMonths', { userAddressMonthsArray, addressID })
                     })
+                  unsubscribeUserAddressesPersonalList =
                   db.collection('addresses').doc(addressID).collection('personalList')
                     .onSnapshot(function (querySnapshot) {
                       // otherwise addressID not defined properly inside the snapshot
@@ -303,6 +353,7 @@ export default {
                     })
                 }
               })
+            unsubscribeUserDataMealplans =
             db.collection('users').doc(userID).collection('mealplans')
               .onSnapshot(function (querySnapshot) {
                 // empty userData
@@ -319,6 +370,7 @@ export default {
                 // loop through all mealplans to get collections thereof
                 for (let userDataMealplan in userDataMealplansArray) {
                   var mealplanID = userDataMealplansArray[userDataMealplan].uid
+                  unsubscribeUserDataMealplanFilters =
                   db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('filters')
                     .onSnapshot(function (querySnapshot) {
                       // otherwise mealplanID not defined properly inside the snapshot
@@ -352,6 +404,7 @@ export default {
                       // set all filters once the array is complete
                       store.commit('setUserDataMealplanFilters', { userDataMealplanFiltersArray, mealplanID })
                     })
+                  unsubscribeUserDataMealplanRecipes =
                   db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('recipes')
                     .onSnapshot(function (querySnapshot) {
                       // otherwise mealplanID not defined properly inside the snapshot
@@ -383,6 +436,7 @@ export default {
                       // get ingredients in the recipe
                       for (let userDataMealplanRecipe in userDataMealplanRecipesArray) {
                         var recipeID = userDataMealplanRecipesArray[userDataMealplanRecipe].uid
+                        unsubscribeUserDataMealplanRecipeIngredients =
                         db.collection('users').doc(userID).collection('mealplans').doc(mealplanID).collection('recipes').doc(recipeID).collection('ingredients')
                           .onSnapshot(function (querySnapshot) {
                             // otherwise mealplanID not defined properly inside the snapshot

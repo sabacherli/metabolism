@@ -9,6 +9,13 @@
         <div :class="{ filter_required2: filter.isRequired }"></div>
       </div>
     </template>
+    <template v-for="mealplan in userData.mealplans">
+      <!-- eslint-disable-next-line -->
+      <div v-if="mealplan.isActive" class="mealplan" @click="selectMealplan()">
+        <p> {{ mealplan.name }} </p>
+        <div :class="{ filter_selected: mealplan.isActive }"></div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -49,6 +56,13 @@ export default {
 }
 .filter:hover {
   cursor: pointer;
+}
+.mealplan {
+  position: relative;
+  display: inline-block;
+  right: 0;
+  margin-right: 40px;
+  text-align: right;
 }
 .filter_selected {
   position: relative;

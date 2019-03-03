@@ -21,8 +21,8 @@
           <button id="reset_button" class="login_email" style="margin-top: 10px; height: auto; width: 100px; font-size: 0.65em; text-algin: center; color: darkgrey; padding: 5px" type="button" name="button" @click="resetPassword()">Reset Password</button>
         </form>
         <div class="login_button" @click="login()">Login</div>
-        <br>
-        <div class="login_button" @click="createDefaultUser()">Create Default User</div>
+        <!-- <br>
+        <div class="login_button" @click="createDefaultUser()">Create Default User</div> -->
       </div>
     </div>
   </div>
@@ -62,24 +62,39 @@ export default {
     login () {
       var email = this.email
       var password = this.password
-      firebase.auth().signOut()
-        .then(function () {
-          firebase.auth().signInWithEmailAndPassword(email, password)
-            .then(user => {
-              if (firebase.auth().currentUser.emailVerified) {
-                router.push('/calendar')
-                // could add new days to user calender here (use 'array-contains' function from firebase)
-              } else {
-                alert('You need to verify your email before you can log in.')
-              }
-            })
-            .catch(function (error) {
-              alert(error.code, ': ', error)
-            })
-        })
-        .catch(function (error) {
-          console.log('Error: ', error)
-        })
+      if (firebase.auth().currentUser) {
+        firebase.auth().signOut()
+          .then(function () {
+            firebase.auth().signInWithEmailAndPassword(email, password)
+              .then(user => {
+                if (firebase.auth().currentUser.emailVerified) {
+                  router.push('/calendar')
+                  // could add new days to user calender here (use 'array-contains' function from firebase)
+                } else {
+                  alert('You need to verify your email before you can log in.')
+                }
+              })
+              .catch(function (error) {
+                alert(error.code, ': ', error)
+              })
+          })
+          .catch(function (error) {
+            console.log('Error: ', error)
+          })
+      } else {
+        firebase.auth().signInWithEmailAndPassword(email, password)
+          .then(user => {
+            if (firebase.auth().currentUser.emailVerified) {
+              router.push('/calendar')
+              // could add new days to user calender here (use 'array-contains' function from firebase)
+            } else {
+              alert('You need to verify your email before you can log in.')
+            }
+          })
+          .catch(function (error) {
+            alert(error.code, ': ', error)
+          })
+      }
     },
     signInWithGoogle () {
       var provider = new firebase.auth.GoogleAuthProvider()
