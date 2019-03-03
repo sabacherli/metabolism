@@ -1037,27 +1037,55 @@ export default {
     },
     makePrivate (mealplan) {
       var userData = this.userData
+      var mealplanIndex = userData.mealplans.indexOf(mealplan)
       db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).update({
         isPublic: false
       })
+      for (var recipe in userData.mealplans[mealplanIndex].recipes) {
+        for (var ingredient in userData.mealplans[mealplanIndex].recipes[recipe].ingredients) {
+          db.collection('mealplans').doc(mealplan.uid).collection('recipes').doc(userData.mealplans[mealplanIndex].recipes[recipe].uid).collection('ingredients').doc(userData.mealplans[mealplanIndex].recipes[recipe].ingredients[ingredient].uid).delete()
+        }
+        db.collection('mealplans').doc(mealplan.uid).collection('recipes').doc(userData.mealplans[mealplanIndex].recipes[recipe].uid).delete()
+      }
+      for (var filter in userData.mealplans[mealplanIndex].filters) {
+        db.collection('mealplans').doc(mealplan.uid).collection('filters').doc(userData.mealplans[mealplanIndex].filters[filter].uid).delete()
+      }
+      db.collection('mealplans').doc(mealplan.uid).delete()
     },
     makePublic (mealplan) {
       var userData = this.userData
+      var mealplanIndex = userData.mealplans.indexOf(mealplan)
       db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).update({
         isPublic: true
       })
-      // db.collection('mealplans').doc(mealplan.uid).set({
-      //   uid: mealplan.uid,
-      //   owner: userData.uid,
-      //   price: mealplan.price,
-      //   currency: mealplan.currency,
-      //   name: mealplan.name,
-      //   purchases: mealplan.purchases
-      // })
+      db.collection('mealplans').doc(mealplan.uid).set({
+        uid: mealplan.uid,
+        owner: userData.uid,
+        price: mealplan.price,
+        currency: mealplan.currency,
+        name: mealplan.name,
+        purchases: mealplan.purchases,
+        calories: userData.calories,
+        filters: [],
+        recipes: []
+      })
+      for (var filter in userData.mealplans[mealplanIndex].filters) {
+        db.collection('mealplans').doc(mealplan.uid).collection('filters').doc(userData.mealplans[mealplanIndex].filters[filter].uid).set(userData.mealplans[mealplanIndex].filters[filter])
+      }
+      for (var recipe in userData.mealplans[mealplanIndex].recipes) {
+        db.collection('mealplans').doc(mealplan.uid).collection('recipes').doc(userData.mealplans[mealplanIndex].recipes[recipe].uid).set(userData.mealplans[mealplanIndex].recipes[recipe])
+        for (var ingredient in userData.mealplans[mealplanIndex].recipes[recipe].ingredients) {
+          db.collection('mealplans').doc(mealplan.uid).collection('recipes').doc(userData.mealplans[mealplanIndex].recipes[recipe].uid).collection('ingredients').doc(userData.mealplans[mealplanIndex].recipes[recipe].ingredients[ingredient].uid).set(userData.mealplans[mealplanIndex].recipes[recipe].ingredients[ingredient])
+        }
+      }
     },
     updatePrice (mealplan) {
       var userData = this.userData
       db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).update({
+        price: Number(mealplan.price),
+        currency: mealplan.currency
+      })
+      db.collection('mealplans').doc(mealplan.uid).update({
         price: Number(mealplan.price),
         currency: mealplan.currency
       })
