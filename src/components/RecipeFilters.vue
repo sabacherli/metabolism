@@ -10,10 +10,13 @@
       </div>
     </template>
     <template v-for="mealplan in userData.mealplans">
-      <!-- eslint-disable-next-line -->
-      <div v-if="mealplan.isActive" class="mealplan" @click="selectMealplan()">
-        <p> {{ mealplan.name }} </p>
-        <div :class="{ filter_selected: mealplan.isActive }"></div>
+      <div v-if="userData.mealplans.length > 1" class="" @click="openDropdownMealplans()">
+        <!-- eslint-disable-next-line -->
+        <div v-if="mealplan.isActive" class="mealplan">
+          <p> {{ mealplan.name }} </p>
+          <div :class="{ filter_selected: mealplan.isActive }"></div>
+        </div>
+        <img id="dropdown_mealplans" class="dropdown_mealplans" src="../assets/icons8-sort-down-24.png" alt="show" @click="">
       </div>
     </template>
   </div>
@@ -58,10 +61,21 @@ export default {
   cursor: pointer;
 }
 .mealplan {
-  position: relative;
+  position: absolute;
   display: inline-block;
   right: 0;
-  margin-right: 40px;
+  bottom: -7px;
+  margin-right: 50px;
+  color: white;
+  text-align: right;
+}
+.dropdown_mealplans {
+  position: absolute;
+  display: inline-block;
+  right: 0;
+  bottom: 5px;
+  margin-right: 20px;
+  color: white;
   text-align: right;
 }
 .filter_selected {

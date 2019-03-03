@@ -42,9 +42,14 @@ export default {
 <style lang="css" scoped>
 .filters {
   position: absolute;
-  bottom: 0;
+  bottom: 0px;
   height: 25px;
-  width: 100%;
+  width: calc(100% - 40px);
+  margin-left: 20px;
+  margin-right: 20px;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
   text-align: center;
 }
 .filter {
@@ -52,8 +57,8 @@ export default {
   display: inline-block;
   bottom: 15px;
   margin: auto 15px auto 15px;
-  color: white;
   text-align: center;
+  color: white;
 }
 .filter:hover {
   cursor: pointer;
