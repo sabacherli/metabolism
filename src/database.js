@@ -10,11 +10,11 @@ const config = {
   messagingSenderId: '2456773126'
 }
 
-
 const firebaseApp = firebase.initializeApp(config)
 const settings = {
   /* your settings... */ timestampsInSnapshots: true
 }
+
 firebase.firestore().settings(settings)
 
 // Enables offline data, which is required for PWA's.

@@ -23,24 +23,11 @@
         </div>
         <div style="margin-bottom: 70px" class="container_faq">
           <div class="break"></div>
-          <p class="question">What is the calorie setting for?</p>
-          <p class="answer">It is used to calculate the ratio of ingredients for the shoppinglist when multiple people are eating at one address.</p>
-          <div style="margin-top: 70px"></div>
-          <p class="question">Are my payment details stored?</p>
-          <p class="answer">No. The entire payment flow is handled by Stripe. No credit card data is stored on our servers.</p>
+          <p class="question">Enter the ID of a known mealplan:</p>
+          <input class="search_input" type="text" name="" value="" placeholder="e.g. wPpDZo3Qrdz3Pkh2G6XW">
         </div>
-      </div>
-      <div class="content" v-if="discoverFilters[2].isActive">
-        <div class="title">
-          {{ discoverFilters[2].text.toUpperCase() }}
-        </div>
-        <div style="margin-bottom: 70px" class="container_faq">
-          <div class="break"></div>
-          <p class="question">What is the calorie setting for?</p>
-          <p class="answer">It is used to calculate the ratio of ingredients for the shoppinglist when multiple people are eating at one address.</p>
-          <div style="margin-top: 70px"></div>
-          <p class="question">Are my payment details stored?</p>
-          <p class="answer">No. The entire payment flow is handled by Stripe. No credit card data is stored on our servers.</p>
+        <div class="search_button" @click="">
+          Search
         </div>
       </div>
     </div>
@@ -97,6 +84,7 @@ export default {
 .content {
   position: fixed;
   height: calc(100% - 110px);
+  width: 100%;
   overflow: scroll;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
@@ -170,11 +158,61 @@ export default {
   width: 40px;
   margin: 0px 20px 0 20px;
 }
-::placeholder {
-  font-size: 14px;
+.search_button {
+  position: relative;
+  display: inline-block;
+  top: 120px;
+  left: 10%;
+  margin-bottom: 50px;
+  color: white;
+  font-size: 1em;
+  border: 2px solid white;
+  border-radius: 20px 20px;
+  padding: 5px 10px 5px 10px;
+  opacity: 0;
+  animation: fadeIn .8s;
+  animation-delay: 2s;
+  animation-fill-mode: forwards;
+
+}
+.search_button:active {
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+  transition: 0s;
+}
+input[type=text].search_input,
+input[type=number].search_input,
+input[type=password].search_input {
+  border: 0px;
+  border-bottom-style: solid;
+  border-bottom-color: white;
+  border-bottom-width: 2px;
+  display: block;
+  width: 80%;
+  position: relative;
+  top: 50px;
+  background: transparent;
+  color: white;
+  margin-bottom: 5px;
+  font-size: 18px;
   font-family: Montserrat;
-  color: darkgray;
-  letter-spacing: .2px;
+}
+input[type=text]:focus.search_input,
+input[type=number].search_input,
+input[type=password]:focus.search_input  {
+  position: relative;
+  display: block;
+  width: 80%;
+  border: 0px;
+  border-bottom-style: solid;
+  border-bottom-color: white;
+  border-bottom-width: 3px;
+  outline: none;
+}
+::placeholder {
+  font-size: 16px;
+  font-family: Montserrat;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: .4px;
 }
 @media (max-width: 700px) {
   .title {
@@ -203,6 +241,13 @@ export default {
 @media (hover:hover) {
   .icon:hover {
     cursor: pointer;
+  }
+  .search_button:hover {
+    cursor: pointer;
+    color: #ffcab0;
+    font-weight: 400;
+    background: white;
+    transition: .4s ease-in-out;
   }
 }
 </style>

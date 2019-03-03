@@ -1009,7 +1009,9 @@ export default {
           recipes: [],
           filters: [],
           price: 0,
+          purchases: 0,
           currency: 'CHF',
+          recipesAmount: 0,
           uid: ''
         })
           .then(function (mealplan) {

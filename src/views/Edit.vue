@@ -150,6 +150,9 @@ export default {
     deleteRecipe () {
       var userData = this.userData
       var editor = this.editor
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).update({
+        recipes: userData.mealplans[0].recipes - 1
+      })
       db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[editor.index].uid).collection('ingredients')
         .onSnapshot(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
