@@ -23,7 +23,7 @@
         </div>
         <div style="margin-bottom: 70px" class="container_faq">
           <div class="break"></div>
-          <p class="question">Enter the ID of a known mealplan:</p>
+          <p class="question">Enter the ID of a known meal plan:</p>
           <input class="search_input" type="text" name="" value="" placeholder="e.g. wPpDZo3Qrdz3Pkh2G6XW" v-model="uid">
         </div>
         <div class="search_button" @click="searchMealplan()">

@@ -280,7 +280,7 @@
       </div>
     </div>
     <div class="animated" v-if="profileFilters[3].isActive" style="padding-bottom: 100px">
-      <template v-for="filter in userData.mealplans[0].filters">
+      <template v-for="filter in filteredMealplans()">
         <!-- eslint-disable-next-line -->
         <div class="box" @click="deleteFilter(filter)">
           <p class="sign" style="transform: rotate(45deg)">+</p>
@@ -318,22 +318,36 @@
           <span class="purchase_text">Add Filter</span>
         </div>
       </div>
+      <div class="">
+        <template v-for="mealplan in userData.mealplans">
+          <!-- eslint-disable-next-line -->
+          <div v-if="userData.mealplans.length > 1">
+            <!-- eslint-disable-next-line -->
+            <div v-if="mealplan.isActive" class="mealplan_button" @click="dropdownMealplans()">
+              <span class="mealplan_text"> {{ mealplan.name }} </span>
+            </div>
+            <div v-if="!mealplan.isActive" class="other_mealplans" @click="selectMealplan(mealplan)">
+              <span class="add_text"> {{ mealplan.name }} </span>
+            </div>
+          </div>
+        </template>
+      </div>
     </div>
     <div class="animated" v-if="profileFilters[4].isActive" style="padding-bottom: 100px">
       <div class="">
         <div class="box" @click="goDiscover()">
           <img class="edit_icon" src="../assets/icons8-binoculars-52.png" alt="Edit">
         </div>
-        <p class="dayname">Discover Mealplans</p>
+        <p class="dayname">Discover Meal Plans</p>
         <div class="ingredients_break">
 
         </div>
         <div class="mealplan_explanation" align="left">
-          <p>Discover pre-made mealplans to alleviate you from the burden of adding your own recipes.</p>
+          <p>Discover pre-made meal plans to alleviate you from the burden of adding your own recipes.</p>
           <br>
         </div>
         <div class="purchase_button" @click="goDiscover()" style="margin-top: 20px">
-          <span class="purchase_text">Discover Mealplans</span>
+          <span class="purchase_text">Discover Meal Plans</span>
         </div>
       </div>
       <template v-for="mealplan in userData.mealplans">
@@ -663,124 +677,6 @@ export default {
         }
       }
     },
-    // deleteAccount2 () {
-    //   if (confirm('Are you sure you want to remove this place?')) {
-    //     const userData = JSON.parse(JSON.stringify(this.userData))
-    //     const userAddresses = JSON.parse(JSON.stringify(this.userAddresses))
-    //     const user = firebase.auth().currentUser
-    //     const credential = firebase.auth.EmailAuthProvider.credential(
-    //       user.email,
-    //       this.deleteConfirmation
-    //     )
-    //     user.reauthenticateAndRetrieveDataWithCredential(credential)
-    //       .then(function () {
-    //         user.delete()
-    //         store.commit('setPage', 'register')
-    //         router.push('/register')
-    //         for (var address in userAddresses) {
-    //           var isOwner = false
-    //           var batch = db.batch()
-    //           for (let member in userAddresses[address].members) {
-    //             if (userAddresses[address].members[member].role === 'Owner' && userAddresses[address].members[member].uid === userData.uid) {
-    //               isOwner = true
-    //             }
-    //           }
-    //           if (isOwner) {
-    //             new Promise(function (resolve, reject) {
-    //               for (let member in userAddresses[address].members) {
-    //                 var addressRef = db.collection('users').doc(userAddresses[address].members[member].uid).collection('addresses').doc(userAddresses[address].uid)
-    //                 batch.delete(addressRef)
-    //               }
-    //               resolve()
-    //             })
-    //               .then(function () {
-    //                 new Promise(function (resolve, reject) {
-    //                   db.collection('addresses').doc(userAddresses[address].uid).collection('calendar')
-    //                     .onSnapshot(function (querySnapshot) {
-    //                       querySnapshot.forEach(function (doc) {
-    //                         var calendarRef = db.collection('addresses').doc(userAddresses[address].uid).collection('calendar').doc(doc.id)
-    //                         batch.delete(calendarRef)
-    //                       })
-    //                       resolve()
-    //                     })
-    //                 })
-    //                   .then(function () {
-    //                     new Promise(function (resolve, reject) {
-    //                       db.collection('addresses').doc(userAddresses[address].uid).collection('members')
-    //                         .onSnapshot(function (querySnapshot) {
-    //                           querySnapshot.forEach(function (doc) {
-    //                             var memberRef = db.collection('addresses').doc(userAddresses[address].uid).collection('members').doc(doc.id)
-    //                             batch.delete(memberRef)
-    //                           })
-    //                           resolve()
-    //                         })
-    //                     })
-    //                       .then(function () {
-    //                         new Promise(function (resolve, reject) {
-    //                           db.collection('addresses').doc(userAddresses[address].uid).collection('months')
-    //                             .onSnapshot(function (querySnapshot) {
-    //                               querySnapshot.forEach(function (doc) {
-    //                                 var monthRef = db.collection('addresses').doc(userAddresses[address].uid).collection('months').doc(doc.id)
-    //                                 batch.delete(monthRef)
-    //                               })
-    //                               resolve()
-    //                             })
-    //                         })
-    //                           .then(function () {
-    //                             new Promise(function (resolve, reject) {
-    //                               var docRef = db.collection('addresses').doc(userAddresses[address].uid)
-    //                               batch.delete(docRef)
-    //                               resolve()
-    //                             })
-    //                               .then(function () {
-    //                                 batch.commit()
-    //                               })
-    //                           })
-    //                       })
-    //                   })
-    //               })
-    //           } else {
-    //             batch.delete(db.collection('addresses').doc(userAddresses[address].uid).collection('members').doc(userData.uid))
-    //             batch.delete(db.collection('users').doc(userData.uid).collection('addresses').doc(userAddresses[address].uid))
-    //             batch.commit()
-    //           }
-    //         }
-    //         new Promise(function (resolve, reject) {
-    //           for (var recipe in userData.mealplans[0].recipes) {
-    //             db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[recipe].uid).collection('ingredients')
-    //               .onSnapshot(function (querySnapshot) {
-    //                 querySnapshot.forEach(function (doc) {
-    //                   db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[recipe].uid).collection('ingredients').doc(doc.id).delete()
-    //                 })
-    //                 db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[recipe].uid).delete()
-    //               })
-    //           }
-    //           resolve()
-    //         })
-    //           .then(function () {
-    //             new Promise(function (resolve, reject) {
-    //               db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('filters')
-    //                 .onSnapshot(function (querySnapshot) {
-    //                   querySnapshot.forEach(function (doc) {
-    //                     db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('filters').doc(doc.id).delete()
-    //                   })
-    //                   db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).delete()
-    //                 })
-    //               db.collection('users').doc(userData.uid).collection('calendar')
-    //                 .onSnapshot(function (querySnapshot) {
-    //                   querySnapshot.forEach(function (doc) {
-    //                     db.collection('users').doc(userData.uid).collection('calendar').doc(doc.id).delete()
-    //                   })
-    //                 })
-    //               resolve()
-    //             })
-    //               .then(function () {
-    //                 db.collection('users').doc(userData.uid).delete()
-    //               })
-    //           })
-    //       })
-    //   }
-    // },
     updatePlace (place) {
       db.collection('users').doc(this.userData.uid).collection('addresses').doc(place.uid).update({
         name: place.name
@@ -966,17 +862,36 @@ export default {
         }
       }
     },
+    filteredMealplans () {
+      var userData = this.userData
+      var filters = []
+      for (let m in userData.mealplans) {
+        if (userData.mealplans[m].isActive) {
+          for (let f in userData.mealplans[m].filters) {
+            filters.push(userData.mealplans[m].filters[f])
+          }
+        }
+      }
+      return filters
+    },
     addFilter (newFilter) {
+      var userData = this.userData
+      var m
+      for (m in userData.mealplans) {
+        if (userData.mealplans[m].isActive) {
+          break
+        }
+      }
       if (this.newFilter !== '') {
         var userData = this.userData
-        db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('filters').add({
+        db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[m].uid).collection('filters').add({
           text: newFilter,
           isActive: false,
           isRequired: false,
           uid: ''
         })
           .then(function (filter) {
-            db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('filters').doc(filter.id).update({
+            db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[m].uid).collection('filters').doc(filter.id).update({
               uid: filter.id
             })
           })
@@ -988,13 +903,47 @@ export default {
     },
     updateFilter (filter) {
       var userData = this.userData
-      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('filters').doc(filter.uid).update({
+      var m
+      for (m in userData.mealplans) {
+        if (userData.mealplans[m].isActive) {
+          break
+        }
+      }
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[m].uid).collection('filters').doc(filter.uid).update({
         text: filter.text
       })
     },
     deleteFilter (filter) {
       var userData = this.userData
-      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('filters').doc(filter.uid).delete()
+      var m
+      for (m in userData.mealplans) {
+        if (userData.mealplans[m].isActive) {
+          break
+        }
+      }
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[m].uid).collection('filters').doc(filter.uid).delete()
+    },
+    dropdownMealplans () {
+      for (var i = 0; i < document.getElementsByClassName('other_mealplans').length; i++) {
+        if (document.getElementsByClassName('other_mealplans')[i].style.opacity == 1) {
+          document.getElementsByClassName('other_mealplans')[i].style.opacity = 0
+        } else {
+          document.getElementsByClassName('other_mealplans')[i].style.opacity = 1
+        }
+      }
+    },
+    selectMealplan (mealplan) {
+      var userData = this.userData
+      for (let m in userData.mealplans) {
+        if (userData.mealplans[m].isActive) {
+          db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[m].uid).update({
+            isActive: false
+          })
+        }
+      }
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).update({
+        isActive: true
+      })
     },
     addMealplan (newMealplan) {
       var newMP = newMealplan
@@ -1200,6 +1149,39 @@ export default {
 .public_text {
   color: white;
 }
+.other_mealplans {
+  position: fixed;
+  bottom: 80px;
+  right: 50px;
+  font-size: .714em;
+  border: 1.2px solid black;
+  border-radius: 20px 20px;
+  padding: 10px;
+  opacity: 0;
+  transition: .4s ease-in-out;
+}
+.other_mealplans:active {
+  transition: 0s;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+}
+.mealplan_button {
+  position: fixed;
+  bottom: 40px;
+  right: 50px;
+  font-size: .714em;
+  background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+  border-radius: 20px 20px;
+  padding: 10px;
+}
+.mealplan_text {
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+}
+.mealplan_button:active {
+  transition: 0s;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+}
 .container {
   position: relative;
   top: 210px;
@@ -1336,11 +1318,22 @@ label {
     box-shadow: 1px 1px 1px rgba(0,0,0,0.4);
     transition: .2s;
   }
-    .public_button:hover {
-      cursor: pointer;
-      box-shadow: 1px 1px 1px rgba(0,0,0,0.4);
-      transition: .2s;
-    }
+  .public_button:hover {
+    cursor: pointer;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.4);
+    transition: .2s;
+  }
+  .mealplan_button:hover {
+    cursor: pointer;
+    background: linear-gradient(315deg, lightpink, #ffdeb9 100%);
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+    transition: 0s;
+  }
+  .other_mealplans:hover {
+    cursor: pointer;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.4);
+    transition: .2s;
+  }
   .inline_date:hover {
     cursor: pointer;
   }

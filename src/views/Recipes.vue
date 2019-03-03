@@ -91,11 +91,27 @@
       </div>
     </div>
 
+    <div class="">
+      <template v-for="mealplan in userData.mealplans">
+        <!-- eslint-disable-next-line -->
+        <div v-if="userData.mealplans.length > 1">
+          <!-- eslint-disable-next-line -->
+          <div v-if="mealplan.isActive" class="mealplan_button" @click="dropdownMealplans()">
+            <span class="mealplan_text"> {{ mealplan.name }} </span>
+          </div>
+          <div v-if="!mealplan.isActive" class="other_mealplans" @click="selectMealplan(mealplan)">
+            <span class="add_text"> {{ mealplan.name }} </span>
+          </div>
+        </div>
+      </template>
+    </div>
+
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations } from 'vuex'
+import db from '@/database.js'
 
 export default {
   name: 'Recipes',
@@ -163,18 +179,24 @@ export default {
         }
         return true
       }
-      for (let f = 0; f < userData.mealplans[0].filters.length; f++) {
-        if (userData.mealplans[0].filters[f].isActive) {
-          activeFilters.push(userData.mealplans[0].filters[f].text)
-        }
-        if (userData.mealplans[0].filters[f].isRequired) {
-          requiredFilters.push(userData.mealplans[0].filters[f].text)
+      var m
+      for (m in userData.mealplans) {
+        if (userData.mealplans[m].isActive) {
+          break
         }
       }
-      for (let r = 0; r < userData.mealplans[0].recipes.length; r++) {
-        for (let t = 0; t < userData.mealplans[0].recipes[r].tags.length; t++) {
-          if (activeFilters.includes(userData.mealplans[0].recipes[r].tags[t]) && containsAll(userData.mealplans[0].recipes[r].tags, requiredFilters) && !filteredRecipes.includes(userData.mealplans[0].recipes[r])) {
-            filteredRecipes.push(userData.mealplans[0].recipes[r])
+      for (let f = 0; f < userData.mealplans[m].filters.length; f++) {
+        if (userData.mealplans[m].filters[f].isActive) {
+          activeFilters.push(userData.mealplans[m].filters[f].text)
+        }
+        if (userData.mealplans[m].filters[f].isRequired) {
+          requiredFilters.push(userData.mealplans[m].filters[f].text)
+        }
+      }
+      for (let r = 0; r < userData.mealplans[m].recipes.length; r++) {
+        for (let t = 0; t < userData.mealplans[m].recipes[r].tags.length; t++) {
+          if (activeFilters.includes(userData.mealplans[m].recipes[r].tags[t]) && containsAll(userData.mealplans[m].recipes[r].tags, requiredFilters) && !filteredRecipes.includes(userData.mealplans[m].recipes[r])) {
+            filteredRecipes.push(userData.mealplans[m].recipes[r])
           }
         }
       }
@@ -188,6 +210,28 @@ export default {
     },
     focusUnit () {
       document.getElementById('newUnit').focus()
+    },
+    dropdownMealplans () {
+      for (var i = 0; i < document.getElementsByClassName('other_mealplans').length; i++) {
+        if (document.getElementsByClassName('other_mealplans')[i].style.opacity == 1) {
+          document.getElementsByClassName('other_mealplans')[i].style.opacity = 0
+        } else {
+          document.getElementsByClassName('other_mealplans')[i].style.opacity = 1
+        }
+      }
+    },
+    selectMealplan (mealplan) {
+      var userData = this.userData
+      for (let m in userData.mealplans) {
+        if (userData.mealplans[m].isActive) {
+          db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[m].uid).update({
+            isActive: false
+          })
+        }
+      }
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).update({
+        isActive: true
+      })
     }
   }
 }
@@ -342,6 +386,39 @@ export default {
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
   transition: 0s;
 }
+.other_mealplans {
+  position: fixed;
+  bottom: 80px;
+  right: 50px;
+  font-size: .714em;
+  border: 1.2px solid black;
+  border-radius: 20px 20px;
+  padding: 10px;
+  opacity: 0;
+  transition: .4s ease-in-out;
+}
+.other_mealplans:active {
+  transition: 0s;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+}
+.mealplan_button {
+  position: fixed;
+  bottom: 40px;
+  right: 50px;
+  font-size: .714em;
+  background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+  border-radius: 20px 20px;
+  padding: 10px;
+}
+.mealplan_text {
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+}
+.mealplan_button:active {
+  transition: 0s;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+}
 input[type=text].amount,
 input[type=number].amount {
   border: 0px;
@@ -434,6 +511,17 @@ label {
 }
 @media (hover:hover) {
   .add_button:hover {
+    cursor: pointer;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.4);
+    transition: .2s;
+  }
+  .mealplan_button:hover {
+    cursor: pointer;
+    background: linear-gradient(315deg, lightpink, #ffdeb9 100%);
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+    transition: 0s;
+  }
+  .other_mealplans:hover {
     cursor: pointer;
     box-shadow: 1px 1px 1px rgba(0,0,0,0.4);
     transition: .2s;

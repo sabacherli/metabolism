@@ -1,23 +1,12 @@
 <template lang="html">
   <div class="filters">
-    <template v-for="filter in userData.mealplans[0].filters">
+    <template v-for="filter in filteredMealplans()">
       <!-- eslint-disable-next-line -->
       <div class="filter" @click="toggleFilter(filter)">
         <p> {{ filter.text }} </p>
         <div :class="{ filter_selected: filter.isActive }"></div>
         <div :class="{ filter_required: filter.isRequired }"></div>
         <div :class="{ filter_required2: filter.isRequired }"></div>
-      </div>
-    </template>
-    <template v-for="mealplan in userData.mealplans">
-      <!-- eslint-disable-next-line -->
-      <div v-if="userData.mealplans.length > 1" class="" @click="openDropdownMealplans()">
-        <!-- eslint-disable-next-line -->
-        <div v-if="mealplan.isActive" class="mealplan">
-          <p> {{ mealplan.name }} </p>
-          <div :class="{ filter_selected: mealplan.isActive }"></div>
-        </div>
-        <img id="dropdown_mealplans" class="dropdown_mealplans" src="../assets/icons8-sort-down-24.png" alt="show">
       </div>
     </template>
   </div>
@@ -37,7 +26,19 @@ export default {
   methods: {
     ...mapMutations([
       'toggleFilter'
-    ])
+    ]),
+    filteredMealplans () {
+      var userData = this.userData
+      var filters = []
+      for (let m in userData.mealplans) {
+        if (userData.mealplans[m].isActive) {
+          for (let f in userData.mealplans[m].filters) {
+            filters.push(userData.mealplans[m].filters[f])
+          }
+        }
+      }
+      return filters
+    }
   }
 }
 </script>
@@ -61,7 +62,7 @@ export default {
 .filter:hover {
   cursor: pointer;
 }
-.mealplan {
+/* .mealplan {
   position: absolute;
   display: inline-block;
   right: 0;
@@ -78,7 +79,7 @@ export default {
   margin-right: 20px;
   color: white;
   text-align: right;
-}
+} */
 .filter_selected {
   position: relative;
   bottom: 15px;
