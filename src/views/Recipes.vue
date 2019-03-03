@@ -123,8 +123,7 @@ export default {
       'setEditor',
       'setEditFilters',
       'removeRecipe',
-      'addIngredient',
-      'addRecipie'
+      'addIngredient'
     ]),
     addName () {
       if (this.newName !== null && this.newName !== '') {

@@ -19,8 +19,8 @@
       <div class="dropdown_item_break">
 
       </div>
-      <span id="discover" class="dropdown_item" v-on:click='goDiscover()'>DISCOVER</span>
-      <div class="dropdown_item_break">
+      <span id="discover" class="dropdown_item" v-if="userData.uid !== 'default'" v-on:click='goDiscover()'>DISCOVER</span>
+      <div v-if="userData.uid !== 'default'" class="dropdown_item_break">
 
       </div>
       <span id="profile" class="dropdown_item" v-if="userData.uid !== 'default'" v-on:click='goProfile()'>PROFILE</span>

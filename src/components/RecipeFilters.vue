@@ -10,13 +10,14 @@
       </div>
     </template>
     <template v-for="mealplan in userData.mealplans">
+      <!-- eslint-disable-next-line -->
       <div v-if="userData.mealplans.length > 1" class="" @click="openDropdownMealplans()">
         <!-- eslint-disable-next-line -->
         <div v-if="mealplan.isActive" class="mealplan">
           <p> {{ mealplan.name }} </p>
           <div :class="{ filter_selected: mealplan.isActive }"></div>
         </div>
-        <img id="dropdown_mealplans" class="dropdown_mealplans" src="../assets/icons8-sort-down-24.png" alt="show" @click="">
+        <img id="dropdown_mealplans" class="dropdown_mealplans" src="../assets/icons8-sort-down-24.png" alt="show">
       </div>
     </template>
   </div>

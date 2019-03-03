@@ -109,7 +109,7 @@ export default {
     transform: translateX(-50%);
     width: auto;
     height: auto;
-    padding: 5px 9.5px 5px 9.5px;
+    padding: 5px 9px 5px 9px;
     text-align: center;
     font-weight: 500;
     font-size: .7em;

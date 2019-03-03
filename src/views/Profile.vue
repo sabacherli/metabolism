@@ -45,7 +45,7 @@
         </div>
         <div class="" align="left">
           <label for="">New Email</label>
-          <input class="amount" type="text" name="" value="" v-model="userData.email" @keyup.enter="updateEmail()">
+          <input class="amount" type="text" v-model="userData.email" @keyup.enter="updateEmail()">
           <br>
           <label for="">Enter Password</label>
           <input class="amount" type="password" v-model="emailPassword" autocomplete="off" @keyup.enter="updateEmail(); removeFocus()" required>
@@ -215,7 +215,7 @@
         <!-- eslint-disable-next-line -->
         <div class="" align="left">
           <label for="">Edit Name</label>
-          <input class="amount" type="text" name="" value="" v-model="place.name" @keyup.enter="updatePlace(place); removeFocus()" required>
+          <input class="amount" type="text" v-model="place.name" @keyup.enter="updatePlace(place); removeFocus()" required>
           <br>
         </div>
         <!-- eslint-disable-next-line -->
@@ -240,7 +240,7 @@
           </template>
           <div class="" align="left">
             <label for="">Add Member</label>
-            <input class="amount" type="text" name="" value="" @keyup.enter="addMember(place)" v-model="newMember" required>
+            <input class="amount" type="text" @keyup.enter="addMember(place)" v-model="newMember" required>
             <br>
           </div>
           <div class="purchase_button" @click="addMember(place)" style="margin-top: 20px">
@@ -294,7 +294,7 @@
         <!-- eslint-disable-next-line -->
         <div class="" align="left">
           <label for="">Edit Filter</label>
-          <input class="amount" type="text" name="" value="" @keyup.enter="updateFilter(filter)" v-model="filter.text" required>
+          <input class="amount" type="text" @keyup.enter="updateFilter(filter)" v-model="filter.text" required>
           <br>
         </div>
         <!-- eslint-disable-next-line -->
@@ -312,7 +312,7 @@
         </div>
         <div class="" align="left">
           <label for="">New Filter</label>
-          <input class="amount" id="newFilter" type="text" name="" value="" @keyup.enter="addFilter(newFilter)" v-model="newFilter" required>
+          <input class="amount" id="newFilter" type="text" @keyup.enter="addFilter(newFilter)" v-model="newFilter" required>
         </div>
         <div class="purchase_button" @click="addFilter(newFilter)" style="margin-top: 40px">
           <span class="purchase_text">Add Filter</span>
@@ -350,7 +350,7 @@
         <!-- eslint-disable-next-line -->
         <div class="" align="left">
           <label for="">Mealplan Name</label>
-          <input class="amount" type="text" name="" value="" @keyup.enter="updateMealplan(mealplan)" v-model="mealplan.name" required>
+          <input class="amount" type="text" @keyup.enter="updateMealplan(mealplan)" v-model="mealplan.name" required>
           <br>
         </div>
         <!-- eslint-disable-next-line -->
@@ -360,19 +360,19 @@
         <!-- eslint-disable-next-line -->
         <div v-if="mealplan.isPublic" class="" align="left" style="margin-top: 40px">
           <label for="">ID</label>
-          <input class="amount" type="text" name="" value="" @keyup.enter="" v-model="mealplan.uid" readonly>
+          <input class="amount" type="text" v-model="mealplan.uid" readonly>
           <br>
         </div>
         <!-- eslint-disable-next-line -->
         <div v-if="mealplan.isPublic" class="" align="left">
           <label for="">Price</label>
-          <input class="amount" type="text" name="" value="" @keyup.enter="" v-model="mealplan.price" required>
+          <input class="amount" type="text" v-model="mealplan.price" required>
           <br>
         </div>
         <!-- eslint-disable-next-line -->
         <div v-if="mealplan.isPublic" class="" align="left">
           <label for="">Currency</label>
-          <input class="amount" type="text" name="" value="" @keyup.enter="" v-model="mealplan.currency" required>
+          <input class="amount" type="text" v-model="mealplan.currency" required>
           <br>
         </div>
         <!-- eslint-disable-next-line -->
@@ -381,6 +381,7 @@
         </div>
         <!-- eslint-disable-next-line -->
         <br>
+        <!-- eslint-disable-next-line -->
         <div v-if="!mealplan.isPublic" class="public_button" @click="makePublic(mealplan)" style="margin-top: 20px">
           <span class="public_text">Make Public</span>
         </div>
@@ -399,7 +400,7 @@
         </div>
         <div class="" align="left">
           <label for="">New Mealplan</label>
-          <input class="amount" id="newMealplan" type="text" name="" value="" @keyup.enter="addMealplan(newMealplan)" v-model="newMealplan" required>
+          <input class="amount" id="newMealplan" type="text" @keyup.enter="addMealplan(newMealplan)" v-model="newMealplan" required>
         </div>
         <div class="purchase_button" @click="addMealplan(newMealplan)" style="margin-top: 40px">
           <span class="purchase_text">Add Mealplan</span>
@@ -605,8 +606,6 @@ export default {
                 console.log(error.code)
               })
           })
-        console.log('oldUSerData: ', oldUserData);
-        console.log('oldUserAddresses: ', oldUserAddresses);
         for (let address in oldUserAddresses) {
           // check owner of the addresses
           var isOwner = false
