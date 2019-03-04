@@ -396,17 +396,17 @@
           <br>
         </div>
         <!-- eslint-disable-next-line -->
-        <div v-if="mealplan.isPublic" class="purchase_button" @click="updatePrice(mealplan)" style="margin-top: 20px">
+        <div v-if="mealplan.isPublic" class="purchase_button" @click="updateDetails(mealplan)" style="margin-top: 20px">
           <span class="purchase_text">Update Details</span>
         </div>
         <!-- eslint-disable-next-line -->
         <br>
         <!-- eslint-disable-next-line -->
-        <div v-if="!mealplan.isPublic" class="public_button" @click="makePublic(mealplan)" style="margin-top: 20px">
+        <div v-if="!mealplan.isPublic && !mealplan.isPurchased" class="public_button" @click="makePublic(mealplan)" style="margin-top: 20px">
           <span class="public_text">Make Public</span>
         </div>
         <!-- eslint-disable-next-line -->
-        <div v-if="mealplan.isPublic" class="public_button" @click="makePrivate(mealplan)" style="margin-top: 20px">
+        <div v-if="mealplan.isPublic && !mealplan.isPurchased" class="public_button" @click="makePrivate(mealplan)" style="margin-top: 20px">
           <span class="public_text">Make Private</span>
         </div>
       </template>
@@ -1016,8 +1016,10 @@ export default {
         uid: mealplan.uid,
         owner: userData.uid,
         price: mealplan.price,
+        recipesAmount: mealplan.recipesAmount,
         currency: mealplan.currency,
         name: mealplan.name,
+        publicName: mealplan.publicName,
         purchases: mealplan.purchases,
         calories: userData.calories,
         filters: [],
@@ -1033,7 +1035,7 @@ export default {
         }
       }
     },
-    updatePrice (mealplan) {
+    updateDetails (mealplan) {
       var userData = this.userData
       db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).update({
         price: Number(mealplan.price),

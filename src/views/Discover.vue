@@ -18,12 +18,12 @@
                 <p class="details">ID: {{ mealplan.uid }}</p>
                 <p class="details">Recipes: {{ mealplan.recipesAmount }}</p>
                 <p class="details">Price: {{ mealplan.price }} {{ mealplan.currency }}</p>
-                <div class="purchase_button" @click="purchaseMealplan(mealplan)">
+                <div v-if="!checkIsOwned(mealplan)" class="purchase_button" @click="purchaseMealplan(mealplan)">
                   Purchase
                 </div>
               </div>
-              <div class="day">
-                <template v-for="recipe in mealplan.recipes">
+              <template v-for="recipe in mealplan.recipes">
+                <div class="day">
                   <div :key="recipe.uid" class="">
                     <!-- eslint-disable-next-line -->
                       <div class="box">
@@ -40,9 +40,12 @@
                           <p class="meal_location"> {{ ingredient.amount }} {{ ingredient.unit }} </p>
                         </div>
                       </template>
+                      <div class="" style="margin-bottom: 70px">
+
+                      </div>
                   </div>
-                </template>
-              </div>
+                </div>
+              </template>
               <div class="mealfilters">
                 <template v-for="filter in mealplan.filters">
                   <div :key="filter.uid" class="mealfilter" @click="toggleFilter(filter)">
@@ -162,8 +165,64 @@ export default {
         this.$store.commit('searchMealplan', mealplanID)
       }
     },
-    purchaseMealplan (searchedMealplan) {
-
+    checkIsOwned (mealplan) {
+      var userData = this.userData
+      var isOwned = false
+      for (let m in userData.mealplans) {
+        if (userData.mealplans[m].uid == mealplan.uid) {
+          isOwned = true
+          break
+        }
+      }
+      return isOwned
+    },
+    purchaseMealplan (mealplan) {
+      var userData = this.userData
+      var calorieRatio = userData.calories / mealplan.calories
+      // eslint-disable-next-line
+      var stripe = Stripe('pk_test_eOIPf7mHX035HASoi8LrghW5', {
+        betas: ['checkout_beta_4']
+      })
+      stripe.redirectToCheckout({
+        items: [{
+          sku: 'sku_ETuovBIeaLjPou', quantity: mealplan.price
+        }],
+        // Note that it is not guaranteed your customers will be redirected to this
+        // URL *100%* of the time, it's possible that they could e.g. close the
+        // tab between form submission and the redirect.
+        successUrl: 'https://metabolism-salo.firebaseapp.com/discover',
+        cancelUrl: 'https://metabolism-salo.firebaseapp.com/discover'
+      })
+        .then(function (result) {
+          if (result.error) {
+            // If `redirectToCheckout` fails due to a browser or network
+            // error, display the localized error message to your customer.
+            alert(result.error.message)
+          }
+        })
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).set({
+        name: mealplan.publicName,
+        publicName: mealplan.publicName,
+        isActive: false,
+        isPublic: false,
+        isPurchased: true,
+        recipes: [],
+        filters: [],
+        price: mealplan.price,
+        purchases: mealplan.purchases,
+        currency: mealplan.currency,
+        recipesAmount: mealplan.recipesAmount,
+        uid: mealplan.uid
+      })
+    for (let filter in mealplan.filters) {
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).collection('filters').doc(mealplan.filters[filter].uid).set(mealplan.filters[filter])
+    }
+    for (let recipe in mealplan.recipes) {
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).collection('filters').doc(mealplan.recipes[recipe].uid).set(mealplan.recipes[recipe])
+      for (let ingredient in mealplan.recipes[recipe].ingredients) {
+        db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).collection('filters').doc(mealplan.recipes[recipe].uid).collection('ingredients').doc(mealplan.recipes[recipe].ingredients[ingredient].uid).set(mealplan.recipes[recipe].ingredients[ingredient])
+      }
+    }
     },
     recipesFiltered () {
       var mealplan = this.searchedMealplan
@@ -273,7 +332,9 @@ export default {
 }
 .container_mealplan {
   display: block;
-  margin-bottom: 70px;
+  margin-bottom: 20px;
+  white-space: nowrap;
+  overflow-y: scroll;
 }
 .break {
   position: relative;
@@ -411,10 +472,11 @@ input[type=password]:focus.search_input  {
 .information {
   position: relative;
   display: inline-block;
-  width: 350px;
+  width: 400px;
   margin-top: 50px;
   margin-bottom: 80px;
   vertical-align: top;
+  overflow-y: visible;
   color: white;
   text-align: center;
 }
@@ -422,6 +484,7 @@ input[type=password]:focus.search_input  {
   position: relative;
   display: inline-block;
   margin-top: 5px;
+  width: 200px;
   vertical-align: top;
   color: white;
   text-align: center;
@@ -463,7 +526,6 @@ input[type=password]:focus.search_input  {
 }
 .mealfilters {
   position: relative;
-  top: 70px;
   height: 25px;
   margin-bottom: 80px;
   width: 100%;
@@ -527,13 +589,30 @@ input[type=password]:focus.search_input  {
     width: 80%;
     top: 50px;
   }
-  .day {
+  .container_mealplan {
     position: relative;
-    display: inline-block;
-    left: 50%;
-    transform: translateX(-50%);
-    margin-top: 5px;
-    vertical-align: top;
+    height: inherit;
+    width: 85%;
+    margin: auto;
+    overflow: visible;
+    text-align: center;
+    margin-bottom: 20px;
+    white-space: nowrap;
+  }
+  .information {
+    width: 100%;
+  }
+  .mealfilters {
+    position: relative;
+    top: 70px;
+    height: 25px;
+    margin-bottom: 80px;
+    width: 100%;
+    text-align: center;
+  }
+  .day {
+    display: inline;
+    margin-top: 70px;
     color: white;
     text-align: center;
   }
@@ -558,6 +637,9 @@ input[type=password]:focus.search_input  {
     font-weight: 400;
     background: white;
     transition: .4s ease-in-out;
+  }
+  .mealfilters {
+    cursor: pointer;
   }
 }
 </style>
