@@ -48,11 +48,9 @@
               </template>
               <div class="mealfilters">
                 <template v-for="filter in mealplan.filters">
-                  <div :key="filter.uid" class="mealfilter" @click="toggleFilter(filter)">
+                  <div :key="filter.uid" class="mealfilter">
                     <p> {{ filter.text }} </p>
-                    <div :class="{ filter_selected: filter.isActive }"></div>
-                    <div :class="{ filter_required: filter.isRequired }"></div>
-                    <div :class="{ filter_required2: filter.isRequired }"></div>
+                    <div class="filter_selected"></div>
                   </div>
                 </template>
               </div>
@@ -637,9 +635,6 @@ input[type=password]:focus.search_input  {
     font-weight: 400;
     background: white;
     transition: .4s ease-in-out;
-  }
-  .mealfilters {
-    cursor: pointer;
   }
 }
 </style>
