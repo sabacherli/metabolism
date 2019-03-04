@@ -513,6 +513,12 @@ export default {
                 db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplanID).collection('recipes').doc(recipeID).collection('ingredients').doc(ingredientID).update({
                   amount: newAmount
                 })
+                db.collection('mealplans').doc(mealplanID).collection('recipes').doc(recipeID).collection('ingredients').doc(ingredientID).update({
+                  amount: newAmount
+                })
+                db.collection('mealplans').doc(mealplanID).update({
+                  calories: Number(userData.calories)
+                })
               }
             }
           }

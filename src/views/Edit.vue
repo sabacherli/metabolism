@@ -78,6 +78,7 @@
         <div v-if="userData.mealplans[editor.mealplan].recipes[editor.index].mealplans.includes(mealplan.uid)" class="mealplan_button filter" @click="deleteRecipeFromMealplan(mealplan)">
           <span class="mealplan_text"> {{ mealplan.name }} </span>
         </div>
+        <!-- eslint-disable-next-line -->
         <div v-if="!userData.mealplans[editor.mealplan].recipes[editor.index].mealplans.includes(mealplan.uid)" class="other_mealplans filter" @click="addRecipeToMealplan(mealplan)">
           <span class="add_text"> {{ mealplan.name }} </span>
         </div>
@@ -142,7 +143,8 @@ export default {
     },
     updateIngredient (ingredient) {
       var userData = this.userData
-      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[this.editor.index].uid).collection('ingredients').doc(ingredient.uid).update({
+      var editor = this.editor
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[editor.index].uid).collection('ingredients').doc(ingredient.uid).update({
         ingredient: ingredient.ingredient,
         amount: ingredient.amount,
         unit: ingredient.unit
@@ -150,12 +152,13 @@ export default {
     },
     deleteIngredient (ingredient) {
       var userData = this.userData
-      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[this.editor.index].uid).collection('ingredients').doc(ingredient.uid).delete()
+      var editor = this.editor
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[editor.index].uid).collection('ingredients').doc(ingredient.uid).delete()
     },
     updateName () {
       var userData = this.userData
       var editor = this.editor
-      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[this.editor.index].uid).update({
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[editor.index].uid).update({
         name: userData.mealplans[editor.mealplan].recipes[editor.index].name
       })
     },
