@@ -166,8 +166,17 @@ export default {
       var userData = this.userData
       var editor = this.editor
       db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).update({
-        recipes: userData.mealplans[editor.mealplan].recipes - 1
+        recipesAmount: userData.mealplans[editor.mealplan].recipes.length - 1
       })
+      if (userData.mealplans[editor.mealplan].isPublic) {
+        db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[editor.index].uid).collection('ingredients')
+          .onSnapshot(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+              db.collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[editor.index].uid).collection('ingredients').doc(doc.id).delete()
+            })
+            db.collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[editor.index].uid).delete()
+          })
+      }
       db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[editor.index].uid).collection('ingredients')
         .onSnapshot(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {

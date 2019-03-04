@@ -447,11 +447,26 @@ export default new Vuex.Store({
         .then(function (doc) {
           var recipeID = doc.id
           db.collection('users').doc(state.userData.uid).collection('mealplans').doc(state.userData.mealplans[m].uid).update({
-            recipes: state.userData.mealplans[m].recipes + 1
+            recipesAmount: state.userData.mealplans[m].recipes.length
           })
           db.collection('users').doc(state.userData.uid).collection('mealplans').doc(state.userData.mealplans[m].uid).collection('recipes').doc(recipeID).update({
             uid: recipeID
           })
+          if (state.userData.mealplans[m].isPublic) {
+            db.collection('mealplans').doc(state.userData.mealplans[m].uid).collection('recipes').doc(recipeID).set({
+              id: state.newRecipe.name.slice(0, 2),
+              ingredients: [],
+              name: state.newRecipe.name,
+              tags: state.newRecipe.tags,
+              mealplans: [
+                state.userData.mealplans[m].uid
+              ],
+              uid: recipeID
+            })
+            db.collection('mealplans').doc(state.userData.mealplans[m].uid).update({
+              recipesAmount: state.userData.mealplans[m].recipes.length
+            })
+          }
           for (var ingredient in state.newRecipe.ingredients) {
             db.collection('users').doc(state.userData.uid).collection('mealplans').doc(state.userData.mealplans[m].uid).collection('recipes').doc(recipeID).collection('ingredients').add({
               ingredient: state.newRecipe.ingredients[ingredient].ingredient,
@@ -465,6 +480,16 @@ export default new Vuex.Store({
                 db.collection('users').doc(state.userData.uid).collection('mealplans').doc(state.userData.mealplans[m].uid).collection('recipes').doc(recipeID).collection('ingredients').doc(doc.id).update({
                   uid: doc.id
                 })
+                if (state.userData.mealplans[m].isPublic) {
+                  db.collection('mealplans').doc(state.userData.mealplans[m].uid).collection('recipes').doc(recipeID).collection('ingredients').doc(doc.id).set({
+                    ingredient: state.newRecipe.ingredients[ingredient].ingredient,
+                    amount: state.newRecipe.ingredients[ingredient].amount,
+                    unit: state.newRecipe.ingredients[ingredient].unit,
+                    isActive: false,
+                    isPurchased: false,
+                    uid: doc.id
+                  })
+                }
                 state.newRecipe = {
                   id: null,
                   name: null,
@@ -475,6 +500,7 @@ export default new Vuex.Store({
                 }
               })
           }
+
         })
     },
     getPopularMealplans (state) {
