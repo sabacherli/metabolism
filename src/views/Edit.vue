@@ -6,13 +6,13 @@
       <div class="number" @click="deleteRecipe()">
         <p class="add_recipe" style="transform: rotate(45deg)">+</p>
       </div>
-      <p class="recipe_name"> {{ userData.mealplans[0].recipes[editor.index].name }} </p>
+      <p class="recipe_name"> {{ userData.mealplans[editor.mealplan].recipes[editor.index].name }} </p>
       <div class="square square_recipes">
 
       </div>
       <div class="" align="left">
         <label for="">Recipe Name</label>
-        <input id="mealName" class="amount editPlace" type="text" @keyup.enter="updateName()" v-model="userData.mealplans[0].recipes[editor.index].name" required>
+        <input id="mealName" class="amount editPlace" type="text" @keyup.enter="updateName()" v-model="userData.mealplans[editor.mealplan].recipes[editor.index].name" required>
       </div>
       <br>
       <div class="add_button" @click="updateName()" style="margin-top: 20px; margin-bottom: 40px">
@@ -21,7 +21,7 @@
     </div>
 
     <!-- eslint-disable-next-line -->
-    <template v-for="ingredient in userData.mealplans[0].recipes[editor.index].ingredients">
+    <template v-for="ingredient in userData.mealplans[editor.mealplan].recipes[editor.index].ingredients">
       <!-- eslint-disable-next-line -->
       <div class="recipes">
         <div class="number" @click="deleteIngredient(ingredient)">
@@ -72,11 +72,23 @@
       <br>
       <div class="add_button" @click="addIngredient(); resetData()" style="margin-top: 20px; margin-bottom: 40px"><span class="add_text">Add Ingredient</span></div>
     </div>
+    <div class="filters" v-if="userData.mealplans.length > 1">
+      <template v-for="mealplan in userData.mealplans">
+        <!-- eslint-disable-next-line -->
+        <div v-if="userData.mealplans[editor.mealplan].recipes[editor.index].mealplans.includes(mealplan.uid)" class="mealplan_button filter" @click="deleteRecipeFromMealplan(mealplan)">
+          <span class="mealplan_text"> {{ mealplan.name }} </span>
+        </div>
+        <div v-if="!userData.mealplans[editor.mealplan].recipes[editor.index].mealplans.includes(mealplan.uid)" class="other_mealplans filter" @click="addRecipeToMealplan(mealplan)">
+          <span class="add_text"> {{ mealplan.name }} </span>
+        </div>
+      </template>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import firebase from 'firebase/app'
 import db from '@/database.js'
 import store from '../store'
 import router from '../router'
@@ -107,7 +119,7 @@ export default {
       var unit = this.newUnit
       var userData = this.userData
       var editor = this.editor
-      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[editor.index].uid).collection('ingredients').add({
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[editor.index].uid).collection('ingredients').add({
         ingredient: ingredient,
         amount: amount,
         unit: unit,
@@ -116,7 +128,7 @@ export default {
         uid: ''
       })
         .then(function (doc) {
-          db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[editor.index].uid).collection('ingredients').doc(doc.id).update({
+          db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[editor.index].uid).collection('ingredients').doc(doc.id).update({
             uid: doc.id
           })
         })
@@ -130,7 +142,7 @@ export default {
     },
     updateIngredient (ingredient) {
       var userData = this.userData
-      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[this.editor.index].uid).collection('ingredients').doc(ingredient.uid).update({
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[this.editor.index].uid).collection('ingredients').doc(ingredient.uid).update({
         ingredient: ingredient.ingredient,
         amount: ingredient.amount,
         unit: ingredient.unit
@@ -138,30 +150,44 @@ export default {
     },
     deleteIngredient (ingredient) {
       var userData = this.userData
-      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[this.editor.index].uid).collection('ingredients').doc(ingredient.uid).delete()
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[this.editor.index].uid).collection('ingredients').doc(ingredient.uid).delete()
     },
     updateName () {
       var userData = this.userData
       var editor = this.editor
-      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[this.editor.index].uid).update({
-        name: userData.mealplans[0].recipes[editor.index].name
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[this.editor.index].uid).update({
+        name: userData.mealplans[editor.mealplan].recipes[editor.index].name
       })
     },
     deleteRecipe () {
       var userData = this.userData
       var editor = this.editor
-      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).update({
-        recipes: userData.mealplans[0].recipes - 1
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).update({
+        recipes: userData.mealplans[editor.mealplan].recipes - 1
       })
-      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[editor.index].uid).collection('ingredients')
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[editor.index].uid).collection('ingredients')
         .onSnapshot(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
-            db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[editor.index].uid).collection('ingredients').doc(doc.id).delete()
+            db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[editor.index].uid).collection('ingredients').doc(doc.id).delete()
           })
-          db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[0].uid).collection('recipes').doc(userData.mealplans[0].recipes[editor.index].uid).delete()
+          db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[editor.index].uid).delete()
           router.push('/recipes')
           store.commit('resetPointer')
         })
+    },
+    deleteRecipeFromMealplan (mealplan) {
+      var userData = this.userData
+      var editor = this.editor
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[editor.index].uid).update({
+        mealplans: firebase.firestore.FieldValue.arrayRemove(mealplan.uid)
+      })
+    },
+    addRecipeToMealplan (mealplan) {
+      var userData = this.userData
+      var editor = this.editor
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[editor.index].uid).update({
+        mealplans: firebase.firestore.FieldValue.arrayUnion(mealplan.uid)
+      })
     },
     focusAmount () {
       document.getElementById('amount').focus()
@@ -180,9 +206,9 @@ export default {
     },
     editRecipe (userData, editor) {
       var editIngredients = []
-      for (let r = 0; r < userData.mealplans[0].recipes.length; r++) {
-        if (userData.mealplans[0].recipes[r].id === editor.id) {
-          editIngredients.push(userData.mealplans[0].recipes[r])
+      for (let r = 0; r < userData.mealplans[editor.mealplan].recipes.length; r++) {
+        if (userData.mealplans[editor.mealplan].recipes[r].id === editor.id) {
+          editIngredients.push(userData.mealplans[editor.mealplan].recipes[r])
         }
       }
       return editIngredients
@@ -192,6 +218,25 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.filters {
+  position: absolute;
+  bottom: 0px;
+  height: 30px;
+  width: calc(100% - 40px);
+  margin-left: 20px;
+  margin-right: 20px;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  text-align: center;
+}
+.filter {
+  position: relative;
+  display: inline-block;
+  bottom: 0px;
+  margin: auto 15px auto 15px;
+  text-align: center;
+}
 .save_button {
   position: fixed;
   bottom: -20px;
@@ -225,6 +270,34 @@ export default {
 }
 .add_text {
   font-size: 10px;
+}
+.other_mealplans {
+  position: relative;
+  font-size: .714em;
+  border: 1.2px solid black;
+  border-radius: 20px 20px;
+  padding: 5px 10px 5px 10px;
+  transition: .4s ease-in-out;
+}
+.other_mealplans:active {
+  transition: 0s;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+}
+.mealplan_button {
+  position: relative;
+  font-size: .714em;
+  background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
+  border-radius: 20px 20px;
+  padding: 5px 10px 5px 10px;
+}
+.mealplan_text {
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+}
+.mealplan_button:active {
+  transition: 0s;
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
 }
 @media (max-width: 850px) and (min-height: 400px) {
   .container_recipes {
@@ -429,6 +502,17 @@ export default {
     transition: 0s;
   }
   .add_button:hover {
+    cursor: pointer;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.4);
+    transition: .2s;
+  }
+  .mealplan_button:hover {
+    cursor: pointer;
+    background: linear-gradient(315deg, lightpink, #ffdeb9 100%);
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.2);
+    transition: 0s;
+  }
+  .other_mealplans:hover {
     cursor: pointer;
     box-shadow: 1px 1px 1px rgba(0,0,0,0.4);
     transition: .2s;

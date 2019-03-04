@@ -33,7 +33,8 @@ export default new Vuex.Store({
       index: ''
     },
     editor: {
-      index: null
+      index: null,
+      mealplan: null
     },
     displayAmount: 7,
     profileFilters: [
@@ -136,7 +137,14 @@ export default new Vuex.Store({
     //   state.currentYearMonth = calories
     // },
     setEditor (state, recipe) {
-      state.editor.index = state.userData.mealplans[0].recipes.indexOf(recipe)
+      var m
+      for (m in state.userData.mealplans) {
+        if (state.userData.mealplans[m].isActive) {
+          break
+        }
+      }
+      state.editor.index = state.userData.mealplans[m].recipes.indexOf(recipe)
+      state.editor.mealplan = m
       router.push('/edit')
     },
     resetPointer (state) {
@@ -144,13 +152,13 @@ export default new Vuex.Store({
       state.pointer.doc = ''
     },
     setEditFilters (state) {
-      for (let t = 0; t < state.userData.mealplans[0].filters.length; t++) {
-        state.userData.mealplans[0].filters[t].isActive = false
+      for (let t = 0; t < state.userData.mealplans[state.editor.mealplan].filters.length; t++) {
+        state.userData.mealplans[state.editor.mealplan].filters[t].isActive = false
       }
-      for (let t = 0; t < state.userData.mealplans[0].filters.length; t++) {
-        for (let tag = 0; tag < state.userData.mealplans[0].recipes[state.editor.index].tags.length; tag++) {
-          if (state.userData.mealplans[0].recipes[state.editor.index].tags[tag] === state.userData.mealplans[0].filters[t].text) {
-            state.userData.mealplans[0].filters[t].isActive = true
+      for (let t = 0; t < state.userData.mealplans[state.editor.mealplan].filters.length; t++) {
+        for (let tag = 0; tag < state.userData.mealplans[state.editor.mealplan].recipes[state.editor.index].tags.length; tag++) {
+          if (state.userData.mealplans[state.editor.mealplan].recipes[state.editor.index].tags[tag] === state.userData.mealplans[state.editor.mealplan].filters[t].text) {
+            state.userData.mealplans[state.editor.mealplan].filters[t].isActive = true
           }
         }
       }
@@ -430,6 +438,9 @@ export default new Vuex.Store({
         ingredients: [],
         name: state.newRecipe.name,
         tags: state.newRecipe.tags,
+        mealplans: [
+          state.userData.mealplans[m].uid
+        ],
         uid: ''
       })
         .then(function (doc) {
@@ -458,6 +469,7 @@ export default new Vuex.Store({
                   name: null,
                   ingredients: [],
                   tags: [],
+                  mealplans: [],
                   uid: ''
                 }
               })
@@ -614,12 +626,20 @@ export default new Vuex.Store({
         }
       }
       // set filters appropriately
-      for (var filter in state.userData.mealplans[0].filters) {
-        if (state.userData.mealplans[0].filters[filter].text === 'Breakfast') {
-          state.userData.mealplans[0].filters[filter].isActive = true
-        } else {
-          state.userData.mealplans[0].filters[filter].isActive = false
+      var m
+      for (m in state.userData.mealplans) {
+        if (state.userData.mealplans[m].isActive) {
+          break
         }
+      }
+      if (state.userData.mealplans[m].filter[0].text === 'Breakfast') {
+        state.userData.mealplans[m].filter[0].isActive = true
+      }
+      if (state.userData.mealplans[m].filter[1].text === 'Lunch') {
+        state.userData.mealplans[m].filter[1].isActive = false
+      }
+      if (state.userData.mealplans[m].filter[2].text === 'Dinner') {
+        state.userData.mealplans[m].filter[2].isActive = false
       }
       db.collection('users').doc(state.userData.uid).collection('calendar').doc(day.date.toString()).update({
         breakfastAddress: state.pointer.address,
@@ -651,12 +671,20 @@ export default new Vuex.Store({
         }
       }
       // set filters appropriately
-      for (var filter in state.userData.mealplans[0].filters) {
-        if (state.userData.mealplans[0].filters[filter].text === 'Lunch') {
-          state.userData.mealplans[0].filters[filter].isActive = true
-        } else {
-          state.userData.mealplans[0].filters[filter].isActive = false
+      var m
+      for (m in state.userData.mealplans) {
+        if (state.userData.mealplans[m].isActive) {
+          break
         }
+      }
+      if (state.userData.mealplans[m].filter[0].text === 'Breakfast') {
+        state.userData.mealplans[m].filter[0].isActive = false
+      }
+      if (state.userData.mealplans[m].filter[1].text === 'Lunch') {
+        state.userData.mealplans[m].filter[1].isActive = true
+      }
+      if (state.userData.mealplans[m].filter[2].text === 'Dinner') {
+        state.userData.mealplans[m].filter[2].isActive = false
       }
       db.collection('users').doc(state.userData.uid).collection('calendar').doc(day.date.toString()).update({
         lunchAddress: state.pointer.address,
@@ -688,12 +716,20 @@ export default new Vuex.Store({
         }
       }
       // set filters appropriately
-      for (var filter in state.userData.mealplans[0].filters) {
-        if (state.userData.mealplans[0].filters[filter].text === 'Dinner') {
-          state.userData.mealplans[0].filters[filter].isActive = true
-        } else {
-          state.userData.mealplans[0].filters[filter].isActive = false
+      var m
+      for (m in state.userData.mealplans) {
+        if (state.userData.mealplans[m].isActive) {
+          break
         }
+      }
+      if (state.userData.mealplans[m].filter[0].text === 'Breakfast') {
+        state.userData.mealplans[m].filter[0].isActive = false
+      }
+      if (state.userData.mealplans[m].filter[1].text === 'Lunch') {
+        state.userData.mealplans[m].filter[1].isActive = false
+      }
+      if (state.userData.mealplans[m].filter[2].text === 'Dinner') {
+        state.userData.mealplans[m].filter[2].isActive = true
       }
       db.collection('users').doc(state.userData.uid).collection('calendar').doc(day.date.toString()).update({
         dinnerAddress: state.pointer.address,
@@ -1069,6 +1105,9 @@ export default new Vuex.Store({
                 uid: '',
                 tags: [
                   'Breakfast'
+                ],
+                mealplans: [
+                  mealplan.id
                 ]
               })
                 .then(function (recipe) {
@@ -1244,6 +1283,9 @@ export default new Vuex.Store({
                 uid: '',
                 tags: [
                   'Breakfast'
+                ],
+                mealplans: [
+                  mealplan.id
                 ]
               })
                 .then(function (recipe) {

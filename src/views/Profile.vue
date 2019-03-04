@@ -883,7 +883,6 @@ export default {
         }
       }
       if (this.newFilter !== '') {
-        var userData = this.userData
         db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[m].uid).collection('filters').add({
           text: newFilter,
           isActive: false,
@@ -965,6 +964,24 @@ export default {
           .then(function (mealplan) {
             db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.id).update({
               uid: mealplan.id
+            })
+            db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.id).collection('filters').doc('00000000000000000001').set({
+              text: 'Breakfast',
+              isActive: true,
+              isRequired: false,
+              uid: '00000000000000000001'
+            })
+            db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.id).collection('filters').doc('00000000000000000002').set({
+              text: 'Lunch',
+              isActive: true,
+              isRequired: false,
+              uid: '00000000000000000002'
+            })
+            db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.id).collection('filters').doc('00000000000000000003').set({
+              text: 'Dinner',
+              isActive: true,
+              isRequired: false,
+              uid: '00000000000000000003'
             })
           })
         this.newMealplan = ''
