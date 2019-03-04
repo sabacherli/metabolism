@@ -14,6 +14,7 @@ export default new Vuex.Store({
 
     },
     userAddresses: [],
+    popularMealplans: [],
     newIngredient: null,
     newAmount: null,
     newUnit: null,
@@ -79,7 +80,7 @@ export default new Vuex.Store({
     ],
     discoverFilters: [
       {
-        text: 'Most Purchased',
+        text: 'Most Popular',
         isActive: true
       },
       {
@@ -474,6 +475,44 @@ export default new Vuex.Store({
                 }
               })
           }
+        })
+    },
+    getPopularMealplans (state) {
+      state.popularMealplans = []
+      db.collection('mealplans').orderBy('purchases', 'desc').limit(10)
+        .get()
+        .then(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            var mealplan = doc.data()
+            var mealplanID = doc.id
+            db.collection('mealplans').doc(mealplanID).collection('filters')
+              .get()
+              .then(function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+                  var filter = doc.data()
+                  mealplan.filters.push(filter)
+                })
+              })
+            db.collection('mealplans').doc(mealplanID).collection('recipes')
+              .get()
+              .then(function (querySnapshot) {
+                querySnapshot.forEach(function (doc) {
+                  var recipe = doc.data()
+                  var recipeID = doc.id
+                  db.collection('mealplans').doc(mealplanID).collection('recipes').doc(recipeID).collection('ingredients')
+                    .get()
+                    .then(function (querySnapshot) {
+                      recipe.ingredients = []
+                      querySnapshot.forEach(function (doc) {
+                        var ingredient = doc.data()
+                        recipe.ingredients.push(ingredient)
+                      })
+                      mealplan.recipes.push(recipe)
+                    })
+                })
+                state.popularMealplans.push(mealplan)
+              })
+          })
         })
     },
     setPage (state, page) {
@@ -1065,6 +1104,7 @@ export default new Vuex.Store({
           })
           db.collection('users').doc('default').collection('mealplans').add({
             name: 'Personal',
+            publicName: 'PersonalMealplan',
             isActive: true,
             isPurchased: true,
             isPublic: false,
@@ -1243,6 +1283,7 @@ export default new Vuex.Store({
           })
           db.collection('users').doc(object.user.uid).collection('mealplans').add({
             name: 'Personal',
+            publicName: 'Personal Mealplan',
             isActive: true,
             isPublic: false,
             isPurchased: true,

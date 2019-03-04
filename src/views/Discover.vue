@@ -10,11 +10,51 @@
         </div>
         <div style="margin-bottom: 70px" class="container_faq">
           <div class="break"></div>
-          <p class="question">What is the calorie setting for?</p>
-          <p class="answer">It is used to calculate the ratio of ingredients for the shoppinglist when multiple people are eating at one address.</p>
-          <div style="margin-top: 70px"></div>
-          <p class="question">Are my payment details stored?</p>
-          <p class="answer">No. The entire payment flow is handled by Stripe. No credit card data is stored on our servers.</p>
+          <template v-for="mealplan in popularMealplans">
+            <div :key="mealplan.uid" class="container_mealplan">
+              <div class="information">
+                <p class="question">{{ mealplan.publicName }}</p>
+                <br>
+                <p class="details">ID: {{ mealplan.uid }}</p>
+                <p class="details">Recipes: {{ mealplan.recipesAmount }}</p>
+                <p class="details">Price: {{ mealplan.price }} {{ mealplan.currency }}</p>
+                <div class="purchase_button" @click="purchaseMealplan(mealplan)">
+                  Purchase
+                </div>
+              </div>
+              <div class="day">
+                <template v-for="recipe in mealplan.recipes">
+                  <div :key="recipe.uid" class="">
+                    <!-- eslint-disable-next-line -->
+                      <div class="box">
+                        <p class="date"> {{ recipe.id }} </p>
+                      </div>
+                      <p class="dayname"> {{ recipe.name }} </p>
+                      <div class="ingredients_break">
+
+                      </div>
+                      <template v-for="ingredient in recipe.ingredients">
+                        <!-- eslint-disable-next-line -->
+                        <div class="">
+                          <p class="meal"> {{ ingredient.ingredient }} </p>
+                          <p class="meal_location"> {{ ingredient.amount }} {{ ingredient.unit }} </p>
+                        </div>
+                      </template>
+                  </div>
+                </template>
+              </div>
+              <div class="mealfilters">
+                <template v-for="filter in mealplan.filters">
+                  <div :key="filter.uid" class="mealfilter" @click="toggleFilter(filter)">
+                    <p> {{ filter.text }} </p>
+                    <div :class="{ filter_selected: filter.isActive }"></div>
+                    <div :class="{ filter_required: filter.isRequired }"></div>
+                    <div :class="{ filter_required2: filter.isRequired }"></div>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </template>
         </div>
       </div>
       <div class="content" v-if="discoverFilters[1].isActive">
@@ -25,48 +65,51 @@
           <div class="break"></div>
           <p class="question">Enter the ID of a known meal plan:</p>
           <input class="search_input" type="text" name="" value="" placeholder="e.g. wPpDZo3Qrdz3Pkh2G6XW" v-model="uid">
-        </div>
-        <div class="search_button" @click="searchMealplan()">
-          Search
-        </div>
-        <div v-if="searchedMealplan" class="container_mealplan">
-          <!-- <div class="">
-            <p class="question">{{ searchedMealplan.name }}</p>
-            <p class="answer">{{ searchedMealplan.uid }}</p>
-            <p>{{ searchedMealplan.recipesAmount }}</p>
-            <p>{{ searchedMealplan.price }} {{ searchedMealplan.currency }}</p>
-          </div> -->
-          <template v-for="recipe in recipesFiltered()">
-            <!-- eslint-disable-next-line -->
+          <div class="search_button" @click="searchMealplan()">
+            Search
+          </div>
+          <div v-if="searchedMealplan" class="container_mealplan" style="margin-top: 70px">
+            <div class="information">
+              <p class="question">{{ searchedMealplan.publicName }}</p>
+              <br>
+              <p class="details">ID: {{ searchedMealplan.uid }}</p>
+              <p class="details">Recipes: {{ searchedMealplan.recipesAmount }}</p>
+              <p class="details">Price: {{ searchedMealplan.price }} {{ searchedMealplan.currency }}</p>
+              <div class="purchase_button" @click="purchaseMealplan(searchedMealplan)">
+                Purchase
+              </div>
+            </div>
             <div class="day">
-              <!-- A user needs to be able to edit the recipe -->
-              <div class="box">
-                <p class="date"> {{ recipe.id }} </p>
-              </div>
-              <!-- Meal is selected and entered into the calendar in the backend -->
-              <p class="dayname"> {{ recipe.name }} </p>
-              <div class="ingredients_break">
+              <template v-for="recipe in searchedMealplan.recipes">
+                <div :key="recipe.uid" class="">
+                  <!-- eslint-disable-next-line -->
+                    <div class="box">
+                      <p class="date"> {{ recipe.id }} </p>
+                    </div>
+                    <p class="dayname"> {{ recipe.name }} </p>
+                    <div class="ingredients_break">
 
-              </div>
-              <template v-for="ingredient in recipe.ingredients">
-                <!-- eslint-disable-next-line -->
-                <div class="">
-                  <p class="meal"> {{ ingredient.ingredient }} </p>
-                  <p class="meal_location"> {{ ingredient.amount }} {{ ingredient.unit }} </p>
+                    </div>
+                    <template v-for="ingredient in recipe.ingredients">
+                      <!-- eslint-disable-next-line -->
+                      <div class="">
+                        <p class="meal"> {{ ingredient.ingredient }} </p>
+                        <p class="meal_location"> {{ ingredient.amount }} {{ ingredient.unit }} </p>
+                      </div>
+                    </template>
                 </div>
               </template>
             </div>
-          </template>
-          <div class="mealfilters">
-            <template v-for="filter in searchedMealplan.filters">
-              <!-- eslint-disable-next-line -->
-              <div class="mealfilter" @click="toggleFilter(filter)">
-                <p> {{ filter.text }} </p>
-                <div :class="{ filter_selected: filter.isActive }"></div>
-                <div :class="{ filter_required: filter.isRequired }"></div>
-                <div :class="{ filter_required2: filter.isRequired }"></div>
-              </div>
-            </template>
+            <div class="mealfilters">
+              <template v-for="filter in searchedMealplan.filters">
+                <div :key="filter.uid" class="mealfilter" @click="toggleFilter(filter)">
+                  <p> {{ filter.text }} </p>
+                  <div :class="{ filter_selected: filter.isActive }"></div>
+                  <div :class="{ filter_required: filter.isRequired }"></div>
+                  <div :class="{ filter_required2: filter.isRequired }"></div>
+                </div>
+              </template>
+            </div>
           </div>
         </div>
       </div>
@@ -99,7 +142,9 @@ export default {
     ...mapState([
       'currentPage',
       'discoverFilters',
-      'searchedMealplan'
+      'userData',
+      'searchedMealplan',
+      'popularMealplans'
     ]),
     currentPageComponent () {
       return 'filters-' + this.currentPage
@@ -116,6 +161,9 @@ export default {
       } else {
         this.$store.commit('searchMealplan', mealplanID)
       }
+    },
+    purchaseMealplan (searchedMealplan) {
+
     },
     recipesFiltered () {
       var mealplan = this.searchedMealplan
@@ -213,19 +261,19 @@ export default {
   animation-delay: 1.4s;
   animation-fill-mode: forwards;
 }
-.container_mealplan {
+.container_details {
   position: relative;
-  display: inline;
   width: 80%;
   margin-left: 10%;
-  color: white;
-  text-align: center;
-  overflow: scroll;
-  white-space: nowrap;
+  text-align: left;
   animation: slideInUp .8s;
   animation-delay: .4s;
   animation-fill-mode: forwards;
   opacity: 0;
+}
+.container_mealplan {
+  display: block;
+  margin-bottom: 70px;
 }
 .break {
   position: relative;
@@ -253,6 +301,13 @@ export default {
   margin-bottom: -20px;
   color: white;
 }
+.details {
+  text-align: left;
+  font-size: 1em;
+  margin-top: 30px;
+  margin-bottom: -20px;
+  color: white;
+}
 .container_icons {
   position: relative;
   top: 260px;
@@ -272,8 +327,8 @@ export default {
 .search_button {
   position: relative;
   display: inline-block;
-  top: 120px;
-  left: 10%;
+  top: 70px;
+  margin-bottom: 40px;
   color: white;
   font-size: 1em;
   border: 2px solid white;
@@ -283,9 +338,29 @@ export default {
   animation: fadeIn .8s;
   animation-delay: 2s;
   animation-fill-mode: forwards;
-
 }
 .search_button:active {
+  box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+  transition: 0s;
+}
+.purchase_button {
+  position: relative;
+  width: 65px;
+  margin-top: 50px;
+  margin-bottom: -20px;
+  color: white;
+  font-size: 1em;
+  text-align: left;
+  font-size: 1em;
+  border: 2px solid white;
+  border-radius: 20px 20px;
+  padding: 5px 10px 5px 10px;
+  opacity: 0;
+  animation: fadeIn .8s;
+  animation-delay: 2s;
+  animation-fill-mode: forwards;
+}
+.purchase_button:active {
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
   transition: 0s;
 }
@@ -333,8 +408,23 @@ input[type=password]:focus.search_input  {
   padding: 5px;
   border: 2px solid white;
 }
-.day {
+.information {
+  position: relative;
+  display: inline-block;
+  width: 350px;
   margin-top: 50px;
+  margin-bottom: 80px;
+  vertical-align: top;
+  color: white;
+  text-align: center;
+}
+.day {
+  position: relative;
+  display: inline-block;
+  margin-top: 5px;
+  vertical-align: top;
+  color: white;
+  text-align: center;
 }
 .date {
   position: absolute;
@@ -417,7 +507,7 @@ input[type=password]:focus.search_input  {
   animation: expand .4s;
   animation-fill-mode: forwards;
 }
-@media (max-width: 700px) {
+@media (max-width: 660px) {
   .title {
     position: relative;
     top: 20px;
@@ -437,6 +527,16 @@ input[type=password]:focus.search_input  {
     width: 80%;
     top: 50px;
   }
+  .day {
+    position: relative;
+    display: inline-block;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 5px;
+    vertical-align: top;
+    color: white;
+    text-align: center;
+  }
   .question {
     font-size: 1.5em;
   }
@@ -446,6 +546,13 @@ input[type=password]:focus.search_input  {
     cursor: pointer;
   }
   .search_button:hover {
+    cursor: pointer;
+    color: #ffcab0;
+    font-weight: 400;
+    background: white;
+    transition: .4s ease-in-out;
+  }
+  .purchase_button:hover {
     cursor: pointer;
     color: #ffcab0;
     font-weight: 400;

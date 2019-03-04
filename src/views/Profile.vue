@@ -368,13 +368,19 @@
           <br>
         </div>
         <!-- eslint-disable-next-line -->
-        <div class="purchase_button" @click="updateMealplan(mealplan)" style="margin-top: 20px">
+        <div v-if="mealplan.isPublic" class="purchase_button" @click="updateMealplan(mealplan)" style="margin-top: 20px">
           <span class="purchase_text">Update Name</span>
         </div>
         <!-- eslint-disable-next-line -->
-        <div v-if="mealplan.isPublic" class="" align="left" style="margin-top: 40px">
+        <div class="" align="left" style="margin-top: 40px">
           <label for="">ID</label>
           <input class="amount" type="text" v-model="mealplan.uid" readonly>
+          <br>
+        </div>
+        <!-- eslint-disable-next-line -->
+        <div v-if="mealplan.isPublic" class="" align="left">
+          <label for="">Public Name</label>
+          <input class="amount" type="text" v-model="mealplan.publicName" required>
           <br>
         </div>
         <!-- eslint-disable-next-line -->
@@ -391,7 +397,7 @@
         </div>
         <!-- eslint-disable-next-line -->
         <div v-if="mealplan.isPublic" class="purchase_button" @click="updatePrice(mealplan)" style="margin-top: 20px">
-          <span class="purchase_text">Update Price & Currency</span>
+          <span class="purchase_text">Update Details</span>
         </div>
         <!-- eslint-disable-next-line -->
         <br>
@@ -459,30 +465,6 @@ export default {
       'userAddresses',
       'price'
     ])
-    // userEmail: {
-    //   get () {
-    //     return store.state.userData.email
-    //   },
-    //   set (value) {
-    //     store.commit('syncUserEmail', value)
-    //   }
-    // },
-    // shoppingListLength: {
-    //   get () {
-    //     return store.state.userData.shoppingListLength
-    //   },
-    //   set (value) {
-    //     store.commit('syncShoppingListLength', value)
-    //   }
-    // },
-    // calories: {
-    //   get () {
-    //     return store.state.userData.calories
-    //   },
-    //   set (value) {
-    //     store.commit('syncCalories', value)
-    //   }
-    // }
   },
   methods: {
     ...mapMutations([
@@ -956,6 +938,7 @@ export default {
         var userData = this.userData
         db.collection('users').doc(userData.uid).collection('mealplans').add({
           name: newMP,
+          publicName: newMP,
           isActive: false,
           isPublic: false,
           isPurchased: true,
@@ -1054,11 +1037,13 @@ export default {
       var userData = this.userData
       db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).update({
         price: Number(mealplan.price),
-        currency: mealplan.currency
+        currency: mealplan.currency,
+        publicName: mealplan.publicName
       })
       db.collection('mealplans').doc(mealplan.uid).update({
         price: Number(mealplan.price),
-        currency: mealplan.currency
+        currency: mealplan.currency,
+        publicName: mealplan.publicName
       })
     }
   }

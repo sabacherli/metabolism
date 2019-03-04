@@ -26,6 +26,7 @@ export default {
     var unsubscribeUserDataMealplanFilters
     var unsubscribeUserDataMealplanRecipes
     var unsubscribeUserDataMealplanRecipeIngredients
+    store.commit('getPopularMealplans')
     firebase.auth().onAuthStateChanged(function (user) {
       if (user && user.emailVerified && user.metadata.creationTime !== user.metadata.lastSignInTime) {
         var userID = user.uid
