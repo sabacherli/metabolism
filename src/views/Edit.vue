@@ -181,6 +181,10 @@ export default {
       db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[editor.index].uid).update({
         mealplans: firebase.firestore.FieldValue.arrayRemove(mealplan.uid)
       })
+      for (let ingredient in userData.mealplans[editor.mealplan].recipes[editor.index].ingredients) {
+        db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[editor.index].uid).collection('ingredients').doc(userData.mealplans[editor.mealplan].recipes[editor.index].ingredients[ingredient].uid).delete()
+      }
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[editor.index].uid).delete()
     },
     addRecipeToMealplan (mealplan) {
       var userData = this.userData
@@ -188,6 +192,13 @@ export default {
       db.collection('users').doc(userData.uid).collection('mealplans').doc(userData.mealplans[editor.mealplan].uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[editor.index].uid).update({
         mealplans: firebase.firestore.FieldValue.arrayUnion(mealplan.uid)
       })
+      for (let ingredient in userData.mealplans[editor.mealplan].recipes[editor.index].ingredients) {
+        db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[editor.index].uid).collection('ingredients').doc(userData.mealplans[editor.mealplan].recipes[editor.index].ingredients[ingredient].uid).set(userData.mealplans[editor.mealplan].recipes[editor.index].ingredients[ingredient])
+      }
+      var payload = userData.mealplans[editor.mealplan].recipes[editor.index]
+      payload.ingredients = []
+      payload.mealplans.push(mealplan.uid)
+      db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).collection('recipes').doc(userData.mealplans[editor.mealplan].recipes[editor.index].uid).set(userData.mealplans[editor.mealplan].recipes[editor.index])
     },
     focusAmount () {
       document.getElementById('amount').focus()
