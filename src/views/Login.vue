@@ -39,6 +39,9 @@ export default {
   name: 'Login',
   created () {
     store.commit('setPage', 'login')
+    setTimeout(function () {
+      store.commit('rerender')
+    }, 800)
   },
   data () {
     return {

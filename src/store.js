@@ -186,6 +186,11 @@ export default new Vuex.Store({
         month.isActive = !month.isActive
       }
     },
+    toggleSelectedRegister (state, month) {
+      if (Number(moment().format('YYYYMM')) <= Number(month.month)) {
+        month.isActive = !month.isActive
+      }
+    },
     calcPrice (state, index) {
       state.price = 0
       for (var i = 0; i < state.userAddresses[index].months.length; i++) {

@@ -23,8 +23,8 @@
                 </div>
               </div>
               <template v-for="recipe in mealplan.recipes">
-                <div class="day">
-                  <div :key="recipe.uid" class="">
+                <div :key="recipe.uid" class="day">
+                  <div class="">
                     <!-- eslint-disable-next-line -->
                       <div class="box">
                         <p class="date"> {{ recipe.id }} </p>
@@ -121,6 +121,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import store from '../store'
+import db from '@/database.js'
 import DiscoverFilters from '@/components/DiscoverFilters.vue'
 
 export default {
@@ -167,7 +168,7 @@ export default {
       var userData = this.userData
       var isOwned = false
       for (let m in userData.mealplans) {
-        if (userData.mealplans[m].uid == mealplan.uid) {
+        if (userData.mealplans[m].uid === mealplan.uid) {
           isOwned = true
           break
         }
@@ -212,15 +213,15 @@ export default {
         recipesAmount: mealplan.recipesAmount,
         uid: mealplan.uid
       })
-    for (let filter in mealplan.filters) {
-      db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).collection('filters').doc(mealplan.filters[filter].uid).set(mealplan.filters[filter])
-    }
-    for (let recipe in mealplan.recipes) {
-      db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).collection('filters').doc(mealplan.recipes[recipe].uid).set(mealplan.recipes[recipe])
-      for (let ingredient in mealplan.recipes[recipe].ingredients) {
-        db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).collection('filters').doc(mealplan.recipes[recipe].uid).collection('ingredients').doc(mealplan.recipes[recipe].ingredients[ingredient].uid).set(mealplan.recipes[recipe].ingredients[ingredient])
+      for (let filter in mealplan.filters) {
+        db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).collection('filters').doc(mealplan.filters[filter].uid).set(mealplan.filters[filter])
       }
-    }
+      for (let recipe in mealplan.recipes) {
+        db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).collection('filters').doc(mealplan.recipes[recipe].uid).set(mealplan.recipes[recipe])
+        for (let ingredient in mealplan.recipes[recipe].ingredients) {
+          db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).collection('filters').doc(mealplan.recipes[recipe].uid).collection('ingredients').doc(mealplan.recipes[recipe].ingredients[ingredient].uid).set(mealplan.recipes[recipe].ingredients[ingredient])
+        }
+      }
     },
     recipesFiltered () {
       var mealplan = this.searchedMealplan

@@ -1,40 +1,226 @@
 <template lang="html">
   <div id="cover_page">
     <div class="background">
-      <div class="brand_large">
-        SIGN UP
+      <div class="progress">
+        <div id="impossible" class="progress_circle progress_circle_active"></div>
+        <div id="2" class="progress_circle" @click="showAddress()"></div>
+        <div id="3" class="progress_circle" @click="showCalories()"></div>
+        <div id="4" class="progress_circle" @click="showMealplans()"></div>
+        <div id="5" class="progress_circle" @click="showVerification()"></div>
       </div>
-      <div class="container_costs">
-        <p class="costs_explanation">One address costs 5 CHF per month and are purchased in the app</p>
-        <!-- <p class="cost_icon">5.- Fr</p> -->
-        <!-- <p> For the price of a <u><a id="loaf_of_bread" href="https://produkte.migros.ch/pain-creation-knusperbrot-111471500500">loaf of bread</a></u>  a month </p> -->
-        <!-- <div class="cost_explanation">The price of metabolism probably amortises itself on average through cost savings due to reduced waste.</div> -->
+      <div id="email" class="container_component">
+        <div class="brand_large">
+          SIGN UP
+        </div>
+        <div class="container_costs">
+          <p class="costs_explanation">One address costs 5 CHF per month and can be shared with up to 7 family members</p>
+          <!-- <p class="cost_icon">5.- Fr</p> -->
+          <!-- <p> For the price of a <u><a id="loaf_of_bread" href="https://produkte.migros.ch/pain-creation-knusperbrot-111471500500">loaf of bread</a></u>  a month </p> -->
+          <!-- <div class="cost_explanation">The price of metabolism probably amortises itself on average through cost savings due to reduced waste.</div> -->
+        </div>
+        <div class="container_icons">
+          <img src="../assets/icons8-email.png" alt="Email" class="icon" @click="focusEmailInput()">
+          <!-- <img src="../assets/icons8-google.png" alt="Google" class="icon" @click="createUserWithGoogle()"> -->
+          <!-- <img src="../assets/icons8-twitter.png" alt="Twitter" class="icon" @click="createUserWithTwitter()"> -->
+        </div>
+        <div class="container_register">
+          <form id="" action="" method="">
+            <input id="emailInput" class="register_email" type="email" name="email" value="" v-model="email" placeholder="Email" autocomplete="email" required>
+            <br>
+            <input class="register_password" type="password" name="password" value="" v-model="password" placeholder="Password" autocomplete="current-password" style="margin-top: 10px" @keyup.enter="createUser()" required>
+            <br>
+            <button id="resend_button" class="register_email" style="margin-top: 10px; height: auto; width: 120px; font-size: 0.65em; text-algin: center; color: darkgrey; padding: 5px" type="button" name="button" @click="resendVerification()">Resend Verification</button>
+            <!-- <input class="register" id="register_email" required>
+            <input class="register" id="register_password" required> -->
+          </form>
+          <div class="register_button" @click="showAddress()">Register</div>
+        </div>
       </div>
-      <div class="container_icons">
-        <img src="../assets/icons8-email.png" alt="Email" class="icon" @click="focusEmailInput()">
-        <!-- <img src="../assets/icons8-google.png" alt="Google" class="icon" @click="createUserWithGoogle()"> -->
-        <!-- <img src="../assets/icons8-twitter.png" alt="Twitter" class="icon" @click="createUserWithTwitter()"> -->
+      <div id="address" class="container_component hidden">
+        <div class="brand_large">
+          ADDRESSES
+        </div>
+        <div class="container_costs">
+          <p class="costs_explanation">Further months can be purchased at any time under the profile section</p>
+          <!-- <p class="cost_icon">5.- Fr</p> -->
+          <!-- <p> For the price of a <u><a id="loaf_of_bread" href="https://produkte.migros.ch/pain-creation-knusperbrot-111471500500">loaf of bread</a></u>  a month </p> -->
+          <!-- <div class="cost_explanation">The price of metabolism probably amortises itself on average through cost savings due to reduced waste.</div> -->
+        </div>
+        <div class="container_register">
+          <template v-for="(place, index) in userData.addresses">
+            <div class="box" @click="addMonths(index)">
+              <p class="sign">+</p>
+            </div>
+            <!-- eslint-disable-next-line -->
+            <div>
+              <!-- eslint-disable-next-line -->
+              <p class="dayname"> {{ place.name }} </p>
+            </div>
+            <!-- eslint-disable-next-line -->
+            <div class="ingredients_break">
+
+            </div>
+            <!-- Adds days for the month ahead to the currently signed in user, also default if not signed in. -->
+            <!-- eslint-disable-next-line -->
+            <div class="" style="margin-bottom: 35px">
+              <!-- eslint-disable-next-line -->
+              <div class="year_date">
+                <p>{{ currentYear }}</p>
+              </div>
+              <div class="">
+                <div class="block_date">
+                  <template v-for="month in userAddresses[index].months.slice(0,4)">
+                    <!-- eslint-disable-next-line -->
+                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: Number(month.month) < currentMonth }" class="inline_date" @click="toggleSelectedRegister(month); calcPrice(index)">{{ month.display }}</p>
+                  </template>
+                </div>
+                <div class="block_date">
+                  <template v-for="month in userAddresses[index].months.slice(4,8)">
+                    <!-- eslint-disable-next-line -->
+                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: Number(month.month) < currentMonth }" class="inline_date" @click="toggleSelectedRegister(month); calcPrice(index)">{{ month.display }}</p>
+                  </template>
+                </div>
+                <div class="block_date">
+                  <template v-for="month in userAddresses[index].months.slice(8,12)">
+                    <!-- eslint-disable-next-line -->
+                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: Number(month.month) < currentMonth }" class="inline_date" @click="toggleSelectedRegister(month); calcPrice(index)">{{ month.display }}</p>
+                  </template>
+                </div>
+              </div>
+            </div>
+            <!-- eslint-disable-next-line -->
+            <div class="">
+              <!-- eslint-disable-next-line -->
+              <div class="year_date">
+                <p>{{ Number(currentYear) + 1 }}</p>
+              </div>
+              <div class="">
+                <div class="block_date">
+                  <template v-for="month in userAddresses[index].months.slice(12,16)">
+                    <!-- eslint-disable-next-line -->
+                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: Number(month.month) < currentMonth }" class="inline_date" @click="toggleSelectedRegister(month); calcPrice(index)">{{ month.display }}</p>
+                  </template>
+                </div>
+                <div class="block_date">
+                  <template v-for="month in userAddresses[index].months.slice(16,20)">
+                    <!-- eslint-disable-next-line -->
+                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: Number(month.month) < currentMonth }" class="inline_date" @click="toggleSelectedRegister(month); calcPrice(index)">{{ month.display }}</p>
+                  </template>
+                </div>
+                <div class="block_date">
+                  <template v-for="month in userAddresses[index].months.slice(20,24)">
+                    <!-- eslint-disable-next-line -->
+                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: Number(month.month) < currentMonth }" class="inline_date" @click="toggleSelectedRegister(month); calcPrice(index)">{{ month.display }}</p>
+                  </template>
+                </div>
+                <p class="year_date price">{{ price }} CHF</p>
+                <div class="register_button remove_left" @click="showCalories()">Next</div>
+              </div>
+            </div>
+          </template>
+        </div>
       </div>
-      <div class="container_register">
-        <!-- <a><img id="link_email" style="transform: translateX(100%)" :src="require('@/assets/icons8-new-post-filled-100.png')" alt="Email"></a> -->
-        <!-- <a><img id="link_google" :src="require('@/assets/icons8-google-plus-96.png')" alt="Google"></a> -->
-        <form id="" action="" method="">
-          <input id="emailInput" class="register_email" type="email" name="email" value="" v-model="email" placeholder="Email" autocomplete="email" required>
-          <br>
-          <input class="register_password" type="password" name="password" value="" v-model="password" placeholder="Password" autocomplete="current-password" style="margin-top: 10px" @keyup.enter="createUser()" required>
-          <br>
-          <button id="resend_button" class="register_email" style="margin-top: 10px; height: auto; width: 120px; font-size: 0.65em; text-algin: center; color: darkgrey; padding: 5px" type="button" name="button" @click="resendVerification()">Resend Verification</button>
-          <!-- <input class="register" id="register_email" required>
-          <input class="register" id="register_password" required> -->
-        </form>
-        <div class="register_button" @click="createUser()">Register</div>
+      <div id="calories" class="container_component hidden">
+        <div class="brand_large">
+          CALORIES
+        </div>
+        <div class="container_costs">
+          <p class="costs_explanation further_explanation">This number is used to calculate shopping lists based all family member's appetite, so when adding ingredients to new recipes, add amounts appropriate for your stomach size</p>
+          <!-- <p class="cost_icon">5.- Fr</p> -->
+          <!-- <p> For the price of a <u><a id="loaf_of_bread" href="https://produkte.migros.ch/pain-creation-knusperbrot-111471500500">loaf of bread</a></u>  a month </p> -->
+          <!-- <div class="cost_explanation">The price of metabolism probably amortises itself on average through cost savings due to reduced waste.</div> -->
+        </div>
+        <div class="container_register">
+          <div class="">
+            <input id="emailInput" class="register_email" type="number" name="calories" value="" v-model="email" placeholder="2000" autocomplete="off">
+            <br>
+            <div class="register_button" @click="showMealplans()">Next</div>
+          </div>
+        </div>
+      </div>
+      <div id="mealplans" class="container_component hidden">
+        <div class="brand_large">
+          MEAL PLANS
+        </div>
+        <div class="container_costs">
+          <p class="costs_explanation">Discover pre-made meal plans to alleviate you from the burden of adding your own recipes</p>
+        </div>
+        <div style="margin-bottom: 70px" class="container_faq">
+          <div class="break"></div>
+          <template v-for="mealplan in popularMealplans">
+            <div :key="mealplan.uid" class="container_mealplan">
+              <div class="information">
+                <p class="question">{{ mealplan.publicName }}</p>
+                <br>
+                <p class="details">ID: {{ mealplan.uid }}</p>
+                <p class="details">Recipes: {{ mealplan.recipesAmount }}</p>
+                <p class="details">Price: {{ mealplan.price }} {{ mealplan.currency }}</p>
+                <div :id="mealplan.uid" class="purchase_button" style="width: 44px" @click="selectMealplan(mealplan)">
+                  Select
+                </div>
+                <div :id="mealplan.uid + 1" class="purchase_button_selected hidden" style="width: 62px" @click="unselectMealplan(mealplan)">
+                  Unselect
+                </div>
+              </div>
+              <template v-for="recipe in mealplan.recipes">
+                <div :key="recipe.uid" class="day">
+                  <div class="">
+                    <!-- eslint-disable-next-line -->
+                      <div class="box">
+                        <p class="date"> {{ recipe.id }} </p>
+                      </div>
+                      <p class="dayname"> {{ recipe.name }} </p>
+                      <div class="ingredients_break">
+
+                      </div>
+                      <template v-for="ingredient in recipe.ingredients">
+                        <!-- eslint-disable-next-line -->
+                        <div class="">
+                          <p class="meal"> {{ ingredient.ingredient }} </p>
+                          <p class="meal_location"> {{ ingredient.amount }} {{ ingredient.unit }} </p>
+                        </div>
+                      </template>
+                      <div class="" style="margin-bottom: 70px">
+
+                      </div>
+                  </div>
+                </div>
+              </template>
+              <div class="mealfilters">
+                <template v-for="filter in mealplan.filters">
+                  <div :key="filter.uid" class="mealfilter">
+                    <p> {{ filter.text }} </p>
+                    <div class="filter_selected"></div>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </template>
+          <div style="margin-bottom: 50px; width: 33px" class="purchase_button" @click="showVerification()">
+            Next
+          </div>
+        </div>
+      </div>
+      <div id="verification" class="container_component hidden">
+        <div class="brand_large">
+          VERIFICATION
+        </div>
+        <div class="container_costs">
+          <p class="costs_explanation">In the mean time, we have sent you an email for verification. Please verify yourself before proceeding to log in.</p>
+          <!-- <p class="cost_icon">5.- Fr</p> -->
+          <!-- <p> For the price of a <u><a id="loaf_of_bread" href="https://produkte.migros.ch/pain-creation-knusperbrot-111471500500">loaf of bread</a></u>  a month </p> -->
+          <!-- <div class="cost_explanation">The price of metabolism probably amortises itself on average through cost savings due to reduced waste.</div> -->
+        </div>
+        <div class="container_register">
+        <div id="register" class="register_button" @click="goLogin()">Done</div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import store from '../store'
@@ -47,7 +233,8 @@ export default {
     return {
       email: '',
       password: '',
-      currentYear: moment().format('YYYY')
+      currentYear: moment().format('YYYY'),
+      currentMonth: moment().format('YYYYMM')
     }
   },
   beforeMount () {
@@ -55,6 +242,10 @@ export default {
   },
   computed: {
     ...mapState([
+      'popularMealplans',
+      'userData',
+      'userAddresses',
+      'price'
     ])
   },
   created () {
@@ -64,8 +255,65 @@ export default {
     }, 800)
   },
   methods: {
+    ...mapMutations([
+      'toggleSelectedRegister',
+      'calcPrice',
+      'addMonths'
+    ]),
+    showAddress () {
+      for (var i = 0; i < document.getElementsByClassName('progress_circle').length; i++) {
+        document.getElementsByClassName('progress_circle')[i].classList.remove('progress_circle_active')
+      }
+      document.getElementById('2').classList.add('progress_circle_active')
+      for (var i = 0; i < document.getElementsByClassName('container_component').length; i++) {
+        document.getElementsByClassName('container_component')[i].classList.add('hidden')
+      }
+      document.getElementById('address').classList.remove('hidden')
+    },
+    showCalories () {
+      for (var i = 0; i < document.getElementsByClassName('progress_circle').length; i++) {
+        document.getElementsByClassName('progress_circle')[i].classList.remove('progress_circle_active')
+      }
+      document.getElementById('3').classList.add('progress_circle_active')
+      for (var i = 0; i < document.getElementsByClassName('container_component').length; i++) {
+        document.getElementsByClassName('container_component')[i].classList.add('hidden')
+      }
+      document.getElementById('calories').classList.remove('hidden')
+    },
+    showMealplans () {
+      for (var i = 0; i < document.getElementsByClassName('progress_circle').length; i++) {
+        document.getElementsByClassName('progress_circle')[i].classList.remove('progress_circle_active')
+      }
+      document.getElementById('4').classList.add('progress_circle_active')
+      for (var i = 0; i < document.getElementsByClassName('container_component').length; i++) {
+        document.getElementsByClassName('container_component')[i].classList.add('hidden')
+      }
+      document.getElementById('mealplans').classList.remove('hidden')
+    },
+    showVerification () {
+      for (var i = 0; i < document.getElementsByClassName('progress_circle').length; i++) {
+        document.getElementsByClassName('progress_circle')[i].classList.remove('progress_circle_active')
+      }
+      document.getElementById('5').classList.add('progress_circle_active')
+      for (var i = 0; i < document.getElementsByClassName('container_component').length; i++) {
+        document.getElementsByClassName('container_component')[i].classList.add('hidden')
+      }
+      document.getElementById('verification').classList.remove('hidden')
+    },
+    goLogin () {
+      store.commit('setPage', 'login')
+      router.push('login')
+    },
     focusEmailInput () {
       document.getElementById('emailInput').focus()
+    },
+    selectMealplan (mealplan) {
+      document.getElementById(mealplan.uid).classList.add('hidden')
+      document.getElementById(mealplan.uid + 1).classList.remove('hidden')
+    },
+    unselectMealplan (mealplan) {
+      document.getElementById(mealplan.uid + 1).classList.add('hidden')
+      document.getElementById(mealplan.uid).classList.remove('hidden')
     },
     createUser () {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
@@ -167,6 +415,9 @@ export default {
   height: 100%;
   background: linear-gradient(to bottom right, lightpink, #ffdfa0);
 }
+.hidden {
+  display: none;
+}
 .brand_large {
   text-align: center;
   font-size: 9em;
@@ -198,6 +449,163 @@ export default {
   margin-bottom: -20px;
   color: white;
 }
+.further_explanation {
+  font-size: 1.6em;
+}
+.container_faq {
+  position: relative;
+  top: 300px;
+  width: 80%;
+  margin-left: 10%;
+  text-align: left;
+  opacity: 0;
+  animation: fadeIn .8s;
+  animation-delay: 1.4s;
+  animation-fill-mode: forwards;
+}
+.container_mealplan {
+  display: block;
+  margin-bottom: 20px;
+  white-space: nowrap;
+  overflow-y: scroll;
+}
+.information {
+  position: relative;
+  display: inline-block;
+  width: 400px;
+  margin-top: 50px;
+  margin-bottom: 80px;
+  vertical-align: top;
+  overflow-y: visible;
+  color: white;
+  text-align: center;
+}
+.break {
+  position: relative;
+  width: 50px;
+  height: auto;
+  left: 0px;
+  margin-top: 40px;
+  border: 0px;
+  border-bottom-style: solid;
+  border-bottom-color: white;
+  border-bottom-width: 2px;
+}
+.question {
+  text-align: left;
+  font-size: 1.8em;
+  font-weight: 400;
+  margin-top: 20px;
+  margin-bottom: -20px;
+  color: white;
+}
+.details {
+  text-align: left;
+  font-size: 1em;
+  margin-top: 30px;
+  margin-bottom: -20px;
+  color: white;
+}
+.sign {
+  position: absolute;
+  top: 50%;
+  margin-top: -19px;
+  left: 50%;
+  margin-left: -7px;
+  font-size: 30px;
+  transition: .8s ease-in-out;
+}
+.sign_special {
+  margin-top: 0px;
+  font-size: 20px;
+  transition: .8s ease-in-out;
+}
+.sign_remove {
+  position: absolute;
+  display: inline-block;
+  left: 50%;
+  transform: translateX(-100px) rotate(45deg);
+  margin-top: 42px;
+  width: 100px;
+  font-size: 25px;
+}
+.box {
+  position: relative;
+  width: 30px;
+  height: 25px;
+  margin: auto;
+  margin-bottom: 30px;
+  padding: 5px;
+  border: 2px solid white;
+}
+.date {
+  position: absolute;
+  font-size: 20px;
+  top: -5%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+.day {
+  position: relative;
+  display: inline-block;
+  margin-top: 5px;
+  width: 200px;
+  vertical-align: top;
+  color: white;
+  text-align: center;
+}
+.dayname {
+  font-size: 20px;
+  margin-top: 30px;
+  margin-bottom: 50px;
+}
+.ingredients_break {
+  position: relative;
+  top: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: auto;
+  margin-top: -10px;
+  margin-bottom: 35px;
+  border: 0px;
+  border-bottom-style: solid;
+  border-bottom-color: white;
+  border-bottom-width: 1px;
+}
+.meal {
+  font-size: 16px;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+.meal_location {
+  font-size: 10px;
+  margin-top: -20px;
+}
+.mealfilters {
+  position: relative;
+  height: 25px;
+  margin-bottom: 80px;
+  width: 100%;
+  text-align: center;
+}
+.mealfilter {
+  position: relative;
+  display: inline-block;
+  bottom: 15px;
+  margin: auto 15px auto 15px;
+  text-align: center;
+  color: white;
+}
+.filter_selected {
+  position: relative;
+  bottom: 15px;
+  margin: auto;
+  height: 2px;
+  background-color: white;
+  animation: expand .4s;
+  animation-fill-mode: forwards;
+}
 .container_icons {
   position: relative;
   top: 260px;
@@ -218,10 +626,14 @@ export default {
    position: relative;
    top: 300px;
    width: 100%;
+   color: white;
    opacity: 0;
    animation: fadeIn .8s;
    animation-delay: 2s;
    animation-fill-mode: forwards;
+}
+#address {
+  text-align: center;
 }
 .register_email,
 .register_password {
@@ -242,7 +654,67 @@ export default {
    border-width: 2px;
    background: white;
  }
+ .purchase_button {
+   position: relative;
+   width: 65px;
+   margin-top: 50px;
+   margin-bottom: -20px;
+   color: white;
+   font-size: 1em;
+   text-align: left;
+   font-size: 1em;
+   border: 2px solid white;
+   border-radius: 20px 20px;
+   padding: 5px 10px 5px 10px;
+ }
+ .purchase_button:active {
+   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
+   transition: 0s;
+ }
+ .purchase_button_selected {
+   position: relative;
+   width: 65px;
+   margin-top: 50px;
+   margin-bottom: -20px;
+   color: white;
+   font-size: 1em;
+   text-align: left;
+   font-size: 1em;
+   font-weight: 400;
+   color: #ffcdaf;
+   padding: 5px 10px 5px 10px;
+   background: white;
+   border: 1.4px solid white;
+   border-radius: 20px 20px;
+ }
+ .year_date {
+   font-weight: 500;
+ }
+ .block_date {
+   display: block;
+ }
+ .inline_date {
+   display: inline-block;
+   margin: 7px;
+   width: 25px;
+   font-weight: 400;
+   border: 1.4px solid white;
+   border-radius: 20px 20px;
+   padding-left: 7px;
+   padding-right: 7px;
+ }
+ .inline_date_bought {
+    text-decoration: line-through;
+ }
+ .inline_date_selected {
+   font-weight: 400;
+   color: #ffcdaf;
+   background: white;
+   border: 1.4px solid white;
+   border-radius: 20px 20px;
+ }
 input[type=email].register_email:focus,
+input[type=number].register_email:focus,
 input[type=password].register_password:focus {
   background-color: #F8F8F8;
   outline: none;
@@ -262,6 +734,10 @@ input[type=password].register_password:focus {
   border-radius: 20px 20px;
   padding: 5px 10px 5px 10px;
 }
+.remove_left {
+  left: 0%;
+  transform: translateX(0%);
+}
 .register_button:active {
   transition: 0s;
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
@@ -271,13 +747,37 @@ input[type=password].register_password:focus {
   box-shadow: 2px 2px 2px rgba(0,0,0,0.4);
   outline: none;
 }
+.progress {
+  position: fixed;
+  height: auto;
+  width: 2%;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+}
+.progress_circle {
+  height: 10px;
+  width: 10px;
+  margin: 10px;
+  border: 1px solid white;
+  border-radius: 50px 50px;
+}
+.progress_circle_active {
+  height: 10px;
+  width: 10px;
+  margin: 10px;
+  background: white;
+  border: 1px solid white;
+  border-radius: 50px 50px;
+}
 ::placeholder {
   font-size: 14px;
   font-family: Montserrat;
   color: darkgray;
   letter-spacing: .2px;
 }
-@media (max-width: 700px) {
+@media (max-width: 660px) {
   .brand_large {
     position: relative;
     top: 180px;
@@ -296,11 +796,50 @@ input[type=password].register_password:focus {
     width: 70%;
   }
   .costs_explanation {
+    margin-top: 60px;
+    margin-bottom: -40px;
     font-size: 1.5em;
+  }
+  .further_explanation {
+    font-size: 1.4em;
   }
   .register_email,
   .register_password {
    width: 60%;
+ }
+ .container_faq {
+   width: 80%;
+   top: 270px;
+ }
+ .container_mealplan {
+   position: relative;
+   height: inherit;
+   width: 85%;
+   margin: auto;
+   overflow: visible;
+   text-align: center;
+   margin-bottom: 20px;
+   white-space: nowrap;
+ }
+ .information {
+   width: 100%;
+ }
+ .mealfilters {
+   position: relative;
+   top: 70px;
+   height: 25px;
+   margin-bottom: 80px;
+   width: 100%;
+   text-align: center;
+ }
+ .day {
+   display: inline;
+   margin-top: 70px;
+   color: white;
+   text-align: center;
+ }
+ .question {
+   font-size: 1.5em;
  }
 }
 @media (hover:hover) {
@@ -311,6 +850,12 @@ input[type=password].register_password:focus {
     background: white;
     transition: .4s ease-in-out;
   }
+  .progress_circle:not(#impossible):hover {
+    cursor: pointer;
+  }
+  .progress_circle_active:hover {
+    cursor: default;
+  }
   #resend_button {
     cursor: pointer;
     color: #ffdeb9;
@@ -319,7 +864,23 @@ input[type=password].register_password:focus {
     transition: .4s ease-in-out;
     outline: none;
   }
+  .inline_date {
+    cursor: pointer;
+  }
   .icon:hover {
+    cursor: pointer;
+  }
+  .inline_date_bought:hover {
+    cursor: default;
+  }
+  .purchase_button:hover {
+    cursor: pointer;
+    color: #ffcab0;
+    font-weight: 400;
+    background: white;
+    transition: .4s ease-in-out;
+  }
+  .purchase_button_selected:hover {
     cursor: pointer;
   }
 }
