@@ -48,6 +48,7 @@
         </div>
         <div class="container_register">
           <template v-for="(place, index) in userData.addresses">
+          <!-- eslint-disable-next-line -->
             <div class="box">
               <p class="sign">+</p>
             </div>
@@ -225,6 +226,7 @@
 import { mapState, mapMutations } from 'vuex'
 import firebase from 'firebase/app'
 import 'firebase/auth'
+import db from '@/database.js'
 import store from '../store'
 import moment from 'moment'
 import router from '../router'
@@ -263,41 +265,41 @@ export default {
       'calcPrice'
     ]),
     showAddress () {
-      for (var i = 0; i < document.getElementsByClassName('progress_circle').length; i++) {
+      for (let i = 0; i < document.getElementsByClassName('progress_circle').length; i++) {
         document.getElementsByClassName('progress_circle')[i].classList.remove('progress_circle_active')
       }
       document.getElementById('2').classList.add('progress_circle_active')
-      for (var i = 0; i < document.getElementsByClassName('container_component').length; i++) {
+      for (let i = 0; i < document.getElementsByClassName('container_component').length; i++) {
         document.getElementsByClassName('container_component')[i].classList.add('hidden')
       }
       document.getElementById('address').classList.remove('hidden')
     },
     showCalories () {
-      for (var i = 0; i < document.getElementsByClassName('progress_circle').length; i++) {
+      for (let i = 0; i < document.getElementsByClassName('progress_circle').length; i++) {
         document.getElementsByClassName('progress_circle')[i].classList.remove('progress_circle_active')
       }
       document.getElementById('3').classList.add('progress_circle_active')
-      for (var i = 0; i < document.getElementsByClassName('container_component').length; i++) {
+      for (let i = 0; i < document.getElementsByClassName('container_component').length; i++) {
         document.getElementsByClassName('container_component')[i].classList.add('hidden')
       }
       document.getElementById('calories').classList.remove('hidden')
     },
     showMealplans () {
-      for (var i = 0; i < document.getElementsByClassName('progress_circle').length; i++) {
+      for (let i = 0; i < document.getElementsByClassName('progress_circle').length; i++) {
         document.getElementsByClassName('progress_circle')[i].classList.remove('progress_circle_active')
       }
       document.getElementById('4').classList.add('progress_circle_active')
-      for (var i = 0; i < document.getElementsByClassName('container_component').length; i++) {
+      for (let i = 0; i < document.getElementsByClassName('container_component').length; i++) {
         document.getElementsByClassName('container_component')[i].classList.add('hidden')
       }
       document.getElementById('mealplans').classList.remove('hidden')
     },
     showCheckout () {
-      for (var i = 0; i < document.getElementsByClassName('progress_circle').length; i++) {
+      for (let i = 0; i < document.getElementsByClassName('progress_circle').length; i++) {
         document.getElementsByClassName('progress_circle')[i].classList.remove('progress_circle_active')
       }
       document.getElementById('5').classList.add('progress_circle_active')
-      for (var i = 0; i < document.getElementsByClassName('container_component').length; i++) {
+      for (let i = 0; i < document.getElementsByClassName('container_component').length; i++) {
         document.getElementsByClassName('container_component')[i].classList.add('hidden')
       }
       document.getElementById('checkout').classList.remove('hidden')
@@ -311,7 +313,7 @@ export default {
       })
       stripe.redirectToCheckout({
         items: [{
-          sku: 'sku_ETuovBIeaLjPou', quantity: state.price / 5
+          sku: 'sku_ETuovBIeaLjPou', quantity: 5
         }],
         // Note that it is not guaranteed your customers will be redirected to this
         // URL *100%* of the time, it's possible that they could e.g. close the
@@ -327,7 +329,7 @@ export default {
           }
         })
       store.commit('addMonths')
-      var mealplans = mealplansSelected
+      var mealplans = this.mealplansSelected
       for (let m in mealplans) {
         var mealplan = mealplans[m]
         var userData = this.userData
@@ -352,6 +354,7 @@ export default {
         for (let recipe in mealplan.recipes) {
           db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).collection('filters').doc(mealplan.recipes[recipe].uid).set(mealplan.recipes[recipe])
           for (let ingredient in mealplan.recipes[recipe].ingredients) {
+            mealplan.recipes[recipe].ingredients[ingredient].amount = calorieRatio * mealplan.recipes[recipe].ingredients[ingredient].amount
             db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).collection('filters').doc(mealplan.recipes[recipe].uid).collection('ingredients').doc(mealplan.recipes[recipe].ingredients[ingredient].uid).set(mealplan.recipes[recipe].ingredients[ingredient])
           }
         }

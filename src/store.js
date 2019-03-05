@@ -21,7 +21,7 @@ export default new Vuex.Store({
     newUnit: null,
     currentPage: 'calendar',
     price: 0,
-    totalPrice: 0
+    totalPrice: 0,
     rerender: 1,
     pricePerMonth: 5,
     today: null,
@@ -521,7 +521,6 @@ export default new Vuex.Store({
                 }
               })
           }
-
         })
     },
     getPopularMealplans (state) {

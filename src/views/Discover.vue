@@ -219,6 +219,7 @@ export default {
       for (let recipe in mealplan.recipes) {
         db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).collection('filters').doc(mealplan.recipes[recipe].uid).set(mealplan.recipes[recipe])
         for (let ingredient in mealplan.recipes[recipe].ingredients) {
+          mealplan.recipes[recipe].ingredients[ingredient].amount = calorieRatio * mealplan.recipes[recipe].ingredients[ingredient].amount
           db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).collection('filters').doc(mealplan.recipes[recipe].uid).collection('ingredients').doc(mealplan.recipes[recipe].ingredients[ingredient].uid).set(mealplan.recipes[recipe].ingredients[ingredient])
         }
       }
