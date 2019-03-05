@@ -6,7 +6,7 @@
         <div id="2" class="progress_circle" @click="showAddress()"></div>
         <div id="3" class="progress_circle" @click="showCalories()"></div>
         <div id="4" class="progress_circle" @click="showMealplans()"></div>
-        <div id="5" class="progress_circle" @click="showVerification()"></div>
+        <div id="5" class="progress_circle" @click="showCheckout()"></div>
       </div>
       <div id="email" class="container_component">
         <div class="brand_large">
@@ -33,7 +33,7 @@
             <!-- <input class="register" id="register_email" required>
             <input class="register" id="register_password" required> -->
           </form>
-          <div class="register_button" @click="showAddress()">Register</div>
+          <div class="register_button" @click="createUser(); showAddress()">Register</div>
         </div>
       </div>
       <div id="address" class="container_component hidden">
@@ -48,7 +48,7 @@
         </div>
         <div class="container_register">
           <template v-for="(place, index) in userData.addresses">
-            <div class="box" @click="addMonths(index)">
+            <div class="box">
               <p class="sign">+</p>
             </div>
             <!-- eslint-disable-next-line -->
@@ -196,23 +196,25 @@
               </div>
             </div>
           </template>
-          <div style="margin-bottom: 50px; width: 33px" class="purchase_button" @click="showVerification()">
-            Next
+          <div style="margin-bottom: 50px; width: 33px" class="purchase_button" @click="showCheckout()">
+            Purchase
           </div>
         </div>
       </div>
-      <div id="verification" class="container_component hidden">
+      <div id="checkout" class="container_component hidden">
         <div class="brand_large">
-          VERIFICATION
+          CHECKOUT
         </div>
         <div class="container_costs">
-          <p class="costs_explanation">In the mean time, we have sent you an email for verification. Please verify yourself before proceeding to log in.</p>
+          <p class="costs_explanation">Our payments are processed externally by Stripe to assure the security of your payment details. Click redirect to proceed to the checkout.</p>
+          <br>
+          <p class="costs_explanation">Please also verify your email in order to successfully log in after you have paid.</p>
           <!-- <p class="cost_icon">5.- Fr</p> -->
           <!-- <p> For the price of a <u><a id="loaf_of_bread" href="https://produkte.migros.ch/pain-creation-knusperbrot-111471500500">loaf of bread</a></u>  a month </p> -->
           <!-- <div class="cost_explanation">The price of metabolism probably amortises itself on average through cost savings due to reduced waste.</div> -->
         </div>
         <div class="container_register">
-        <div id="register" class="register_button" @click="goLogin()">Done</div>
+        <div id="register" class="register_button" @click="goCheckout()">Proceed</div>
         </div>
       </div>
     </div>
@@ -245,7 +247,8 @@ export default {
       'popularMealplans',
       'userData',
       'userAddresses',
-      'price'
+      'price',
+      'mealplansSelected'
     ])
   },
   created () {
@@ -257,8 +260,7 @@ export default {
   methods: {
     ...mapMutations([
       'toggleSelectedRegister',
-      'calcPrice',
-      'addMonths'
+      'calcPrice'
     ]),
     showAddress () {
       for (var i = 0; i < document.getElementsByClassName('progress_circle').length; i++) {
@@ -290,7 +292,7 @@ export default {
       }
       document.getElementById('mealplans').classList.remove('hidden')
     },
-    showVerification () {
+    showCheckout () {
       for (var i = 0; i < document.getElementsByClassName('progress_circle').length; i++) {
         document.getElementsByClassName('progress_circle')[i].classList.remove('progress_circle_active')
       }
@@ -298,11 +300,62 @@ export default {
       for (var i = 0; i < document.getElementsByClassName('container_component').length; i++) {
         document.getElementsByClassName('container_component')[i].classList.add('hidden')
       }
-      document.getElementById('verification').classList.remove('hidden')
+      document.getElementById('checkout').classList.remove('hidden')
     },
-    goLogin () {
-      store.commit('setPage', 'login')
-      router.push('login')
+    goCheckout () {
+      // returns total price which you can then pass on to Stripe Checkout
+      store.commit('calcTotalPrice')
+      // eslint-disable-next-line
+      var stripe = Stripe('pk_test_eOIPf7mHX035HASoi8LrghW5', {
+        betas: ['checkout_beta_4']
+      })
+      stripe.redirectToCheckout({
+        items: [{
+          sku: 'sku_ETuovBIeaLjPou', quantity: state.price / 5
+        }],
+        // Note that it is not guaranteed your customers will be redirected to this
+        // URL *100%* of the time, it's possible that they could e.g. close the
+        // tab between form submission and the redirect.
+        successUrl: 'https://metabolism-salo.firebaseapp.com/profile',
+        cancelUrl: 'https://metabolism-salo.firebaseapp.com/profile'
+      })
+        .then(function (result) {
+          if (result.error) {
+            // If `redirectToCheckout` fails due to a browser or network
+            // error, display the localized error message to your customer.
+            alert(result.error.message)
+          }
+        })
+      store.commit('addMonths')
+      var mealplans = mealplansSelected
+      for (let m in mealplans) {
+        var mealplan = mealplans[m]
+        var userData = this.userData
+        var calorieRatio = userData.calories / mealplan.calories
+        db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).set({
+          name: mealplan.publicName,
+          publicName: mealplan.publicName,
+          isActive: false,
+          isPublic: false,
+          isPurchased: true,
+          recipes: [],
+          filters: [],
+          price: mealplan.price,
+          purchases: mealplan.purchases,
+          currency: mealplan.currency,
+          recipesAmount: mealplan.recipesAmount,
+          uid: mealplan.uid
+        })
+        for (let filter in mealplan.filters) {
+          db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).collection('filters').doc(mealplan.filters[filter].uid).set(mealplan.filters[filter])
+        }
+        for (let recipe in mealplan.recipes) {
+          db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).collection('filters').doc(mealplan.recipes[recipe].uid).set(mealplan.recipes[recipe])
+          for (let ingredient in mealplan.recipes[recipe].ingredients) {
+            db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).collection('filters').doc(mealplan.recipes[recipe].uid).collection('ingredients').doc(mealplan.recipes[recipe].ingredients[ingredient].uid).set(mealplan.recipes[recipe].ingredients[ingredient])
+          }
+        }
+      }
     },
     focusEmailInput () {
       document.getElementById('emailInput').focus()
@@ -310,10 +363,12 @@ export default {
     selectMealplan (mealplan) {
       document.getElementById(mealplan.uid).classList.add('hidden')
       document.getElementById(mealplan.uid + 1).classList.remove('hidden')
+      store.commit('pushMealplanSelected', mealplan)
     },
     unselectMealplan (mealplan) {
       document.getElementById(mealplan.uid + 1).classList.add('hidden')
       document.getElementById(mealplan.uid).classList.remove('hidden')
+      store.commit('removeMealplanSelected', mealplan)
     },
     createUser () {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
@@ -321,11 +376,6 @@ export default {
           store.commit('createUser', user)
           firebase.auth().useDeviceLanguage()
           firebase.auth().currentUser.sendEmailVerification()
-            .then(function () {
-              console.log('Sign-out successful.')
-              alert('Verification email sent. Please verify your email address.')
-              router.push('/login')
-            })
         })
         .catch(function (error) {
           alert(error)

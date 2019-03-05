@@ -15,11 +15,13 @@ export default new Vuex.Store({
     },
     userAddresses: [],
     popularMealplans: [],
+    mealplansSelected: [],
     newIngredient: null,
     newAmount: null,
     newUnit: null,
     currentPage: 'calendar',
     price: 0,
+    totalPrice: 0
     rerender: 1,
     pricePerMonth: 5,
     today: null,
@@ -191,6 +193,13 @@ export default new Vuex.Store({
         month.isActive = !month.isActive
       }
     },
+    pushMealplanSelected (state, mealplan) {
+      state.mealplansSelected.push(mealplan)
+    },
+    removeMealplanSelected (state, mealplan) {
+      let index = state.mealplansSelected.indexOf(mealplan)
+      state.mealplansSelected.splice(index, 1)
+    },
     calcPrice (state, index) {
       state.price = 0
       for (var i = 0; i < state.userAddresses[index].months.length; i++) {
@@ -198,6 +207,13 @@ export default new Vuex.Store({
           state.price += state.pricePerMonth
         }
       }
+    },
+    calcTotalPrice (state) {
+      state.totalPrice = 0
+      for (let mealplan in state.mealplansSelected) {
+        state.totalPrice += state.mealplansSelected[mealplan].price
+      }
+      state.totalPrice += state.price
     },
     addMonths (state, index) {
       // eslint-disable-next-line
