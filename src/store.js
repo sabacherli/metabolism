@@ -1702,14 +1702,12 @@ export default new Vuex.Store({
           new Promise(function (resolve, reject) {
             querySnapshot.forEach(function (doc) {
               db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection(mealIngredients).doc(doc.id).delete()
-              console.log('removed all ingredients');
             })
             resolve()
           })
             .then(function () {
               for (let ingredient in recipe.ingredients) {
                 db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection(mealIngredients).doc(recipe.ingredients[ingredient].uid).set(recipe.ingredients[ingredient])
-                console.log('added ingredient');
               }
             })
         })
@@ -1859,7 +1857,6 @@ export default new Vuex.Store({
         .then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
             db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection(mealIngredients).doc(doc.id).delete()
-            console.log(doc.id, 'deleted');
           })
         })
     },
@@ -2269,7 +2266,7 @@ export default new Vuex.Store({
             name: 'Personal',
             publicName: 'PersonalMealplan',
             isActive: true,
-            isPurchased: true,
+            isPurchased: false,
             isPublic: false,
             recipes: [],
             filters: [],
@@ -2521,7 +2518,7 @@ export default new Vuex.Store({
             publicName: 'Personal Mealplan',
             isActive: true,
             isPublic: false,
-            isPurchased: true,
+            isPurchased: false,
             recipes: [],
             filters: [],
             price: 0,

@@ -42,13 +42,11 @@
         <p class="dayname">Displayed Meals</p>
         <div class="ingredients_break">
 
-
         </div>
+        <!-- eslint-disable-next-line -->
         <div class="meal_container" v-for="meal in userData.meals" @click="toggleMeal(meal)">
           <div :key="meal.uid" class="meal">{{ meal.text }}</div>
           <div :class="{ meal_selected_black: meal.isActive, meal_selected_white: !meal.isActive }"></div>
-          <!-- <span class="sign_remove" style="margin-top: -39px" v-if="meal.isActive === true" @click="hideMeal(meal)">+</span>
-          <span class="sign_remove" style="margin-top: -30px" v-if="meal.isActive === false" @click="showMeal(meal)">-</span> -->
         </div>
       </div>
       <div class="">
@@ -379,7 +377,7 @@
         </div>
         <!-- eslint-disable-next-line -->
         <div class="" align="left">
-          <label for="">Mealplan Name</label>
+          <label for="">Meal Plan Name</label>
           <input class="amount" type="text" @keyup.enter="updateMealplan(mealplan)" v-model="mealplan.name" required>
           <br>
         </div>
