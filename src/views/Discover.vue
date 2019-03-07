@@ -199,6 +199,9 @@ export default {
             alert(result.error.message)
           }
         })
+      db.collection('mealplans').doc(mealplan.uid).update({
+        purchases: mealplan.purchases + 1
+      })
       db.collection('users').doc(userData.uid).collection('mealplans').doc(mealplan.uid).set({
         name: mealplan.publicName,
         publicName: mealplan.publicName,

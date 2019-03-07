@@ -4,17 +4,16 @@
       <!-- eslint-disable-next-line -->
       <div class="filter" @click="toggleLocation(address)">
         <p> {{ address.name }} </p>
-        <div :class="{ filter_selected: address.isActive }">
-
-        </div>
+        <div :class="{ filter_selected: address.isActive }"></div>
       </div>
     </template>
-    <div v-if="currentPage === 'calendar'" class="filter" @click="toggleMenu(menu)">
-      <p> {{ menu.text }} </p>
-      <div :class="{ filter_selected: menu.isActive }">
-
+    <template v-for="option in calendarOptions">
+      <!-- eslint-disable-next-line -->
+      <div v-if="currentPage === 'calendar'" class="filter" @click="toggleCalendarOptions(option)">
+        <p> {{ option.text }} </p>
+        <div :class="{ filter_selected: option.isActive }"></div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -27,13 +26,14 @@ export default {
     ...mapState([
       'userData',
       'menu',
-      'currentPage'
+      'currentPage',
+      'calendarOptions'
     ])
   },
   methods: {
     ...mapMutations([
       'toggleLocation',
-      'toggleMenu'
+      'toggleCalendarOptions'
     ])
   }
 }

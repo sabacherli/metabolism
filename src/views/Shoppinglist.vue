@@ -125,9 +125,16 @@ export default {
         if (place.shoppingList[ingredient].isActive) {
           for (var d = 0; d < days; d++) {
             var day = moment().add(d, 'days').format('YYYYMMDD')
-            db.collection('addresses').doc(place.uid).collection('calendar').doc(day).collection('breakfastIngredients').doc(place.shoppingList[ingredient].uid).delete()
-            db.collection('addresses').doc(place.uid).collection('calendar').doc(day).collection('lunchIngredients').doc(place.shoppingList[ingredient].uid).delete()
-            db.collection('addresses').doc(place.uid).collection('calendar').doc(day).collection('dinnerIngredients').doc(place.shoppingList[ingredient].uid).delete()
+            db.collection('addresses').doc(place.uid).collection('calendar').doc(day).collection('meal0Ingredients').doc(place.shoppingList[ingredient].uid).delete()
+            db.collection('addresses').doc(place.uid).collection('calendar').doc(day).collection('meal1Ingredients').doc(place.shoppingList[ingredient].uid).delete()
+            db.collection('addresses').doc(place.uid).collection('calendar').doc(day).collection('meal2Ingredients').doc(place.shoppingList[ingredient].uid).delete()
+            db.collection('addresses').doc(place.uid).collection('calendar').doc(day).collection('meal3Ingredients').doc(place.shoppingList[ingredient].uid).delete()
+            db.collection('addresses').doc(place.uid).collection('calendar').doc(day).collection('meal4Ingredients').doc(place.shoppingList[ingredient].uid).delete()
+            db.collection('addresses').doc(place.uid).collection('calendar').doc(day).collection('meal5Ingredients').doc(place.shoppingList[ingredient].uid).delete()
+            db.collection('addresses').doc(place.uid).collection('calendar').doc(day).collection('meal6Ingredients').doc(place.shoppingList[ingredient].uid).delete()
+            db.collection('addresses').doc(place.uid).collection('calendar').doc(day).collection('meal7Ingredients').doc(place.shoppingList[ingredient].uid).delete()
+            db.collection('addresses').doc(place.uid).collection('calendar').doc(day).collection('meal8Ingredients').doc(place.shoppingList[ingredient].uid).delete()
+            db.collection('addresses').doc(place.uid).collection('calendar').doc(day).collection('meal9Ingredients').doc(place.shoppingList[ingredient].uid).delete()
           }
         }
       }

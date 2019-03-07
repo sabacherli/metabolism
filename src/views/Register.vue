@@ -250,7 +250,8 @@ export default {
       'userData',
       'userAddresses',
       'price',
-      'mealplansSelected'
+      'mealplansSelected',
+      'totalPrice'
     ])
   },
   created () {
@@ -311,23 +312,27 @@ export default {
       var stripe = Stripe('pk_test_eOIPf7mHX035HASoi8LrghW5', {
         betas: ['checkout_beta_4']
       })
-      stripe.redirectToCheckout({
-        items: [{
-          sku: 'sku_ETuovBIeaLjPou', quantity: 5
-        }],
-        // Note that it is not guaranteed your customers will be redirected to this
-        // URL *100%* of the time, it's possible that they could e.g. close the
-        // tab between form submission and the redirect.
-        successUrl: 'https://metabolism-salo.firebaseapp.com/profile',
-        cancelUrl: 'https://metabolism-salo.firebaseapp.com/profile'
-      })
-        .then(function (result) {
-          if (result.error) {
-            // If `redirectToCheckout` fails due to a browser or network
-            // error, display the localized error message to your customer.
-            alert(result.error.message)
-          }
+      if (this.totalPrice > 0) {
+        stripe.redirectToCheckout({
+          items: [{
+            sku: 'sku_ETuovBIeaLjPou', quantity: this.totalPrice
+          }],
+          // Note that it is not guaranteed your customers will be redirected to this
+          // URL *100%* of the time, it's possible that they could e.g. close the
+          // tab between form submission and the redirect.
+          successUrl: 'https://metabolism-salo.firebaseapp.com/login',
+          cancelUrl: 'https://metabolism-salo.firebaseapp.com/login'
         })
+          .then(function (result) {
+            if (result.error) {
+              // If `redirectToCheckout` fails due to a browser or network
+              // error, display the localized error message to your customer.
+              alert(result.error.message)
+            }
+          })
+      } else {
+        store.commit('login')
+      }
       store.commit('addMonths')
       var mealplans = this.mealplansSelected
       for (let m in mealplans) {

@@ -18,17 +18,45 @@
               <div class="ingredients_break">
 
               </div>
-              <div class="">
-                <p class="meal" style="text-decoration: line-through"> {{ day.breakfast }} </p>
-                <p class="meal_location" style="text-decoration: line-through"> {{ day.breakfastLocation }} </p>
+              <div class="" v-if="userData.meals[0].isActive">
+                <p class="meal" style="text-decoration: line-through"> {{ day.meal0 }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.meal0Location }} </p>
               </div>
-              <div class="">
-                <p class="meal" style="text-decoration: line-through"> {{ day.lunch }} </p>
-                <p class="meal_location" style="text-decoration: line-through"> {{ day.lunchLocation }} </p>
+              <div class="" v-if="userData.meals[1].isActive">
+                <p class="meal" style="text-decoration: line-through"> {{ day.meal1 }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.meal1Location }} </p>
               </div>
-              <div class="">
-                <p class="meal" style="text-decoration: line-through"> {{ day.dinner }} </p>
-                <p class="meal_location" style="text-decoration: line-through"> {{ day.dinnerLocation }} </p>
+              <div class="" v-if="userData.meals[2].isActive">
+                <p class="meal" style="text-decoration: line-through"> {{ day.meal2 }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.meal2Location }} </p>
+              </div>
+              <div class="" v-if="userData.meals[3].isActive">
+                <p class="meal" style="text-decoration: line-through"> {{ day.meal3 }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.meal3Location }} </p>
+              </div>
+              <div class="" v-if="userData.meals[4].isActive">
+                <p class="meal" style="text-decoration: line-through"> {{ day.meal4 }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.meal4Location }} </p>
+              </div>
+              <div class="" v-if="userData.meals[5].isActive">
+                <p class="meal" style="text-decoration: line-through"> {{ day.meal5 }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.meal5Location }} </p>
+              </div>
+              <div class="" v-if="userData.meals[6].isActive">
+                <p class="meal" style="text-decoration: line-through"> {{ day.meal6 }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.meal6Location }} </p>
+              </div>
+              <div class="" v-if="userData.meals[7].isActive">
+                <p class="meal" style="text-decoration: line-through"> {{ day.meal7 }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.meal7Location }} </p>
+              </div>
+              <div class="" v-if="userData.meals[8].isActive">
+                <p class="meal" style="text-decoration: line-through"> {{ day.meal8 }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.meal8Location }} </p>
+              </div>
+              <div class="" v-if="userData.meals[9].isActive">
+                <p class="meal" style="text-decoration: line-through"> {{ day.meal9 }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.meal9Location }} </p>
               </div>
             </div>
             <!-- eslint-disable-next-line -->
@@ -38,17 +66,45 @@
               <div class="ingredients_break">
 
               </div>
-              <div class="container_meal" @click="setBreakfast(day); openMenu()">
-                <p class="meal"> {{ day.breakfast }} </p>
-                <p class="meal_location"> {{ day.breakfastLocation }} </p>
+              <div class="container_meal" v-if="userData.meals[0].isActive" @click="setMeal0(day); openMenu()">
+                <p class="meal"> {{ day.meal0 }} </p>
+                <p class="meal_location"> {{ day.meal0Location }} </p>
               </div>
-              <div class="container_meal" @click="setLunch(day); openMenu()">
-                <p class="meal"> {{ day.lunch }} </p>
-                <p class="meal_location"> {{ day.lunchLocation }} </p>
+              <div class="container_meal" v-if="userData.meals[1].isActive" @click="setMeal1(day); openMenu()">
+                <p class="meal"> {{ day.meal1 }} </p>
+                <p class="meal_location"> {{ day.meal1Location }} </p>
               </div>
-              <div class="container_meal" @click="setDinner(day); openMenu()">
-                <p class="meal"> {{ day.dinner }} </p>
-                <p class="meal_location"> {{ day.dinnerLocation }} </p>
+              <div class="container_meal" v-if="userData.meals[2].isActive" @click="setMeal2(day); openMenu()">
+                <p class="meal"> {{ day.meal2 }} </p>
+                <p class="meal_location"> {{ day.meal2Location }} </p>
+              </div>
+              <div class="container_meal" v-if="userData.meals[3].isActive" @click="setMeal3(day); openMenu()">
+                <p class="meal"> {{ day.meal3 }} </p>
+                <p class="meal_location"> {{ day.meal3Location }} </p>
+              </div>
+              <div class="container_meal" v-if="userData.meals[4].isActive" @click="setMeal4(day); openMenu()">
+                <p class="meal"> {{ day.meal4 }} </p>
+                <p class="meal_location"> {{ day.meal4Location }} </p>
+              </div>
+              <div class="container_meal" v-if="userData.meals[5].isActive" @click="setMeal5(day); openMenu()">
+                <p class="meal"> {{ day.meal5 }} </p>
+                <p class="meal_location"> {{ day.meal5Location }} </p>
+              </div>
+              <div class="container_meal" v-if="userData.meals[6].isActive" @click="setMeal6(day); openMenu()">
+                <p class="meal"> {{ day.meal6 }} </p>
+                <p class="meal_location"> {{ day.meal6Location }} </p>
+              </div>
+              <div class="container_meal" v-if="userData.meals[7].isActive" @click="setMeal7(day); openMenu()">
+                <p class="meal"> {{ day.meal7 }} </p>
+                <p class="meal_location"> {{ day.meal7Location }} </p>
+              </div>
+              <div class="container_meal" v-if="userData.meals[8].isActive" @click="setMeal8(day); openMenu()">
+                <p class="meal"> {{ day.meal8 }} </p>
+                <p class="meal_location"> {{ day.meal8Location }} </p>
+              </div>
+              <div class="container_meal" v-if="userData.meals[9].isActive" @click="setMeal9(day); openMenu()">
+                <p class="meal"> {{ day.meal9 }} </p>
+                <p class="meal_location"> {{ day.meal9Location }} </p>
               </div>
             </div>
             <!-- eslint-disable-next-line -->
@@ -61,17 +117,45 @@
               <div class="ingredients_break">
 
               </div>
-              <div class="container_meal" @click="goProfile()">
-                <p class="meal" style="text-decoration: line-through"> {{ day.breakfast }} </p>
-                <p class="meal_location" style="text-decoration: line-through"> {{ day.breakfastLocation }} </p>
+              <div class="" v-if="userData.meals[0].isActive" @click="goProfile()">
+                <p class="meal" style="text-decoration: line-through"> {{ day.meal0 }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.meal0Location }} </p>
               </div>
-              <div class="container_meal" @click="goProfile()">
-                <p class="meal" style="text-decoration: line-through"> {{ day.lunch }} </p>
-                <p class="meal_location" style="text-decoration: line-through"> {{ day.lunchLocation }} </p>
+              <div class="" v-if="userData.meals[1].isActive" @click="goProfile()">
+                <p class="meal" style="text-decoration: line-through"> {{ day.meal1 }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.meal1Location }} </p>
               </div>
-              <div class="container_meal" @click="goProfile()">
-                <p class="meal" style="text-decoration: line-through"> {{ day.dinner }} </p>
-                <p class="meal_location" style="text-decoration: line-through"> {{ day.dinnerLocation }} </p>
+              <div class="" v-if="userData.meals[2].isActive" @click="goProfile()">
+                <p class="meal" style="text-decoration: line-through"> {{ day.meal2 }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.meal2Location }} </p>
+              </div>
+              <div class="" v-if="userData.meals[3].isActive" @click="goProfile()">
+                <p class="meal" style="text-decoration: line-through"> {{ day.meal3 }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.meal3Location }} </p>
+              </div>
+              <div class="" v-if="userData.meals[4].isActive" @click="goProfile()">
+                <p class="meal" style="text-decoration: line-through"> {{ day.meal4 }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.meal4Location }} </p>
+              </div>
+              <div class="" v-if="userData.meals[5].isActive" @click="goProfile()">
+                <p class="meal" style="text-decoration: line-through"> {{ day.meal5 }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.meal5Location }} </p>
+              </div>
+              <div class="" v-if="userData.meals[6].isActive" @click="goProfile()">
+                <p class="meal" style="text-decoration: line-through"> {{ day.meal6 }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.meal6Location }} </p>
+              </div>
+              <div class="" v-if="userData.meals[7].isActive" @click="goProfile()">
+                <p class="meal" style="text-decoration: line-through"> {{ day.meal7 }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.meal7Location }} </p>
+              </div>
+              <div class="" v-if="userData.meals[8].isActive" @click="goProfile()">
+                <p class="meal" style="text-decoration: line-through"> {{ day.meal8 }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.meal8Location }} </p>
+              </div>
+              <div class="" v-if="userData.meals[9].isActive" @click="goProfile()">
+                <p class="meal" style="text-decoration: line-through"> {{ day.meal9 }} </p>
+                <p class="meal_location" style="text-decoration: line-through"> {{ day.meal9Location }} </p>
               </div>
             </div>
           </template>
@@ -99,19 +183,19 @@
                 <div class="block_date">
                   <template v-for="month in userAddresses[index].months.slice(0,4)">
                     <!-- eslint-disable-next-line -->
-                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
+                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased, inline_date_past: Number(month.month) < currentYearMonth }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
                   </template>
                 </div>
                 <div class="block_date">
                   <template v-for="month in userAddresses[index].months.slice(4,8)">
                     <!-- eslint-disable-next-line -->
-                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
+                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased, inline_date_past: Number(month.month) < currentYearMonth }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
                   </template>
                 </div>
                 <div class="block_date">
                   <template v-for="month in userAddresses[index].months.slice(8,12)">
                     <!-- eslint-disable-next-line -->
-                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
+                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased, inline_date_past: Number(month.month) < currentYearMonth }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
                   </template>
                 </div>
               </div>
@@ -126,19 +210,19 @@
                 <div class="block_date">
                   <template v-for="month in userAddresses[index].months.slice(12,16)">
                     <!-- eslint-disable-next-line -->
-                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
+                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased, inline_date_past: Number(month.month) < currentYearMonth }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
                   </template>
                 </div>
                 <div class="block_date">
                   <template v-for="month in userAddresses[index].months.slice(16,20)">
                     <!-- eslint-disable-next-line -->
-                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
+                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased, inline_date_past: Number(month.month) < currentYearMonth }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
                   </template>
                 </div>
                 <div class="block_date">
                   <template v-for="month in userAddresses[index].months.slice(20,24)">
                     <!-- eslint-disable-next-line -->
-                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
+                    <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased, inline_date_past: Number(month.month) < currentYearMonth }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
                   </template>
                 </div>
                 <p class="year_date price">{{ price }} CHF</p>
@@ -179,14 +263,22 @@ export default {
       'start',
       'currentYear',
       'currentYearMonth',
-      'pointer'
+      'pointer',
+      'calendarOptions'
     ])
   },
   methods: {
     ...mapMutations([
-      'setBreakfast',
-      'setLunch',
-      'setDinner',
+      'setMeal0',
+      'setMeal1',
+      'setMeal2',
+      'setMeal3',
+      'setMeal4',
+      'setMeal5',
+      'setMeal6',
+      'setMeal7',
+      'setMeal8',
+      'setMeal9',
       'nextWeek',
       'previousWeek',
       'toggleSelected',
@@ -194,8 +286,11 @@ export default {
       'addMonths'
     ]),
     openMenu () {
-      if (this.menu.isActive) {
-        this.$router.push('/recipes')
+      var options = this.calendarOptions
+      for (let option in options) {
+        if (options[option].text === 'Menu' && options[option].isActive === true) {
+          this.$router.push('/recipes')
+        }
       }
     },
     dayPurchased (day) {
@@ -383,6 +478,9 @@ export default {
     padding: auto 5px auto 5px;
     border-radius: 20px 20px;
 }
+.inline_date_past {
+  text-decoration: line-through;
+}
 .inline_date_selected {
   font-weight: 400;
   border: 1.4px solid black;
@@ -445,6 +543,9 @@ export default {
   }
   .inline_date:hover {
     cursor: pointer;
+  }
+  .inline_date_past:hover {
+    cursor: default;
   }
   .box:hover {
     cursor: pointer;

@@ -91,10 +91,20 @@ export default new Vuex.Store({
       }
     ],
     searchedMealplan: null,
-    menu: {
-      text: 'Menu',
-      isActive: true
-    },
+    calendarOptions: [
+      {
+        text: 'Menu',
+        isActive: true
+      },
+      {
+        text: 'Restaurant',
+        isActive: false
+      }//,
+      // {
+      //   text: 'Sports',
+      //   isActive: false
+      // }
+    ],
     newRecipe: {
       id: null,
       name: null,
@@ -217,26 +227,26 @@ export default new Vuex.Store({
     },
     addMonths (state, index) {
       // eslint-disable-next-line
-      var stripe = Stripe('pk_test_eOIPf7mHX035HASoi8LrghW5', {
-        betas: ['checkout_beta_4']
-      })
-      stripe.redirectToCheckout({
-        items: [{
-          sku: 'sku_ETuovBIeaLjPou', quantity: state.price / 5
-        }],
+      // var stripe = Stripe('pk_test_eOIPf7mHX035HASoi8LrghW5', {
+      //   betas: ['checkout_beta_4']
+      // })
+      // stripe.redirectToCheckout({
+      //   items: [{
+      //     sku: 'sku_ETuovBIeaLjPou', quantity: state.price / 5
+      //   }],
         // Note that it is not guaranteed your customers will be redirected to this
         // URL *100%* of the time, it's possible that they could e.g. close the
         // tab between form submission and the redirect.
-        successUrl: 'https://metabolism-salo.firebaseapp.com/profile',
-        cancelUrl: 'https://metabolism-salo.firebaseapp.com/profile'
-      })
-        .then(function (result) {
-          if (result.error) {
-            // If `redirectToCheckout` fails due to a browser or network
-            // error, display the localized error message to your customer.
-            alert(result.error.message)
-          }
-        })
+      //   successUrl: 'https://metabolism-salo.firebaseapp.com/profile',
+      //   cancelUrl: 'https://metabolism-salo.firebaseapp.com/profile'
+      // })
+      //   .then(function (result) {
+      //     if (result.error) {
+      //       // If `redirectToCheckout` fails due to a browser or network
+      //       // error, display the localized error message to your customer.
+      //       alert(result.error.message)
+      //     }
+      //   })
       for (let month = 0; month < state.userAddresses[index].months.length; month++) {
         if (state.userAddresses[index].months[month].isActive === true) {
           const date = moment(state.userAddresses[index].months[month].month, 'YYYYMM', true)
@@ -260,21 +270,68 @@ export default new Vuex.Store({
                 dayname: moment().isoWeekday(moment().year(year).month(mon).subtract(1, 'M')
                   .date(day)
                   .weekday()).format('dddd'),
-                breakfastCaloriesOwner: null,
-                breakfastMembers: [
-                  state.userData.uid
-                ],
-                breakfastIngredients: [],
-                lunchCaloriesOwner: null,
-                lunchMembers: [
-                  state.userData.uid
-                ],
-                lunchIngredients: [],
-                dinnerCaloriesOwner: null,
-                dinnerMembers: [
-                  state.userData.uid
-                ],
-                dinnerIngredients: []
+                meal0CaloriesOwner: null,
+                meal0Members: [],
+                meal0Ingredients: [],
+                meal1CaloriesOwner: null,
+                meal1Members: [],
+                meal1Ingredients: [],
+                meal2CaloriesOwner: null,
+                meal2Members: [],
+                meal2Ingredients: [],
+                meal3CaloriesOwner: null,
+                meal3Members: [],
+                meal3Ingredients: [],
+                meal4CaloriesOwner: null,
+                meal4Members: [],
+                meal4Ingredients: [],
+                meal5CaloriesOwner: null,
+                meal5Members: [],
+                meal5Ingredients: [],
+                meal6CaloriesOwner: null,
+                meal6Members: [],
+                meal6Ingredients: [],
+                meal7CaloriesOwner: null,
+                meal7Members: [],
+                meal7Ingredients: [],
+                meal8CaloriesOwner: null,
+                meal8Members: [],
+                meal8Ingredients: [],
+                meal9CaloriesOwner: null,
+                meal9Members: [],
+                meal9Ingredients: []
+              }
+              for (let meal in state.userData.meals) {
+                if (state.userData.meals[meal].uid === '0' && state.userData.meals[meal].isActive) {
+                  dayTemplate.meal0Members.push(state.userData.uid)
+                }
+                if (state.userData.meals[meal].uid === '1' && state.userData.meals[meal].isActive) {
+                  dayTemplate.meal1Members.push(state.userData.uid)
+                }
+                if (state.userData.meals[meal].uid === '2' && state.userData.meals[meal].isActive) {
+                  dayTemplate.meal2Members.push(state.userData.uid)
+                }
+                if (state.userData.meals[meal].uid === '3' && state.userData.meals[meal].isActive) {
+                  dayTemplate.meal3Members.push(state.userData.uid)
+                }
+                if (state.userData.meals[meal].uid === '4' && state.userData.meals[meal].isActive) {
+                  dayTemplate.meal4Members.push(state.userData.uid)
+                }
+                if (state.userData.meals[meal].uid === '5' && state.userData.meals[meal].isActive) {
+                  dayTemplate.meal5Members.push(state.userData.uid)
+                }
+                if (state.userData.meals[meal].uid === '6' && state.userData.meals[meal].isActive) {
+                  dayTemplate.meal6Members.push(state.userData.uid)
+                }
+                if (state.userData.meals[meal].uid === '7' && state.userData.meals[meal].isActive) {
+                  dayTemplate.meal7Members.push(state.userData.uid)
+                }
+                if (state.userData.meals[meal].uid === '8' && state.userData.meals[meal].isActive) {
+                  dayTemplate.meal8Members.push(state.userData.uid)
+                }
+                if (state.userData.meals[meal].uid === '9' && state.userData.meals[meal].isActive) {
+                  dayTemplate.meal9Members.push(state.userData.uid)
+                }
               }
               db.collection('addresses').doc(state.userData.addresses[index].uid).collection('calendar').doc(docName)
                 .set(dayTemplate)
@@ -287,15 +344,36 @@ export default new Vuex.Store({
                 dayname: moment().isoWeekday(moment().year(year).month(mon).subtract(1, 'M')
                   .date(day)
                   .weekday()).format('dddd'),
-                breakfastCaloriesOwner: null,
-                breakfastMembers: [],
-                breakfastIngredients: [],
-                lunchCaloriesOwner: null,
-                lunchMembers: [],
-                lunchIngredients: [],
-                dinnerCaloriesOwner: null,
-                dinnerMembers: [],
-                dinnerIngredients: []
+                meal0CaloriesOwner: null,
+                meal0Members: [],
+                meal0Ingredients: [],
+                meal1CaloriesOwner: null,
+                meal1Members: [],
+                meal1Ingredients: [],
+                meal2CaloriesOwner: null,
+                meal2Members: [],
+                meal2Ingredients: [],
+                meal3CaloriesOwner: null,
+                meal3Members: [],
+                meal3Ingredients: [],
+                meal4CaloriesOwner: null,
+                meal4Members: [],
+                meal4Ingredients: [],
+                meal5CaloriesOwner: null,
+                meal5Members: [],
+                meal5Ingredients: [],
+                meal6CaloriesOwner: null,
+                meal6Members: [],
+                meal6Ingredients: [],
+                meal7CaloriesOwner: null,
+                meal7Members: [],
+                meal7Ingredients: [],
+                meal8CaloriesOwner: null,
+                meal8Members: [],
+                meal8Ingredients: [],
+                meal9CaloriesOwner: null,
+                meal9Members: [],
+                meal9Ingredients: []
               }
               db.collection('addresses').doc(state.userData.addresses[index].uid).collection('calendar').doc(docName)
                 .set(dayTemplate)
@@ -324,71 +402,233 @@ export default new Vuex.Store({
         .then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
             db.collection('users').doc(state.userData.uid).collection('calendar').doc(doc.id).update({
-              breakfastAddress: place.uid,
-              breakfastLocation: place.name,
-              lunchAddress: place.uid,
-              lunchLocation: place.name,
-              dinnerAddress: place.uid,
-              dinnerLocation: place.name
+              meal0Location: place.name,
+              meal0Address: place.uid,
+              meal1Location: place.name,
+              meal1Address: place.uid,
+              meal2Location: place.name,
+              meal2Address: place.uid,
+              meal3Location: place.name,
+              meal3Address: place.uid,
+              meal4Location: place.name,
+              meal4Address: place.uid,
+              meal5Location: place.name,
+              meal5Address: place.uid,
+              meal6Location: place.name,
+              meal6Address: place.uid,
+              meal7Location: place.name,
+              meal7Address: place.uid,
+              meal8Location: place.name,
+              meal8Address: place.uid,
+              meal9Location: place.name,
+              meal9Address: place.uid
             })
           })
         })
       for (var address in state.userData.addresses) {
-        db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD'))).where('breakfastMembers', 'array-contains', state.userData.uid)
+        db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD'))).where('meal0Members', 'array-contains', state.userData.uid)
           .get()
           .then(function (querySnapshot) {
             querySnapshot.forEach(function (doc) {
               db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
-                breakfastMembers: firebase.firestore.FieldValue.arrayRemove(state.userData.uid)
+                meal0Members: firebase.firestore.FieldValue.arrayRemove(state.userData.uid)
               })
             })
           })
-        db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD'))).where('lunchMembers', 'array-contains', state.userData.uid)
+        db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD'))).where('meal1Members', 'array-contains', state.userData.uid)
           .get()
           .then(function (querySnapshot) {
             querySnapshot.forEach(function (doc) {
               db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
-                lunchMembers: firebase.firestore.FieldValue.arrayRemove(state.userData.uid)
+                meal1Members: firebase.firestore.FieldValue.arrayRemove(state.userData.uid)
               })
             })
           })
-        db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD'))).where('dinnerMembers', 'array-contains', state.userData.uid)
+        db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD'))).where('meal2Members', 'array-contains', state.userData.uid)
           .get()
           .then(function (querySnapshot) {
             querySnapshot.forEach(function (doc) {
               db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
-                dinnerMembers: firebase.firestore.FieldValue.arrayRemove(state.userData.uid)
+                meal2Members: firebase.firestore.FieldValue.arrayRemove(state.userData.uid)
+              })
+            })
+          })
+        db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD'))).where('meal3Members', 'array-contains', state.userData.uid)
+          .get()
+          .then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+              db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+                meal3Members: firebase.firestore.FieldValue.arrayRemove(state.userData.uid)
+              })
+            })
+          })
+        db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD'))).where('meal4Members', 'array-contains', state.userData.uid)
+          .get()
+          .then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+              db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+                meal4Members: firebase.firestore.FieldValue.arrayRemove(state.userData.uid)
+              })
+            })
+          })
+        db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD'))).where('meal5Members', 'array-contains', state.userData.uid)
+          .get()
+          .then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+              db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+                meal5Members: firebase.firestore.FieldValue.arrayRemove(state.userData.uid)
+              })
+            })
+          })
+        db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD'))).where('meal6Members', 'array-contains', state.userData.uid)
+          .get()
+          .then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+              db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+                meal6Members: firebase.firestore.FieldValue.arrayRemove(state.userData.uid)
+              })
+            })
+          })
+        db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD'))).where('meal7Members', 'array-contains', state.userData.uid)
+          .get()
+          .then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+              db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+                meal7Members: firebase.firestore.FieldValue.arrayRemove(state.userData.uid)
+              })
+            })
+          })
+        db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD'))).where('meal8Members', 'array-contains', state.userData.uid)
+          .get()
+          .then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+              db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+                meal8Members: firebase.firestore.FieldValue.arrayRemove(state.userData.uid)
+              })
+            })
+          })
+        db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD'))).where('meal9Members', 'array-contains', state.userData.uid)
+          .get()
+          .then(function (querySnapshot) {
+            querySnapshot.forEach(function (doc) {
+              db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+                meal9Members: firebase.firestore.FieldValue.arrayRemove(state.userData.uid)
               })
             })
           })
       }
-      db.collection('addresses').doc(place.uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD')))
-        .get()
-        .then(function (querySnapshot) {
-          querySnapshot.forEach(function (doc) {
-            db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
-              breakfastMembers: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+      for (let meal in state.userData.meals) {
+        if (state.userData.meals[meal].uid === '0' && state.userData.meals[meal].isActive) {
+          db.collection('addresses').doc(place.uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD')))
+            .get()
+            .then(function (querySnapshot) {
+              querySnapshot.forEach(function (doc) {
+                db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+                  meal0Members: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+                })
+              })
             })
-          })
-        })
-      db.collection('addresses').doc(place.uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD')))
-        .get()
-        .then(function (querySnapshot) {
-          querySnapshot.forEach(function (doc) {
-            db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
-              lunchMembers: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+        }
+        if (state.userData.meals[meal].uid === '1' && state.userData.meals[meal].isActive) {
+          db.collection('addresses').doc(place.uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD')))
+            .get()
+            .then(function (querySnapshot) {
+              querySnapshot.forEach(function (doc) {
+                db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+                  meal1Members: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+                })
+              })
             })
-          })
-        })
-      db.collection('addresses').doc(place.uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD')))
-        .get()
-        .then(function (querySnapshot) {
-          querySnapshot.forEach(function (doc) {
-            db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
-              dinnerMembers: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+        }
+        if (state.userData.meals[meal].uid === '2' && state.userData.meals[meal].isActive) {
+          db.collection('addresses').doc(place.uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD')))
+            .get()
+            .then(function (querySnapshot) {
+              querySnapshot.forEach(function (doc) {
+                db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+                  meal2Members: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+                })
+              })
             })
-          })
-        })
+        }
+        if (state.userData.meals[meal].uid === '3' && state.userData.meals[meal].isActive) {
+          db.collection('addresses').doc(place.uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD')))
+            .get()
+            .then(function (querySnapshot) {
+              querySnapshot.forEach(function (doc) {
+                db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+                  meal3Members: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+                })
+              })
+            })
+        }
+        if (state.userData.meals[meal].uid === '4' && state.userData.meals[meal].isActive) {
+          db.collection('addresses').doc(place.uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD')))
+            .get()
+            .then(function (querySnapshot) {
+              querySnapshot.forEach(function (doc) {
+                db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+                  meal4Members: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+                })
+              })
+            })
+        }
+        if (state.userData.meals[meal].uid === '5' && state.userData.meals[meal].isActive) {
+          db.collection('addresses').doc(place.uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD')))
+            .get()
+            .then(function (querySnapshot) {
+              querySnapshot.forEach(function (doc) {
+                db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+                  meal5Members: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+                })
+              })
+            })
+        }
+        if (state.userData.meals[meal].uid === '6' && state.userData.meals[meal].isActive) {
+          db.collection('addresses').doc(place.uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD')))
+            .get()
+            .then(function (querySnapshot) {
+              querySnapshot.forEach(function (doc) {
+                db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+                  meal6Members: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+                })
+              })
+            })
+        }
+        if (state.userData.meals[meal].uid === '7' && state.userData.meals[meal].isActive) {
+          db.collection('addresses').doc(place.uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD')))
+            .get()
+            .then(function (querySnapshot) {
+              querySnapshot.forEach(function (doc) {
+                db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+                  meal7Members: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+                })
+              })
+            })
+        }
+        if (state.userData.meals[meal].uid === '8' && state.userData.meals[meal].isActive) {
+          db.collection('addresses').doc(place.uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD')))
+            .get()
+            .then(function (querySnapshot) {
+              querySnapshot.forEach(function (doc) {
+                db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+                  meal8Members: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+                })
+              })
+            })
+        }
+        if (state.userData.meals[meal].uid === '9' && state.userData.meals[meal].isActive) {
+          db.collection('addresses').doc(place.uid).collection('calendar').where('date', '>=', Number(moment().format('YYYYMMDD')))
+            .get()
+            .then(function (querySnapshot) {
+              querySnapshot.forEach(function (doc) {
+                db.collection('addresses').doc(state.userData.addresses[address].uid).collection('calendar').doc(doc.id).update({
+                  meal9Members: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+                })
+              })
+            })
+        }
+      }
     },
     toggleLocation (state, address) {
       for (let a = 0; a < state.userData.addresses.length; a++) {
@@ -409,8 +649,11 @@ export default new Vuex.Store({
         filter.isActive = !filter.isActive
       }
     },
-    toggleMenu (state, menu) {
-      menu.isActive = !menu.isActive
+    toggleCalendarOptions (state, option) {
+      for (let o in state.calendarOptions) {
+        state.calendarOptions[o].isActive = false
+      }
+      option.isActive = true
     },
     toggleProfileFilter (state, filter) {
       for (let p = 0; p < state.profileFilters.length; p++) {
@@ -579,25 +822,84 @@ export default new Vuex.Store({
             state.userAddresses[address].calendar.length = 0
             querySnapshot.forEach(function (doc) {
               var userAddressDay = doc.data()
-              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('breakfastIngredients')
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal0Ingredients')
                 .onSnapshot(function (querySnapshot) {
+                  userAddressDay.meal0Ingredients.length = 0
                   querySnapshot.forEach(function (doc) {
                     let userAddressDayIngredient = doc.data()
-                    userAddressDay.breakfastIngredients.push(userAddressDayIngredient)
+                    userAddressDay.meal0Ingredients.push(userAddressDayIngredient)
                   })
                 })
-              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('lunchIngredients')
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal1Ingredients')
                 .onSnapshot(function (querySnapshot) {
+                  userAddressDay.meal1Ingredients.length = 0
                   querySnapshot.forEach(function (doc) {
                     let userAddressDayIngredient = doc.data()
-                    userAddressDay.lunchIngredients.push(userAddressDayIngredient)
+                    userAddressDay.meal1Ingredients.push(userAddressDayIngredient)
                   })
                 })
-              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('dinnerIngredients')
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal2Ingredients')
                 .onSnapshot(function (querySnapshot) {
+                  userAddressDay.meal2Ingredients.length = 0
                   querySnapshot.forEach(function (doc) {
                     let userAddressDayIngredient = doc.data()
-                    userAddressDay.dinnerIngredients.push(userAddressDayIngredient)
+                    userAddressDay.meal2Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal3Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  userAddressDay.meal2Ingredients.length = 0
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal3Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal4Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  userAddressDay.meal4Ingredients.length = 0
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal4Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal5Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  userAddressDay.meal5Ingredients.length = 0
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal5Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal6Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  userAddressDay.meal6Ingredients.length = 0
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal6Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal7Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  userAddressDay.meal7Ingredients.length = 0
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal7Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal8Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  userAddressDay.meal8Ingredients.length = 0
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal8Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal9Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  userAddressDay.meal9Ingredients.length = 0
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal9Ingredients.push(userAddressDayIngredient)
                   })
                 })
               state.userAddresses[address].calendar.push(userAddressDay)
@@ -617,30 +919,80 @@ export default new Vuex.Store({
       for (var address in state.userAddresses) {
         state.currentYear = state.start.format('YYYY')
         state.currentYearMonth = state.start.format('YYYYMM')
+        var addressID = state.userAddresses[address].uid
         db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
           .onSnapshot(function (querySnapshot) {
             state.userAddresses[address].calendar.length = 0
             querySnapshot.forEach(function (doc) {
               var userAddressDay = doc.data()
-              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userAddressDay.date.toString()).collection('breakfastIngredients')
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal0Ingredients')
                 .onSnapshot(function (querySnapshot) {
                   querySnapshot.forEach(function (doc) {
                     let userAddressDayIngredient = doc.data()
-                    userAddressDay.breakfastIngredients.push(userAddressDayIngredient)
+                    userAddressDay.meal0Ingredients.push(userAddressDayIngredient)
                   })
                 })
-              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userAddressDay.date.toString()).collection('lunchIngredients')
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal1Ingredients')
                 .onSnapshot(function (querySnapshot) {
                   querySnapshot.forEach(function (doc) {
                     let userAddressDayIngredient = doc.data()
-                    userAddressDay.lunchIngredients.push(userAddressDayIngredient)
+                    userAddressDay.meal1Ingredients.push(userAddressDayIngredient)
                   })
                 })
-              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userAddressDay.date.toString()).collection('dinnerIngredients')
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal2Ingredients')
                 .onSnapshot(function (querySnapshot) {
                   querySnapshot.forEach(function (doc) {
                     let userAddressDayIngredient = doc.data()
-                    userAddressDay.dinnerIngredients.push(userAddressDayIngredient)
+                    userAddressDay.meal2Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal3Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal3Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal4Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal4Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal5Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal5Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal6Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal6Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal7Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal7Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal8Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal8Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal9Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal9Ingredients.push(userAddressDayIngredient)
                   })
                 })
               state.userAddresses[address].calendar.push(userAddressDay)
@@ -661,30 +1013,80 @@ export default new Vuex.Store({
       for (var address in state.userAddresses) {
         state.currentYear = state.start.format('YYYY')
         state.currentYearMonth = state.start.format('YYYYMM')
+        var addressID = state.userAddresses[address].uid
         db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').where('date', '>=', Number(state.start.format('YYYYMMDD'))).where('date', '<', Number(state.start.add(state.displayAmount, 'days').format('YYYYMMDD'))).orderBy('date')
           .onSnapshot(function (querySnapshot) {
             state.userAddresses[address].calendar.length = 0
             querySnapshot.forEach(function (doc) {
               var userAddressDay = doc.data()
-              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userAddressDay.date.toString()).collection('breakfastIngredients')
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal0Ingredients')
                 .onSnapshot(function (querySnapshot) {
                   querySnapshot.forEach(function (doc) {
                     let userAddressDayIngredient = doc.data()
-                    userAddressDay.breakfastIngredients.push(userAddressDayIngredient)
+                    userAddressDay.meal0Ingredients.push(userAddressDayIngredient)
                   })
                 })
-              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userAddressDay.date.toString()).collection('lunchIngredients')
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal1Ingredients')
                 .onSnapshot(function (querySnapshot) {
                   querySnapshot.forEach(function (doc) {
                     let userAddressDayIngredient = doc.data()
-                    userAddressDay.lunchIngredients.push(userAddressDayIngredient)
+                    userAddressDay.meal1Ingredients.push(userAddressDayIngredient)
                   })
                 })
-              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userAddressDay.date.toString()).collection('dinnerIngredients')
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal2Ingredients')
                 .onSnapshot(function (querySnapshot) {
                   querySnapshot.forEach(function (doc) {
                     let userAddressDayIngredient = doc.data()
-                    userAddressDay.dinnerIngredients.push(userAddressDayIngredient)
+                    userAddressDay.meal2Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal3Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal3Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal4Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal4Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal5Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal5Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal6Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal6Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal7Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal7Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal8Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal8Ingredients.push(userAddressDayIngredient)
+                  })
+                })
+              db.collection('addresses').doc(addressID).collection('calendar').doc(userAddressDay.date.toString()).collection('meal9Ingredients')
+                .onSnapshot(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let userAddressDayIngredient = doc.data()
+                    userAddressDay.meal9Ingredients.push(userAddressDayIngredient)
                   })
                 })
               state.userAddresses[address].calendar.push(userAddressDay)
@@ -700,9 +1102,9 @@ export default new Vuex.Store({
           })
         })
     },
-    setBreakfast (state, day) {
+    setMeal0 (state, day) {
       state.pointer.doc = day.date
-      state.pointer.meal = 'Breakfast'
+      state.pointer.meal = '0'
       for (var address in state.userData.addresses) {
         if (state.userData.addresses[address].isActive) {
           state.pointer.address = state.userData.addresses[address].uid
@@ -717,37 +1119,37 @@ export default new Vuex.Store({
           break
         }
       }
-      if (state.userData.mealplans[m].filter[0].text === 'Breakfast') {
-        state.userData.mealplans[m].filter[0].isActive = true
+      if (state.userData.mealplans[m].filters[0].text === 'Breakfast') {
+        state.userData.mealplans[m].filters[0].isActive = false
       }
-      if (state.userData.mealplans[m].filter[1].text === 'Lunch') {
-        state.userData.mealplans[m].filter[1].isActive = false
+      if (state.userData.mealplans[m].filters[1].text === 'Lunch') {
+        state.userData.mealplans[m].filters[1].isActive = false
       }
-      if (state.userData.mealplans[m].filter[2].text === 'Dinner') {
-        state.userData.mealplans[m].filter[2].isActive = false
+      if (state.userData.mealplans[m].filters[2].text === 'Dinner') {
+        state.userData.mealplans[m].filters[2].isActive = false
       }
       db.collection('users').doc(state.userData.uid).collection('calendar').doc(day.date.toString()).update({
-        breakfastAddress: state.pointer.address,
-        breakfastLocation: state.pointer.location
+        meal0Address: state.pointer.address,
+        meal0Location: state.pointer.location
       })
       var isMember = false
       var date = day.date.toString()
       for (var object in state.userAddresses[state.pointer.index].calendar) {
         if (state.userAddresses[state.pointer.index].calendar[object].date === day.date) {
-          if (state.userAddresses[state.pointer.index].calendar[object].breakfastMembers.includes(state.userData.uid)) {
+          if (state.userAddresses[state.pointer.index].calendar[object].meal0Members.includes(state.userData.uid)) {
             isMember = true
           }
         }
       }
       if (isMember === false) {
-        db.collection('users').doc(state.userData.uid).collection('calendar').doc(date).update({
-          breakfastMembers: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+        db.collection('addresses').doc(state.userAddresses[state.pointer.index].uid).collection('calendar').doc(date).update({
+          meal0Members: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
         })
       }
     },
-    setLunch (state, day) {
+    setMeal1 (state, day) {
       state.pointer.doc = day.date
-      state.pointer.meal = 'Lunch'
+      state.pointer.meal = '1'
       for (var address in state.userData.addresses) {
         if (state.userData.addresses[address].isActive) {
           state.pointer.address = state.userData.addresses[address].uid
@@ -762,37 +1164,37 @@ export default new Vuex.Store({
           break
         }
       }
-      if (state.userData.mealplans[m].filter[0].text === 'Breakfast') {
-        state.userData.mealplans[m].filter[0].isActive = false
+      if (state.userData.mealplans[m].filters[0].text === 'Breakfast') {
+        state.userData.mealplans[m].filters[0].isActive = true
       }
-      if (state.userData.mealplans[m].filter[1].text === 'Lunch') {
-        state.userData.mealplans[m].filter[1].isActive = true
+      if (state.userData.mealplans[m].filters[1].text === 'Lunch') {
+        state.userData.mealplans[m].filters[1].isActive = false
       }
-      if (state.userData.mealplans[m].filter[2].text === 'Dinner') {
-        state.userData.mealplans[m].filter[2].isActive = false
+      if (state.userData.mealplans[m].filters[2].text === 'Dinner') {
+        state.userData.mealplans[m].filters[2].isActive = false
       }
       db.collection('users').doc(state.userData.uid).collection('calendar').doc(day.date.toString()).update({
-        lunchAddress: state.pointer.address,
-        lunchLocation: state.pointer.location
+        meal1Address: state.pointer.address,
+        meal1Location: state.pointer.location
       })
       var isMember = false
       var date = day.date.toString()
       for (var object in state.userAddresses[state.pointer.index].calendar) {
         if (state.userAddresses[state.pointer.index].calendar[object].date === day.date) {
-          if (state.userAddresses[state.pointer.index].calendar[object].lunchMembers.includes(state.userData.uid)) {
+          if (state.userAddresses[state.pointer.index].calendar[object].meal1Members.includes(state.userData.uid)) {
             isMember = true
           }
         }
       }
       if (isMember === false) {
-        db.collection('users').doc(state.userData.uid).collection('calendar').doc(date).update({
-          lunchMembers: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+        db.collection('addresses').doc(state.userAddresses[state.pointer.index].uid).collection('calendar').doc(date).update({
+          meal1Members: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
         })
       }
     },
-    setDinner (state, day) {
+    setMeal2 (state, day) {
       state.pointer.doc = day.date
-      state.pointer.meal = 'Dinner'
+      state.pointer.meal = '2'
       for (var address in state.userData.addresses) {
         if (state.userData.addresses[address].isActive) {
           state.pointer.address = state.userData.addresses[address].uid
@@ -807,177 +1209,657 @@ export default new Vuex.Store({
           break
         }
       }
-      if (state.userData.mealplans[m].filter[0].text === 'Breakfast') {
-        state.userData.mealplans[m].filter[0].isActive = false
+      if (state.userData.mealplans[m].filters[0].text === 'Breakfast') {
+        state.userData.mealplans[m].filters[0].isActive = false
       }
-      if (state.userData.mealplans[m].filter[1].text === 'Lunch') {
-        state.userData.mealplans[m].filter[1].isActive = false
+      if (state.userData.mealplans[m].filters[1].text === 'Lunch') {
+        state.userData.mealplans[m].filters[1].isActive = false
       }
-      if (state.userData.mealplans[m].filter[2].text === 'Dinner') {
-        state.userData.mealplans[m].filter[2].isActive = true
+      if (state.userData.mealplans[m].filters[2].text === 'Dinner') {
+        state.userData.mealplans[m].filters[2].isActive = false
       }
       db.collection('users').doc(state.userData.uid).collection('calendar').doc(day.date.toString()).update({
-        dinnerAddress: state.pointer.address,
-        dinnerLocation: state.pointer.location
+        meal2Address: state.pointer.address,
+        meal2Location: state.pointer.location
       })
       var isMember = false
       var date = day.date.toString()
       for (var object in state.userAddresses[state.pointer.index].calendar) {
         if (state.userAddresses[state.pointer.index].calendar[object].date === day.date) {
-          if (state.userAddresses[state.pointer.index].calendar[object].dinnerMembers.includes(state.userData.uid)) {
+          if (state.userAddresses[state.pointer.index].calendar[object].meal2Members.includes(state.userData.uid)) {
             isMember = true
           }
         }
       }
       if (isMember === false) {
-        db.collection('users').doc(state.userData.uid).collection('calendar').doc(date).update({
-          dinnerMembers: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+        db.collection('addresses').doc(state.userAddresses[state.pointer.index].uid).collection('calendar').doc(date).update({
+          meal2Members: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+        })
+      }
+    },
+    setMeal3 (state, day) {
+      state.pointer.doc = day.date
+      state.pointer.meal = '3'
+      for (var address in state.userData.addresses) {
+        if (state.userData.addresses[address].isActive) {
+          state.pointer.address = state.userData.addresses[address].uid
+          state.pointer.location = state.userData.addresses[address].name
+          state.pointer.index = address
+        }
+      }
+      // set filters appropriately
+      var m
+      for (m in state.userData.mealplans) {
+        if (state.userData.mealplans[m].isActive) {
+          break
+        }
+      }
+      if (state.userData.mealplans[m].filters[0].text === 'Breakfast') {
+        state.userData.mealplans[m].filters[0].isActive = false
+      }
+      if (state.userData.mealplans[m].filters[1].text === 'Lunch') {
+        state.userData.mealplans[m].filters[1].isActive = false
+      }
+      if (state.userData.mealplans[m].filters[2].text === 'Dinner') {
+        state.userData.mealplans[m].filters[2].isActive = false
+      }
+      db.collection('users').doc(state.userData.uid).collection('calendar').doc(day.date.toString()).update({
+        meal3Address: state.pointer.address,
+        meal3Location: state.pointer.location
+      })
+      var isMember = false
+      var date = day.date.toString()
+      for (var object in state.userAddresses[state.pointer.index].calendar) {
+        if (state.userAddresses[state.pointer.index].calendar[object].date === day.date) {
+          if (state.userAddresses[state.pointer.index].calendar[object].meal3Members.includes(state.userData.uid)) {
+            isMember = true
+          }
+        }
+      }
+      if (isMember === false) {
+        db.collection('addresses').doc(state.userAddresses[state.pointer.index].uid).collection('calendar').doc(date).update({
+          meal3Members: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+        })
+      }
+    },
+    setMeal4 (state, day) {
+      state.pointer.doc = day.date
+      state.pointer.meal = '4'
+      for (var address in state.userData.addresses) {
+        if (state.userData.addresses[address].isActive) {
+          state.pointer.address = state.userData.addresses[address].uid
+          state.pointer.location = state.userData.addresses[address].name
+          state.pointer.index = address
+        }
+      }
+      // set filters appropriately
+      var m
+      for (m in state.userData.mealplans) {
+        if (state.userData.mealplans[m].isActive) {
+          break
+        }
+      }
+      if (state.userData.mealplans[m].filters[0].text === 'Breakfast') {
+        state.userData.mealplans[m].filters[0].isActive = false
+      }
+      if (state.userData.mealplans[m].filters[1].text === 'Lunch') {
+        state.userData.mealplans[m].filters[1].isActive = true
+      }
+      if (state.userData.mealplans[m].filters[2].text === 'Dinner') {
+        state.userData.mealplans[m].filters[2].isActive = false
+      }
+      db.collection('users').doc(state.userData.uid).collection('calendar').doc(day.date.toString()).update({
+        meal4Address: state.pointer.address,
+        meal4Location: state.pointer.location
+      })
+      var isMember = false
+      var date = day.date.toString()
+      for (var object in state.userAddresses[state.pointer.index].calendar) {
+        if (state.userAddresses[state.pointer.index].calendar[object].date === day.date) {
+          if (state.userAddresses[state.pointer.index].calendar[object].meal4Members.includes(state.userData.uid)) {
+            isMember = true
+          }
+        }
+      }
+      if (isMember === false) {
+        db.collection('addresses').doc(state.userAddresses[state.pointer.index].uid).collection('calendar').doc(date).update({
+          meal4Members: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+        })
+      }
+    },
+    setMeal5 (state, day) {
+      state.pointer.doc = day.date
+      state.pointer.meal = '5'
+      for (var address in state.userData.addresses) {
+        if (state.userData.addresses[address].isActive) {
+          state.pointer.address = state.userData.addresses[address].uid
+          state.pointer.location = state.userData.addresses[address].name
+          state.pointer.index = address
+        }
+      }
+      // set filters appropriately
+      var m
+      for (m in state.userData.mealplans) {
+        if (state.userData.mealplans[m].isActive) {
+          break
+        }
+      }
+      if (state.userData.mealplans[m].filters[0].text === 'Breakfast') {
+        state.userData.mealplans[m].filters[0].isActive = false
+      }
+      if (state.userData.mealplans[m].filters[1].text === 'Lunch') {
+        state.userData.mealplans[m].filters[1].isActive = false
+      }
+      if (state.userData.mealplans[m].filters[2].text === 'Dinner') {
+        state.userData.mealplans[m].filters[2].isActive = false
+      }
+      db.collection('users').doc(state.userData.uid).collection('calendar').doc(day.date.toString()).update({
+        meal5Address: state.pointer.address,
+        meal5Location: state.pointer.location
+      })
+      var isMember = false
+      var date = day.date.toString()
+      for (var object in state.userAddresses[state.pointer.index].calendar) {
+        if (state.userAddresses[state.pointer.index].calendar[object].date === day.date) {
+          if (state.userAddresses[state.pointer.index].calendar[object].meal5Members.includes(state.userData.uid)) {
+            isMember = true
+          }
+        }
+      }
+      if (isMember === false) {
+        db.collection('addresses').doc(state.userAddresses[state.pointer.index].uid).collection('calendar').doc(date).update({
+          meal5Members: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+        })
+      }
+    },
+    setMeal6 (state, day) {
+      state.pointer.doc = day.date
+      state.pointer.meal = '6'
+      for (var address in state.userData.addresses) {
+        if (state.userData.addresses[address].isActive) {
+          state.pointer.address = state.userData.addresses[address].uid
+          state.pointer.location = state.userData.addresses[address].name
+          state.pointer.index = address
+        }
+      }
+      // set filters appropriately
+      var m
+      for (m in state.userData.mealplans) {
+        if (state.userData.mealplans[m].isActive) {
+          break
+        }
+      }
+      if (state.userData.mealplans[m].filters[0].text === 'Breakfast') {
+        state.userData.mealplans[m].filters[0].isActive = false
+      }
+      if (state.userData.mealplans[m].filters[1].text === 'Lunch') {
+        state.userData.mealplans[m].filters[1].isActive = false
+      }
+      if (state.userData.mealplans[m].filters[2].text === 'Dinner') {
+        state.userData.mealplans[m].filters[2].isActive = false
+      }
+      db.collection('users').doc(state.userData.uid).collection('calendar').doc(day.date.toString()).update({
+        meal6Address: state.pointer.address,
+        meal6Location: state.pointer.location
+      })
+      var isMember = false
+      var date = day.date.toString()
+      for (var object in state.userAddresses[state.pointer.index].calendar) {
+        if (state.userAddresses[state.pointer.index].calendar[object].date === day.date) {
+          if (state.userAddresses[state.pointer.index].calendar[object].meal6Members.includes(state.userData.uid)) {
+            isMember = true
+          }
+        }
+      }
+      if (isMember === false) {
+        db.collection('addresses').doc(state.userAddresses[state.pointer.index].uid).collection('calendar').doc(date).update({
+          meal6Members: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+        })
+      }
+    },
+    setMeal7 (state, day) {
+      state.pointer.doc = day.date
+      state.pointer.meal = '7'
+      for (var address in state.userData.addresses) {
+        if (state.userData.addresses[address].isActive) {
+          state.pointer.address = state.userData.addresses[address].uid
+          state.pointer.location = state.userData.addresses[address].name
+          state.pointer.index = address
+        }
+      }
+      // set filters appropriately
+      var m
+      for (m in state.userData.mealplans) {
+        if (state.userData.mealplans[m].isActive) {
+          break
+        }
+      }
+      if (state.userData.mealplans[m].filters[0].text === 'Breakfast') {
+        state.userData.mealplans[m].filters[0].isActive = false
+      }
+      if (state.userData.mealplans[m].filters[1].text === 'Lunch') {
+        state.userData.mealplans[m].filters[1].isActive = false
+      }
+      if (state.userData.mealplans[m].filters[2].text === 'Dinner') {
+        state.userData.mealplans[m].filters[2].isActive = true
+      }
+      db.collection('users').doc(state.userData.uid).collection('calendar').doc(day.date.toString()).update({
+        meal7Address: state.pointer.address,
+        meal7Location: state.pointer.location
+      })
+      var isMember = false
+      var date = day.date.toString()
+      for (var object in state.userAddresses[state.pointer.index].calendar) {
+        if (state.userAddresses[state.pointer.index].calendar[object].date === day.date) {
+          if (state.userAddresses[state.pointer.index].calendar[object].meal7Members.includes(state.userData.uid)) {
+            isMember = true
+          }
+        }
+      }
+      if (isMember === false) {
+        db.collection('addresses').doc(state.userAddresses[state.pointer.index].uid).collection('calendar').doc(date).update({
+          meal7Members: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+        })
+      }
+    },
+    setMeal8 (state, day) {
+      state.pointer.doc = day.date
+      state.pointer.meal = '8'
+      for (var address in state.userData.addresses) {
+        if (state.userData.addresses[address].isActive) {
+          state.pointer.address = state.userData.addresses[address].uid
+          state.pointer.location = state.userData.addresses[address].name
+          state.pointer.index = address
+        }
+      }
+      // set filters appropriately
+      var m
+      for (m in state.userData.mealplans) {
+        if (state.userData.mealplans[m].isActive) {
+          break
+        }
+      }
+      if (state.userData.mealplans[m].filters[0].text === 'Breakfast') {
+        state.userData.mealplans[m].filters[0].isActive = false
+      }
+      if (state.userData.mealplans[m].filters[1].text === 'Lunch') {
+        state.userData.mealplans[m].filters[1].isActive = false
+      }
+      if (state.userData.mealplans[m].filters[2].text === 'Dinner') {
+        state.userData.mealplans[m].filters[2].isActive = false
+      }
+      db.collection('users').doc(state.userData.uid).collection('calendar').doc(day.date.toString()).update({
+        meal8Address: state.pointer.address,
+        meal8Location: state.pointer.location
+      })
+      var isMember = false
+      var date = day.date.toString()
+      for (var object in state.userAddresses[state.pointer.index].calendar) {
+        if (state.userAddresses[state.pointer.index].calendar[object].date === day.date) {
+          if (state.userAddresses[state.pointer.index].calendar[object].meal8Members.includes(state.userData.uid)) {
+            isMember = true
+          }
+        }
+      }
+      if (isMember === false) {
+        db.collection('addresses').doc(state.userAddresses[state.pointer.index].uid).collection('calendar').doc(date).update({
+          meal8Members: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
+        })
+      }
+    },
+    setMeal9 (state, day) {
+      state.pointer.doc = day.date
+      state.pointer.meal = '9'
+      for (var address in state.userData.addresses) {
+        if (state.userData.addresses[address].isActive) {
+          state.pointer.address = state.userData.addresses[address].uid
+          state.pointer.location = state.userData.addresses[address].name
+          state.pointer.index = address
+        }
+      }
+      // set filters appropriately
+      var m
+      for (m in state.userData.mealplans) {
+        if (state.userData.mealplans[m].isActive) {
+          break
+        }
+      }
+      if (state.userData.mealplans[m].filters[0].text === 'Breakfast') {
+        state.userData.mealplans[m].filters[0].isActive = false
+      }
+      if (state.userData.mealplans[m].filters[1].text === 'Lunch') {
+        state.userData.mealplans[m].filters[1].isActive = false
+      }
+      if (state.userData.mealplans[m].filters[2].text === 'Dinner') {
+        state.userData.mealplans[m].filters[2].isActive = false
+      }
+      db.collection('users').doc(state.userData.uid).collection('calendar').doc(day.date.toString()).update({
+        meal9Address: state.pointer.address,
+        meal9Location: state.pointer.location
+      })
+      var isMember = false
+      var date = day.date.toString()
+      for (var object in state.userAddresses[state.pointer.index].calendar) {
+        if (state.userAddresses[state.pointer.index].calendar[object].date === day.date) {
+          if (state.userAddresses[state.pointer.index].calendar[object].meal9Members.includes(state.userData.uid)) {
+            isMember = true
+          }
+        }
+      }
+      if (isMember === false) {
+        db.collection('addresses').doc(state.userAddresses[state.pointer.index].uid).collection('calendar').doc(date).update({
+          meal9Members: firebase.firestore.FieldValue.arrayUnion(state.userData.uid)
         })
       }
     },
     selectRecipe (state, recipe) {
-      if (state.pointer.meal === 'Breakfast') {
+      var mealIngredients = 'meal' + state.pointer.meal + 'Ingredients'
+      if (state.pointer.meal === '0') {
         for (let address in state.userAddresses) {
           if (state.userAddresses[address].uid === state.pointer.address) {
             for (let member in state.userAddresses[address].members) {
               db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
-                breakfast: recipe.name
+                meal0: recipe.name
               })
             }
           }
         }
         db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
-          breakfastCaloriesOwner: state.userData.calories
+          meal0CaloriesOwner: state.userData.calories
         })
-        for (let ingredient in recipe.ingredients) {
-          db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection('breakfastIngredients')
-            .get()
-            .then(function (querySnapshot) {
-              new Promise(function (resolve, reject) {
-                querySnapshot.forEach(function (doc) {
-                  db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection('breakfastIngredients').doc(doc.id).delete()
-                })
-                resolve()
-              })
-                .then(function () {
-                  db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection('breakfastIngredients').doc(recipe.ingredients[ingredient].uid).set(recipe.ingredients[ingredient])
-                })
-            })
-        }
       }
-      if (state.pointer.meal === 'Lunch') {
+      if (state.pointer.meal === '1') {
         for (let address in state.userAddresses) {
           if (state.userAddresses[address].uid === state.pointer.address) {
             for (let member in state.userAddresses[address].members) {
               db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
-                lunch: recipe.name
+                meal1: recipe.name
               })
             }
           }
         }
         db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
-          lunchCaloriesOwner: state.userData.calories
+          meal1CaloriesOwner: state.userData.calories
         })
-        for (let ingredient in recipe.ingredients) {
-          db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection('lunchIngredients')
-            .get()
-            .then(function (querySnapshot) {
-              querySnapshot.forEach(function (doc) {
-                db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection('lunchIngredients').doc(doc.id).delete()
-              })
-              db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection('lunchIngredients').doc(recipe.ingredients[ingredient].uid).set(recipe.ingredients[ingredient])
-            })
-        }
       }
-      if (state.pointer.meal === 'Dinner') {
+      if (state.pointer.meal === '2') {
         for (let address in state.userAddresses) {
           if (state.userAddresses[address].uid === state.pointer.address) {
             for (let member in state.userAddresses[address].members) {
               db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
-                dinner: recipe.name
+                meal2: recipe.name
               })
             }
           }
         }
         db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
-          dinnerCaloriesOwner: state.userData.calories
+          meal2CaloriesOwner: state.userData.calories
         })
-        for (let ingredient in recipe.ingredients) {
-          db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection('dinnerIngredients')
-            .get()
-            .then(function (querySnapshot) {
-              querySnapshot.forEach(function (doc) {
-                db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection('dinnerIngredients').doc(doc.id).delete()
-              })
-              db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection('dinnerIngredients').doc(recipe.ingredients[ingredient].uid).set(recipe.ingredients[ingredient])
-            })
-        }
       }
+      if (state.pointer.meal === '3') {
+        for (let address in state.userAddresses) {
+          if (state.userAddresses[address].uid === state.pointer.address) {
+            for (let member in state.userAddresses[address].members) {
+              db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
+                meal3: recipe.name
+              })
+            }
+          }
+        }
+        db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
+          meal3CaloriesOwner: state.userData.calories
+        })
+      }
+      if (state.pointer.meal === '4') {
+        for (let address in state.userAddresses) {
+          if (state.userAddresses[address].uid === state.pointer.address) {
+            for (let member in state.userAddresses[address].members) {
+              db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
+                meal4: recipe.name
+              })
+            }
+          }
+        }
+        db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
+          meal4CaloriesOwner: state.userData.calories
+        })
+      }
+      if (state.pointer.meal === '5') {
+        for (let address in state.userAddresses) {
+          if (state.userAddresses[address].uid === state.pointer.address) {
+            for (let member in state.userAddresses[address].members) {
+              db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
+                meal5: recipe.name
+              })
+            }
+          }
+        }
+        db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
+          meal5CaloriesOwner: state.userData.calories
+        })
+      }
+      if (state.pointer.meal === '6') {
+        for (let address in state.userAddresses) {
+          if (state.userAddresses[address].uid === state.pointer.address) {
+            for (let member in state.userAddresses[address].members) {
+              db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
+                meal6: recipe.name
+              })
+            }
+          }
+        }
+        db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
+          meal6CaloriesOwner: state.userData.calories
+        })
+      }
+      if (state.pointer.meal === '7') {
+        for (let address in state.userAddresses) {
+          if (state.userAddresses[address].uid === state.pointer.address) {
+            for (let member in state.userAddresses[address].members) {
+              db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
+                meal7: recipe.name
+              })
+            }
+          }
+        }
+        db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
+          meal7CaloriesOwner: state.userData.calories
+        })
+      }
+      if (state.pointer.meal === '8') {
+        for (let address in state.userAddresses) {
+          if (state.userAddresses[address].uid === state.pointer.address) {
+            for (let member in state.userAddresses[address].members) {
+              db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
+                meal8: recipe.name
+              })
+            }
+          }
+        }
+        db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
+          meal8CaloriesOwner: state.userData.calories
+        })
+      }
+      if (state.pointer.meal === '9') {
+        for (let address in state.userAddresses) {
+          if (state.userAddresses[address].uid === state.pointer.address) {
+            for (let member in state.userAddresses[address].members) {
+              db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
+                meal9: recipe.name
+              })
+            }
+          }
+        }
+        db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
+          meal9CaloriesOwner: state.userData.calories
+        })
+      }
+      db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection(mealIngredients)
+        .get()
+        .then(function (querySnapshot) {
+          new Promise(function (resolve, reject) {
+            querySnapshot.forEach(function (doc) {
+              db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection(mealIngredients).doc(doc.id).delete()
+              console.log('removed all ingredients');
+            })
+            resolve()
+          })
+            .then(function () {
+              for (let ingredient in recipe.ingredients) {
+                db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection(mealIngredients).doc(recipe.ingredients[ingredient].uid).set(recipe.ingredients[ingredient])
+                console.log('added ingredient');
+              }
+            })
+        })
     },
     removeRecipe (state) {
-      if (state.pointer.meal === 'Breakfast') {
+      var mealIngredients = 'meal' + state.pointer.meal + 'Ingredients'
+      if (state.pointer.meal === '0') {
         for (let address in state.userAddresses) {
           if (state.userAddresses[address].uid === state.pointer.address) {
             for (let member in state.userAddresses[address].members) {
               db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
-                breakfast: 'Breakfast'
+                meal0: 'Snack'
+              })
+            }
+          }
+        }
+      }
+      if (state.pointer.meal === '1') {
+        for (let address in state.userAddresses) {
+          if (state.userAddresses[address].uid === state.pointer.address) {
+            for (let member in state.userAddresses[address].members) {
+              db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
+                meal1: 'Breakfast'
               })
             }
           }
         }
         db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
-          breakfastCaloriesOwner: null
+          meal1CaloriesOwner: null
         })
-        db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection('breakfastIngredients')
-          .get()
-          .then(function (querySnapshot) {
-            querySnapshot.forEach(function (doc) {
-              db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection('breakfastIngredients').doc(doc.id).delete()
-            })
-          })
       }
-      if (state.pointer.meal === 'Lunch') {
+      if (state.pointer.meal === '2') {
         for (let address in state.userAddresses) {
           if (state.userAddresses[address].uid === state.pointer.address) {
             for (let member in state.userAddresses[address].members) {
               db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
-                lunch: 'Lunch'
+                meal2: 'Snack'
               })
             }
           }
         }
         db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
-          lunchCaloriesOwner: null
+          meal2CaloriesOwner: null
         })
-        db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection('lunchIngredients')
-          .get()
-          .then(function (querySnapshot) {
-            querySnapshot.forEach(function (doc) {
-              db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection('lunchIngredients').doc(doc.id).delete()
-            })
-          })
       }
-      if (state.pointer.meal === 'Dinner') {
+      if (state.pointer.meal === '3') {
         for (let address in state.userAddresses) {
           if (state.userAddresses[address].uid === state.pointer.address) {
             for (let member in state.userAddresses[address].members) {
               db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
-                dinner: 'Dinner'
+                meal3: 'Snack'
               })
             }
           }
         }
         db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
-          dinnerCaloriesOwner: null
+          meal3CaloriesOwner: null
         })
-        db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection('breakfastIngredients')
-          .get()
-          .then(function (querySnapshot) {
-            querySnapshot.forEach(function (doc) {
-              db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection('dinnerIngredients').doc(doc.id).delete()
-            })
-          })
       }
+      if (state.pointer.meal === '4') {
+        for (let address in state.userAddresses) {
+          if (state.userAddresses[address].uid === state.pointer.address) {
+            for (let member in state.userAddresses[address].members) {
+              db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
+                meal4: 'Lunch'
+              })
+            }
+          }
+        }
+        db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
+          meal4CaloriesOwner: null
+        })
+      }
+      if (state.pointer.meal === '5') {
+        for (let address in state.userAddresses) {
+          if (state.userAddresses[address].uid === state.pointer.address) {
+            for (let member in state.userAddresses[address].members) {
+              db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
+                meal5: 'Snack'
+              })
+            }
+          }
+        }
+        db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
+          meal5CaloriesOwner: null
+        })
+      }
+      if (state.pointer.meal === '6') {
+        for (let address in state.userAddresses) {
+          if (state.userAddresses[address].uid === state.pointer.address) {
+            for (let member in state.userAddresses[address].members) {
+              db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
+                meal6: 'Snack'
+              })
+            }
+          }
+        }
+        db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
+          meal6CaloriesOwner: null
+        })
+      }
+      if (state.pointer.meal === '7') {
+        for (let address in state.userAddresses) {
+          if (state.userAddresses[address].uid === state.pointer.address) {
+            for (let member in state.userAddresses[address].members) {
+              db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
+                meal7: 'Dinner'
+              })
+            }
+          }
+        }
+        db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
+          meal7CaloriesOwner: null
+        })
+      }
+      if (state.pointer.meal === '8') {
+        for (let address in state.userAddresses) {
+          if (state.userAddresses[address].uid === state.pointer.address) {
+            for (let member in state.userAddresses[address].members) {
+              db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
+                meal8: 'Snack'
+              })
+            }
+          }
+        }
+        db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
+          meal8CaloriesOwner: null
+        })
+      }
+      if (state.pointer.meal === '9') {
+        for (let address in state.userAddresses) {
+          if (state.userAddresses[address].uid === state.pointer.address) {
+            for (let member in state.userAddresses[address].members) {
+              db.collection('users').doc(state.userAddresses[address].members[member].uid).collection('calendar').doc(state.pointer.doc.toString()).update({
+                meal9: 'Snack'
+              })
+            }
+          }
+        }
+        db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).update({
+          meal9CaloriesOwner: null
+        })
+      }
+      console.log(mealIngredients);
+      db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection(mealIngredients)
+        .get()
+        .then(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection(mealIngredients).doc(doc.id).delete()
+            console.log(doc.id, 'deleted');
+          })
+        })
     },
     createList (state) {
       for (var address in state.userAddresses) {
@@ -992,80 +1874,261 @@ export default new Vuex.Store({
               userCalendarArray.push(userDay)
             })
             for (let day in userCalendarArray) {
-              var breakfastTotal = 0
-              for (let calendarMember in userCalendarArray[day].breakfastMembers) {
+              var meal0Total = 0
+              for (let calendarMember in userCalendarArray[day].meal0Members) {
                 for (let addressMember in state.userAddresses[address].members) {
-                  if (state.userAddresses[address].members[addressMember].uid === userCalendarArray[day].breakfastMembers[calendarMember]) {
-                    breakfastTotal += state.userAddresses[address].members[addressMember].calories
+                  if (state.userAddresses[address].members[addressMember].uid === userCalendarArray[day].meal0Members[calendarMember]) {
+                    meal0Total += state.userAddresses[address].members[addressMember].calories
                   }
                 }
               }
-              var lunchTotal = 0
-              for (let calendarMember in userCalendarArray[day].lunchMembers) {
-                // console.log('inside: ', address);
+              var meal1Total = 0
+              for (let calendarMember in userCalendarArray[day].meal1Members) {
                 for (let addressMember in state.userAddresses[address].members) {
-                  if (state.userAddresses[address].members[addressMember].uid === userCalendarArray[day].lunchMembers[calendarMember]) {
-                    lunchTotal += state.userAddresses[address].members[addressMember].calories
+                  if (state.userAddresses[address].members[addressMember].uid === userCalendarArray[day].meal1Members[calendarMember]) {
+                    meal1Total += state.userAddresses[address].members[addressMember].calories
                   }
                 }
               }
-              var dinnerTotal = 0
-              for (let calendarMember in userCalendarArray[day].dinnerMembers) {
+              var meal2Total = 0
+              for (let calendarMember in userCalendarArray[day].meal2Members) {
                 for (let addressMember in state.userAddresses[address].members) {
-                  if (state.userAddresses[address].members[addressMember].uid === userCalendarArray[day].dinnerMembers[calendarMember]) {
-                    dinnerTotal += state.userAddresses[address].members[addressMember].calories
+                  if (state.userAddresses[address].members[addressMember].uid === userCalendarArray[day].meal2Members[calendarMember]) {
+                    meal2Total += state.userAddresses[address].members[addressMember].calories
                   }
                 }
               }
-              const breakfastRatio = breakfastTotal / userCalendarArray[day].breakfastCaloriesOwner
-              const lunchRatio = lunchTotal / userCalendarArray[day].lunchCaloriesOwner
-              const dinnerRatio = dinnerTotal / userCalendarArray[day].dinnerCaloriesOwner
-              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userCalendarArray[day].date.toString()).collection('breakfastIngredients')
+              var meal3Total = 0
+              for (let calendarMember in userCalendarArray[day].meal3Members) {
+                for (let addressMember in state.userAddresses[address].members) {
+                  if (state.userAddresses[address].members[addressMember].uid === userCalendarArray[day].meal3Members[calendarMember]) {
+                    meal3Total += state.userAddresses[address].members[addressMember].calories
+                  }
+                }
+              }
+              var meal4Total = 0
+              for (let calendarMember in userCalendarArray[day].meal4Members) {
+                for (let addressMember in state.userAddresses[address].members) {
+                  if (state.userAddresses[address].members[addressMember].uid === userCalendarArray[day].meal4Members[calendarMember]) {
+                    meal4Total += state.userAddresses[address].members[addressMember].calories
+                  }
+                }
+              }
+              var meal5Total = 0
+              for (let calendarMember in userCalendarArray[day].meal5Members) {
+                for (let addressMember in state.userAddresses[address].members) {
+                  if (state.userAddresses[address].members[addressMember].uid === userCalendarArray[day].meal5Members[calendarMember]) {
+                    meal5Total += state.userAddresses[address].members[addressMember].calories
+                  }
+                }
+              }
+              var meal6Total = 0
+              for (let calendarMember in userCalendarArray[day].meal6Members) {
+                for (let addressMember in state.userAddresses[address].members) {
+                  if (state.userAddresses[address].members[addressMember].uid === userCalendarArray[day].meal6Members[calendarMember]) {
+                    meal6Total += state.userAddresses[address].members[addressMember].calories
+                  }
+                }
+              }
+              var meal7Total = 0
+              for (let calendarMember in userCalendarArray[day].meal7Members) {
+                for (let addressMember in state.userAddresses[address].members) {
+                  if (state.userAddresses[address].members[addressMember].uid === userCalendarArray[day].meal7Members[calendarMember]) {
+                    meal7Total += state.userAddresses[address].members[addressMember].calories
+                  }
+                }
+              }
+              var meal8Total = 0
+              for (let calendarMember in userCalendarArray[day].meal8Members) {
+                for (let addressMember in state.userAddresses[address].members) {
+                  if (state.userAddresses[address].members[addressMember].uid === userCalendarArray[day].meal8Members[calendarMember]) {
+                    meal8Total += state.userAddresses[address].members[addressMember].calories
+                  }
+                }
+              }
+              var meal9Total = 0
+              for (let calendarMember in userCalendarArray[day].meal9Members) {
+                for (let addressMember in state.userAddresses[address].members) {
+                  if (state.userAddresses[address].members[addressMember].uid === userCalendarArray[day].meal9Members[calendarMember]) {
+                    meal9Total += state.userAddresses[address].members[addressMember].calories
+                  }
+                }
+              }
+              const meal0Ratio = meal0Total / userCalendarArray[day].meal0CaloriesOwner
+              const meal1Ratio = meal1Total / userCalendarArray[day].meal1CaloriesOwner
+              const meal2Ratio = meal2Total / userCalendarArray[day].meal2CaloriesOwner
+              const meal3Ratio = meal3Total / userCalendarArray[day].meal3CaloriesOwner
+              const meal4Ratio = meal4Total / userCalendarArray[day].meal4CaloriesOwner
+              const meal5Ratio = meal5Total / userCalendarArray[day].meal5CaloriesOwner
+              const meal6Ratio = meal6Total / userCalendarArray[day].meal6CaloriesOwner
+              const meal7Ratio = meal7Total / userCalendarArray[day].meal7CaloriesOwner
+              const meal8Ratio = meal8Total / userCalendarArray[day].meal8CaloriesOwner
+              const meal9Ratio = meal9Total / userCalendarArray[day].meal9CaloriesOwner
+              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userCalendarArray[day].date.toString()).collection('meal0Ingredients')
                 .get()
                 .then(function (querySnapshot) {
                   querySnapshot.forEach(function (doc) {
                     let ingredient = doc.data()
                     if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
-                      ingredient.amount = ingredient.amount * breakfastRatio
+                      ingredient.amount = ingredient.amount * meal0Ratio
                       state.userAddresses[address].shoppingList.push(ingredient)
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
                         if (state.userAddresses[address].shoppingList[item].ingredient === ingredient.ingredient) {
-                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * breakfastRatio)
+                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * meal0Ratio)
                         }
                       }
                     }
                   })
                 })
-              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userCalendarArray[day].date.toString()).collection('lunchIngredients')
+              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userCalendarArray[day].date.toString()).collection('meal1Ingredients')
                 .get()
                 .then(function (querySnapshot) {
                   querySnapshot.forEach(function (doc) {
                     let ingredient = doc.data()
                     if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
-                      ingredient.amount = ingredient.amount * lunchRatio
+                      ingredient.amount = ingredient.amount * meal1Ratio
                       state.userAddresses[address].shoppingList.push(ingredient)
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
                         if (state.userAddresses[address].shoppingList[item].ingredient === ingredient.ingredient) {
-                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * lunchRatio)
+                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * meal1Ratio)
                         }
                       }
                     }
                   })
                 })
-              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userCalendarArray[day].date.toString()).collection('dinnerIngredients')
+              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userCalendarArray[day].date.toString()).collection('meal2Ingredients')
                 .get()
                 .then(function (querySnapshot) {
                   querySnapshot.forEach(function (doc) {
                     let ingredient = doc.data()
                     if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
-                      ingredient.amount = ingredient.amount * dinnerRatio
+                      ingredient.amount = ingredient.amount * meal2Ratio
                       state.userAddresses[address].shoppingList.push(ingredient)
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
                         if (state.userAddresses[address].shoppingList[item].ingredient === ingredient.ingredient) {
-                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * dinnerRatio)
+                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * meal2Ratio)
+                        }
+                      }
+                    }
+                  })
+                })
+              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userCalendarArray[day].date.toString()).collection('meal3Ingredients')
+                .get()
+                .then(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let ingredient = doc.data()
+                    if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
+                      ingredient.amount = ingredient.amount * meal3Ratio
+                      state.userAddresses[address].shoppingList.push(ingredient)
+                    } else {
+                      for (let item in state.userAddresses[address].shoppingList) {
+                        if (state.userAddresses[address].shoppingList[item].ingredient === ingredient.ingredient) {
+                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * meal3Ratio)
+                        }
+                      }
+                    }
+                  })
+                })
+              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userCalendarArray[day].date.toString()).collection('meal4Ingredients')
+                .get()
+                .then(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let ingredient = doc.data()
+                    if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
+                      ingredient.amount = ingredient.amount * meal4Ratio
+                      state.userAddresses[address].shoppingList.push(ingredient)
+                    } else {
+                      for (let item in state.userAddresses[address].shoppingList) {
+                        if (state.userAddresses[address].shoppingList[item].ingredient === ingredient.ingredient) {
+                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * meal4Ratio)
+                        }
+                      }
+                    }
+                  })
+                })
+              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userCalendarArray[day].date.toString()).collection('meal5Ingredients')
+                .get()
+                .then(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let ingredient = doc.data()
+                    if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
+                      ingredient.amount = ingredient.amount * meal5Ratio
+                      state.userAddresses[address].shoppingList.push(ingredient)
+                    } else {
+                      for (let item in state.userAddresses[address].shoppingList) {
+                        if (state.userAddresses[address].shoppingList[item].ingredient === ingredient.ingredient) {
+                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * meal5Ratio)
+                        }
+                      }
+                    }
+                  })
+                })
+              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userCalendarArray[day].date.toString()).collection('meal6Ingredients')
+                .get()
+                .then(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let ingredient = doc.data()
+                    if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
+                      ingredient.amount = ingredient.amount * meal6Ratio
+                      state.userAddresses[address].shoppingList.push(ingredient)
+                    } else {
+                      for (let item in state.userAddresses[address].shoppingList) {
+                        if (state.userAddresses[address].shoppingList[item].ingredient === ingredient.ingredient) {
+                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * meal6Ratio)
+                        }
+                      }
+                    }
+                  })
+                })
+              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userCalendarArray[day].date.toString()).collection('meal7Ingredients')
+                .get()
+                .then(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let ingredient = doc.data()
+                    if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
+                      ingredient.amount = ingredient.amount * meal7Ratio
+                      state.userAddresses[address].shoppingList.push(ingredient)
+                    } else {
+                      for (let item in state.userAddresses[address].shoppingList) {
+                        if (state.userAddresses[address].shoppingList[item].ingredient === ingredient.ingredient) {
+                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * meal7Ratio)
+                        }
+                      }
+                    }
+                  })
+                })
+              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userCalendarArray[day].date.toString()).collection('meal8Ingredients')
+                .get()
+                .then(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let ingredient = doc.data()
+                    if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
+                      ingredient.amount = ingredient.amount * meal8Ratio
+                      state.userAddresses[address].shoppingList.push(ingredient)
+                    } else {
+                      for (let item in state.userAddresses[address].shoppingList) {
+                        if (state.userAddresses[address].shoppingList[item].ingredient === ingredient.ingredient) {
+                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * meal8Ratio)
+                        }
+                      }
+                    }
+                  })
+                })
+              db.collection('addresses').doc(state.userAddresses[address].uid).collection('calendar').doc(userCalendarArray[day].date.toString()).collection('meal9Ingredients')
+                .get()
+                .then(function (querySnapshot) {
+                  querySnapshot.forEach(function (doc) {
+                    let ingredient = doc.data()
+                    if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
+                      ingredient.amount = ingredient.amount * meal9Ratio
+                      state.userAddresses[address].shoppingList.push(ingredient)
+                    } else {
+                      for (let item in state.userAddresses[address].shoppingList) {
+                        if (state.userAddresses[address].shoppingList[item].ingredient === ingredient.ingredient) {
+                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * meal9Ratio)
                         }
                       }
                     }
@@ -1146,7 +2209,59 @@ export default new Vuex.Store({
             months: [],
             calendar: [],
             addresses: [],
+            meals: [],
             mealplans: []
+          })
+
+          db.collection('users').doc('default').collection('meals').doc('0').set({
+            text: 'Snack',
+            isActive: false,
+            uid: '0'
+          })
+          db.collection('users').doc('default').collection('meals').doc('1').set({
+            text: 'Breakfast',
+            isActive: true,
+            uid: '1'
+          })
+          db.collection('users').doc('default').collection('meals').doc('2').set({
+            text: 'Snack',
+            isActive: false,
+            uid: '2'
+          })
+          db.collection('users').doc('default').collection('meals').doc('3').set({
+            text: 'Snack',
+            isActive: false,
+            uid: '3'
+          })
+          db.collection('users').doc('default').collection('meals').doc('4').set({
+            text: 'Lunch',
+            isActive: true,
+            uid: '4'
+          })
+          db.collection('users').doc('default').collection('meals').doc('5').set({
+            text: 'Snack',
+            isActive: false,
+            uid: '5'
+          })
+          db.collection('users').doc('default').collection('meals').doc('6').set({
+            text: 'Snack',
+            isActive: false,
+            uid: '6'
+          })
+          db.collection('users').doc('default').collection('meals').doc('7').set({
+            text: 'Dinner',
+            isActive: true,
+            uid: '7'
+          })
+          db.collection('users').doc('default').collection('meals').doc('8').set({
+            text: 'Snack',
+            isActive: false,
+            uid: '8'
+          })
+          db.collection('users').doc('default').collection('meals').doc('9').set({
+            text: 'Snack',
+            isActive: false,
+            uid: '9'
           })
           db.collection('users').doc('default').collection('mealplans').add({
             name: 'Personal',
@@ -1259,15 +2374,36 @@ export default new Vuex.Store({
                 dayname: moment().isoWeekday(moment().year(year).month(mon).subtract(1, 'M')
                   .date(day)
                   .weekday()).format('dddd'),
-                breakfast: 'Breakfast',
-                breakfastLocation: 'Home',
-                breakfastAddress: address.id,
-                lunch: 'Lunch',
-                lunchLocation: 'Home',
-                lunchAddress: address.id,
-                dinner: 'Dinner',
-                dinnerLocation: 'Home',
-                dinnerAddress: address.id
+                meal0: 'Snack',
+                meal0Location: 'Home',
+                meal0Address: address.id,
+                meal1: 'Breakfast',
+                meal1Location: 'Home',
+                meal1Address: address.id,
+                meal2: 'Snack',
+                meal2Location: 'Home',
+                meal2Address: address.id,
+                meal3: 'Snack',
+                meal3Location: 'Home',
+                meal3Address: address.id,
+                meal4: 'Lunch',
+                meal4Location: 'Home',
+                meal4Address: address.id,
+                meal5: 'Snack',
+                meal5Location: 'Home',
+                meal5Address: address.id,
+                meal6: 'Snack',
+                meal6Location: 'Home',
+                meal6Address: address.id,
+                meal7: 'Dinner',
+                meal7Location: 'Home',
+                meal7Address: address.id,
+                meal8: 'Snack',
+                meal8Location: 'Home',
+                meal8Address: address.id,
+                meal9: 'Snack',
+                meal9Location: 'Home',
+                meal9Address: address.id
               }
               const docRef = db.collection('users').doc('default').collection('calendar').doc(docName)
               batchUser.set(docRef, dayTemplate)
@@ -1325,7 +2461,58 @@ export default new Vuex.Store({
             months: [],
             calendar: [],
             addresses: [],
+            meals: [],
             mealplans: []
+          })
+          db.collection('users').doc(object.user.uid).collection('meals').doc('0').set({
+            text: 'Snack',
+            isActive: false,
+            uid: '0'
+          })
+          db.collection('users').doc(object.user.uid).collection('meals').doc('1').set({
+            text: 'Breakfast',
+            isActive: true,
+            uid: '1'
+          })
+          db.collection('users').doc(object.user.uid).collection('meals').doc('2').set({
+            text: 'Snack',
+            isActive: false,
+            uid: '2'
+          })
+          db.collection('users').doc(object.user.uid).collection('meals').doc('3').set({
+            text: 'Snack',
+            isActive: false,
+            uid: '3'
+          })
+          db.collection('users').doc(object.user.uid).collection('meals').doc('4').set({
+            text: 'Lunch',
+            isActive: true,
+            uid: '4'
+          })
+          db.collection('users').doc(object.user.uid).collection('meals').doc('5').set({
+            text: 'Snack',
+            isActive: false,
+            uid: '5'
+          })
+          db.collection('users').doc(object.user.uid).collection('meals').doc('6').set({
+            text: 'Snack',
+            isActive: false,
+            uid: '6'
+          })
+          db.collection('users').doc(object.user.uid).collection('meals').doc('7').set({
+            text: 'Dinner',
+            isActive: true,
+            uid: '7'
+          })
+          db.collection('users').doc(object.user.uid).collection('meals').doc('8').set({
+            text: 'Snack',
+            isActive: false,
+            uid: '8'
+          })
+          db.collection('users').doc(object.user.uid).collection('meals').doc('9').set({
+            text: 'Snack',
+            isActive: false,
+            uid: '9'
           })
           db.collection('users').doc(object.user.uid).collection('mealplans').add({
             name: 'Personal',
@@ -1438,15 +2625,36 @@ export default new Vuex.Store({
                 dayname: moment().isoWeekday(moment().year(year).month(mon).subtract(1, 'M')
                   .date(day)
                   .weekday()).format('dddd'),
-                breakfast: 'Breakfast',
-                breakfastLocation: 'Home',
-                breakfastAddress: address.id,
-                lunch: 'Lunch',
-                lunchLocation: 'Home',
-                lunchAddress: address.id,
-                dinner: 'Dinner',
-                dinnerLocation: 'Home',
-                dinnerAddress: address.id
+                meal0: 'Snack',
+                meal0Location: 'Home',
+                meal0Address: address.id,
+                meal1: 'Breakfast',
+                meal1Location: 'Home',
+                meal1Address: address.id,
+                meal2: 'Snack',
+                meal2Location: 'Home',
+                meal2Address: address.id,
+                meal3: 'Snack',
+                meal3Location: 'Home',
+                meal3Address: address.id,
+                meal4: 'Lunch',
+                meal4Location: 'Home',
+                meal4Address: address.id,
+                meal5: 'Snack',
+                meal5Location: 'Home',
+                meal5Address: address.id,
+                meal6: 'Snack',
+                meal6Location: 'Home',
+                meal6Address: address.id,
+                meal7: 'Dinner',
+                meal7Location: 'Home',
+                meal7Address: address.id,
+                meal8: 'Snack',
+                meal8Location: 'Home',
+                meal8Address: address.id,
+                meal9: 'Snack',
+                meal9Location: 'Home',
+                meal9Address: address.id
               }
               const docRef = db.collection('users').doc(object.user.uid).collection('calendar').doc(docName)
               batchUser.set(docRef, dayTemplate)
@@ -1501,20 +2709,44 @@ export default new Vuex.Store({
               dayname: moment().isoWeekday(moment().year(year).month(mon).subtract(1, 'M')
                 .date(day)
                 .weekday()).format('dddd'),
-              breakfast: 'Breakfast',
-              breakfastLocation: defaultName,
-              breakfastAddress: defaultAddress,
-              lunch: 'Lunch',
-              lunchLocation: defaultName,
-              lunchAddress: defaultAddress,
-              dinner: 'Dinner',
-              dinnerLocation: defaultName,
-              dinnerAddress: defaultAddress
+              meal0: 'Snack',
+              meal0Location: defaultName,
+              meal0Address: defaultAddress,
+              meal1: 'Breakfast',
+              meal1Location: defaultName,
+              meal1Address: defaultAddress,
+              meal2: 'Snack',
+              meal2Location: defaultName,
+              meal2Address: defaultAddress,
+              meal3: 'Snack',
+              meal3Location: defaultName,
+              meal3Address: defaultAddress,
+              meal4: 'Lunch',
+              meal4Location: defaultName,
+              meal4Address: defaultAddress,
+              meal5: 'Snack',
+              meal5Location: defaultName,
+              meal5Address: defaultAddress,
+              meal6: 'Snack',
+              meal6Location: defaultName,
+              meal6Address: defaultAddress,
+              meal7: 'Dinner',
+              meal7Location: defaultName,
+              meal7Address: defaultAddress,
+              meal8: 'Snack',
+              meal8Location: defaultName,
+              meal8Address: defaultAddress,
+              meal9: 'Snack',
+              meal9Location: defaultName,
+              meal9Address: defaultAddress
             }
-            db.collection('users').doc(state.userID).collection('calendar').doc(docName)
+            db.collection('users').doc(state.userData.uid).collection('calendar').doc(docName)
               .set(dayTemplate)
           }
           state.userData.months.push(moment().add(month, 'months').format('YYYYMM'))
+          db.collection('users').doc(state.userData.uid).update({
+            months: state.userData.months
+          })
         }
       }
       state.userAddresses.length = 0
@@ -1587,6 +2819,14 @@ export default new Vuex.Store({
             state.userAddresses[address].personalList.push(userAddressPersonalListsArray[userAddressPersonalList])
           }
         }
+      }
+    },
+    emptyUserDataMeals (state) {
+      state.userData.meals.length = 0
+    },
+    setUserDataMeals (state, userDataMealsArray) {
+      for (let userDataMeal in userDataMealsArray) {
+        state.userData.meals.push(userDataMealsArray[userDataMeal])
       }
     },
     emptyUserDataMealplans (state) {

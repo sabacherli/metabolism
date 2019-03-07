@@ -22,6 +22,7 @@ export default {
     var unsubscribeUserAddressesMembers
     var unsubscribeUserAddressesMonths
     var unsubscribeUserAddressesPersonalList
+    var unsubscribeUserDataMeals
     var unsubscribeUserDataMealplans
     var unsubscribeUserDataMealplanFilters
     var unsubscribeUserDataMealplanRecipes
@@ -37,6 +38,7 @@ export default {
           unsubscribeUserAddressesMembers()
           unsubscribeUserAddressesMonths()
           unsubscribeUserAddressesPersonalList()
+          unsubscribeUserDataMeals()
           unsubscribeUserDataMealplans()
           unsubscribeUserDataMealplanFilters()
           unsubscribeUserDataMealplanRecipes()
@@ -130,6 +132,21 @@ export default {
                       store.commit('setUserAddressPersonalLists', { userAddressPersonalListsArray, addressID })
                     })
                 }
+              })
+            unsubscribeUserDataMeals =
+            db.collection('users').doc(userID).collection('meals')
+              .onSnapshot(function (querySnapshot) {
+                // emtpy userData.meals
+                store.commit('emptyUserDataMeals')
+                // assign the values to an array first
+                let userDataMealsArray = []
+                // get the documents and push them into the array
+                querySnapshot.forEach(function (doc) {
+                  let userDataMeal = doc.data()
+                  userDataMealsArray.push(userDataMeal)
+                })
+                // set the meals in userData instead of pushing them sepeartely, doing it all at once now
+                store.commit('setUserDataMeals', userDataMealsArray)
               })
             unsubscribeUserDataMealplans =
             db.collection('users').doc(userID).collection('mealplans')
@@ -260,6 +277,7 @@ export default {
           unsubscribeUserAddressesMembers()
           unsubscribeUserAddressesMonths()
           unsubscribeUserAddressesPersonalList()
+          unsubscribeUserDataMeals()
           unsubscribeUserDataMealplans()
           unsubscribeUserDataMealplanFilters()
           unsubscribeUserDataMealplanRecipes()
@@ -353,6 +371,21 @@ export default {
                       store.commit('setUserAddressPersonalLists', { userAddressPersonalListsArray, addressID })
                     })
                 }
+              })
+            unsubscribeUserDataMeals =
+            db.collection('users').doc(userID).collection('meals')
+              .onSnapshot(function (querySnapshot) {
+                // emtpy userData.meals
+                store.commit('emptyUserDataMeals')
+                // assign the values to an array first
+                let userDataMealsArray = []
+                // get the documents and push them into the array
+                querySnapshot.forEach(function (doc) {
+                  let userDataMeal = doc.data()
+                  userDataMealsArray.push(userDataMeal)
+                })
+                // set the meals in userData instead of pushing them sepeartely, doing it all at once now
+                store.commit('setUserDataMeals', userDataMealsArray)
               })
             unsubscribeUserDataMealplans =
             db.collection('users').doc(userID).collection('mealplans')

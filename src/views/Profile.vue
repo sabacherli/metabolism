@@ -36,6 +36,22 @@
         </div>
       </div>
       <div class="">
+        <div class="box" @click="updateLength(); removeFocus()">
+          <img class="edit_icon" src="../assets/icon-edit.png" alt="Edit">
+        </div>
+        <p class="dayname">Displayed Meals</p>
+        <div class="ingredients_break">
+
+
+        </div>
+        <div class="meal_container" v-for="meal in userData.meals" @click="toggleMeal(meal)">
+          <div :key="meal.uid" class="meal">{{ meal.text }}</div>
+          <div :class="{ meal_selected_black: meal.isActive, meal_selected_white: !meal.isActive }"></div>
+          <!-- <span class="sign_remove" style="margin-top: -39px" v-if="meal.isActive === true" @click="hideMeal(meal)">+</span>
+          <span class="sign_remove" style="margin-top: -30px" v-if="meal.isActive === false" @click="showMeal(meal)">-</span> -->
+        </div>
+      </div>
+      <div class="">
         <div class="box" @click="updateEmail(); removeFocus()">
           <img class="edit_icon" src="../assets/icon-edit.png" alt="Edit">
         </div>
@@ -140,19 +156,19 @@
             <div class="block_date">
               <template v-for="month in userAddresses[index].months.slice(0,4)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased, inline_date_past: Number(month.month) < currentMonth }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in userAddresses[index].months.slice(4,8)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased, inline_date_past: Number(month.month) < currentMonth }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in userAddresses[index].months.slice(8,12)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased, inline_date_past: Number(month.month) < currentMonth }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
               </template>
             </div>
           </div>
@@ -167,19 +183,19 @@
             <div class="block_date">
               <template v-for="month in userAddresses[index].months.slice(12,16)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased, inline_date_past: Number(month.month) < currentMonth }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in userAddresses[index].months.slice(16,20)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased, inline_date_past: Number(month.month) < currentMonth }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
               </template>
             </div>
             <div class="block_date">
               <template v-for="month in userAddresses[index].months.slice(20,24)">
                 <!-- eslint-disable-next-line -->
-                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
+                <p :class="{ inline_date_selected: month.isActive, inline_date_bought: month.isPurchased, inline_date_past: Number(month.month) < currentMonth }" class="inline_date" @click="toggleSelected(month); calcPrice(index)">{{ month.display }}</p>
               </template>
             </div>
             <p class="year_date price">{{ price }} CHF</p>
@@ -414,16 +430,16 @@
         <div class="box">
           <p class="sign" @click="addMealplan(newMealplan)">+</p>
         </div>
-        <p class="dayname">New Mealplan</p>
+        <p class="dayname">New Meal Plan</p>
         <div class="ingredients_break">
 
         </div>
         <div class="" align="left">
-          <label for="">New Mealplan</label>
+          <label for="">New Meal Plan</label>
           <input class="amount" id="newMealplan" type="text" @keyup.enter="addMealplan(newMealplan)" v-model="newMealplan" required>
         </div>
         <div class="purchase_button" @click="addMealplan(newMealplan)" style="margin-top: 40px">
-          <span class="purchase_text">Add Mealplan</span>
+          <span class="purchase_text">Add Meal Plan</span>
         </div>
       </div>
     </div>
@@ -455,7 +471,8 @@ export default {
       newPassword: '',
       checkPassword: '',
       deleteConfirmation: '',
-      currentYear: moment().format('YYYY')
+      currentYear: moment().format('YYYY'),
+      currentMonth: moment().format('YYYYMM')
     }
   },
   computed: {
@@ -518,6 +535,19 @@ export default {
       db.collection('users').doc(this.userData.uid).update({
         shoppingListLength: Number(this.userData.shoppingListLength)
       })
+    },
+    toggleMeal (meal) {
+      var index = meal.uid
+      var userData = this.userData
+      if (meal.isActive) {
+        db.collection('users').doc(userData.uid).collection('meals').doc(index).update({
+          isActive: false
+        })
+      } else {
+        db.collection('users').doc(userData.uid).collection('meals').doc(index).update({
+          isActive: true
+        })
+      }
     },
     updateEmail () {
       const user = firebase.auth().currentUser
@@ -594,20 +624,6 @@ export default {
           user.email,
           this.deleteConfirmation
         )
-        // delete user, sign out and redirect to register page
-        user.reauthenticateAndRetrieveDataWithCredential(credential)
-          .then(function () {
-            user.delete()
-            firebase.auth().signOut()
-              .then(function () {
-                store.commit('setPage', 'register')
-                router.push('register')
-              })
-              .catch(error => {
-                alert(error.message)
-                console.log(error.code)
-              })
-          })
         for (let address in oldUserAddresses) {
           // check owner of the addresses
           var isOwner = false
@@ -627,14 +643,35 @@ export default {
               db.collection('addresses').doc(oldUserAddresses[address].uid).collection('personalList').doc(oldUserAddresses[address].personalList[item].uid).delete()
             }
             for (let day in oldUserAddresses[address].calendar) {
-              for (let ingredient in oldUserAddresses[address].calendar[day].breakfastIngredients) {
-                db.collection('addresses').doc(oldUserAddresses[address].uid).collection('calendar').doc(oldUserAddresses[address].calendar[day].date.toString()).collection('breakfastIngredients').doc(oldUserAddresses[address].calendar[day].breakfastIngredients[ingredient].uid).delete()
+              for (let ingredient in oldUserAddresses[address].calendar[day].meal0Ingredients) {
+                db.collection('addresses').doc(oldUserAddresses[address].uid).collection('calendar').doc(oldUserAddresses[address].calendar[day].date.toString()).collection('meal0Ingredients').doc(oldUserAddresses[address].calendar[day].meal0Ingredients[ingredient].uid).delete()
               }
-              for (let ingredient in oldUserAddresses[address].calendar[day].lunchIngredients) {
-                db.collection('addresses').doc(oldUserAddresses[address].uid).collection('calendar').doc(oldUserAddresses[address].calendar[day].date.toString()).collection('lunchIngredients').doc(oldUserAddresses[address].calendar[day].lunchIngredients[ingredient].uid).delete()
+              for (let ingredient in oldUserAddresses[address].calendar[day].meal1Ingredients) {
+                db.collection('addresses').doc(oldUserAddresses[address].uid).collection('calendar').doc(oldUserAddresses[address].calendar[day].date.toString()).collection('meal1Ingredients').doc(oldUserAddresses[address].calendar[day].meal1Ingredients[ingredient].uid).delete()
               }
-              for (let ingredient in oldUserAddresses[address].calendar[day].dinnerIngredients) {
-                db.collection('addresses').doc(oldUserAddresses[address].uid).collection('calendar').doc(oldUserAddresses[address].calendar[day].date.toString()).collection('dinnerIngredients').doc(oldUserAddresses[address].calendar[day].dinnerIngredients[ingredient].uid).delete()
+              for (let ingredient in oldUserAddresses[address].calendar[day].meal2Ingredients) {
+                db.collection('addresses').doc(oldUserAddresses[address].uid).collection('calendar').doc(oldUserAddresses[address].calendar[day].date.toString()).collection('meal2Ingredients').doc(oldUserAddresses[address].calendar[day].meal2Ingredients[ingredient].uid).delete()
+              }
+              for (let ingredient in oldUserAddresses[address].calendar[day].meal3Ingredients) {
+                db.collection('addresses').doc(oldUserAddresses[address].uid).collection('calendar').doc(oldUserAddresses[address].calendar[day].date.toString()).collection('meal3Ingredients').doc(oldUserAddresses[address].calendar[day].meal3Ingredients[ingredient].uid).delete()
+              }
+              for (let ingredient in oldUserAddresses[address].calendar[day].meal4Ingredients) {
+                db.collection('addresses').doc(oldUserAddresses[address].uid).collection('calendar').doc(oldUserAddresses[address].calendar[day].date.toString()).collection('meal4Ingredients').doc(oldUserAddresses[address].calendar[day].meal4Ingredients[ingredient].uid).delete()
+              }
+              for (let ingredient in oldUserAddresses[address].calendar[day].meal5Ingredients) {
+                db.collection('addresses').doc(oldUserAddresses[address].uid).collection('calendar').doc(oldUserAddresses[address].calendar[day].date.toString()).collection('meal5Ingredients').doc(oldUserAddresses[address].calendar[day].meal5Ingredients[ingredient].uid).delete()
+              }
+              for (let ingredient in oldUserAddresses[address].calendar[day].meal6Ingredients) {
+                db.collection('addresses').doc(oldUserAddresses[address].uid).collection('calendar').doc(oldUserAddresses[address].calendar[day].date.toString()).collection('meal6Ingredients').doc(oldUserAddresses[address].calendar[day].meal6Ingredients[ingredient].uid).delete()
+              }
+              for (let ingredient in oldUserAddresses[address].calendar[day].meal7Ingredients) {
+                db.collection('addresses').doc(oldUserAddresses[address].uid).collection('calendar').doc(oldUserAddresses[address].calendar[day].date.toString()).collection('meal7Ingredients').doc(oldUserAddresses[address].calendar[day].meal7Ingredients[ingredient].uid).delete()
+              }
+              for (let ingredient in oldUserAddresses[address].calendar[day].meal8Ingredients) {
+                db.collection('addresses').doc(oldUserAddresses[address].uid).collection('calendar').doc(oldUserAddresses[address].calendar[day].date.toString()).collection('meal8Ingredients').doc(oldUserAddresses[address].calendar[day].meal8Ingredients[ingredient].uid).delete()
+              }
+              for (let ingredient in oldUserAddresses[address].calendar[day].meal9Ingredients) {
+                db.collection('addresses').doc(oldUserAddresses[address].uid).collection('calendar').doc(oldUserAddresses[address].calendar[day].date.toString()).collection('meal9Ingredients').doc(oldUserAddresses[address].calendar[day].meal9Ingredients[ingredient].uid).delete()
               }
               db.collection('addresses').doc(oldUserAddresses[address].uid).collection('calendar').doc(oldUserAddresses[address].calendar[day].date.toString()).delete()
             }
@@ -663,6 +700,20 @@ export default {
           }
           db.collection('users').doc(oldUserData.uid).collection('mealplans').doc(oldUserData.mealplans[mealplan].uid).delete()
         }
+        // delete user, sign out and redirect to register page
+        user.reauthenticateAndRetrieveDataWithCredential(credential)
+          .then(function () {
+            user.delete()
+            firebase.auth().signOut()
+              .then(function () {
+                store.commit('setPage', 'register')
+                router.push('register')
+              })
+              .catch(error => {
+                alert(error.message)
+                console.log(error.code)
+              })
+          })
       }
     },
     updatePlace (place) {
@@ -1104,6 +1155,37 @@ export default {
   font-size: 20px;
   transition: .8s ease-in-out;
 }
+.meal_container {
+  display: table;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+.meal {
+  position: relative;
+  display: block;
+  margin-top: 15px;
+  text-align: center;
+}
+.meal_selected_black {
+  position: relative;
+  bottom: 0px;
+  margin: auto;
+  width: 40px;
+  height: 2px;
+  background-color: black;
+  animation: expand .4s;
+  animation-fill-mode: forwards;
+}
+.meal_selected_white {
+  position: relative;
+  bottom: 0px;
+  margin: auto;
+  width: 40px;
+  height: 2px;
+  background-color: white;
+  animation: expand .4s;
+  animation-fill-mode: forwards;
+}
 .sign_remove {
   position: absolute;
   display: inline-block;
@@ -1225,6 +1307,9 @@ export default {
   padding-left: 7px;
   padding-right: 7px;
 }
+.inline_date_past {
+  text-decoration: line-through;
+}
 .inline_date_bought {
     background: linear-gradient(315deg, #ffdeb9, lightpink 100%);
     color: white;
@@ -1344,8 +1429,14 @@ label {
     box-shadow: 1px 1px 1px rgba(0,0,0,0.4);
     transition: .2s;
   }
+  .meal_container:hover {
+    cursor: pointer;
+  }
   .inline_date:hover {
     cursor: pointer;
+  }
+  .inline_date_past:hover {
+    cursor: default;
   }
   .box:hover {
     cursor: pointer;
