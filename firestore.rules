@@ -6,6 +6,11 @@ service cloud.firestore {
       allow read, write: if request.auth.uid != null;
     }
 
+    // Match any document in the 'addresses' collection
+    match /mealplans/{document=**} {
+      allow read, write: if request.auth.uid != null;
+    }
+
     // Match any document in the 'users' collection
     // All users need to be able to write all documents because if an owner of a place deletes the place, it has to remove the address out of each members userData.
     match /users/{document=**} {
@@ -31,10 +36,29 @@ service cloud.firestore {
     }
 
     // Default should be accessible by the public
+    match /mealplans {
+      allow read, write: if true;
+
+      match /filters/{document=**} {
+        allow read, write: if true;
+      }
+      match /recipes/{document=**} {
+        allow read, write: if true;
+
+        match /ingredients/{document=**} {
+        allow read, write: if true;
+        }
+      }
+    }
+
+    // Default should be accessible by the public
     match /users/default {
       allow read, write: if true;
 
       match /calendar/{document=**} {
+        allow read, write: if true;
+      }
+      match /meals/{document=**} {
         allow read, write: if true;
       }
       match /mealplans/{document=**} {

@@ -34,6 +34,9 @@
           <div style="margin-top: 70px"></div>
           <p class="question">Are my payment details stored?</p>
           <p class="answer">No. The entire payment flow is handled by Stripe. No credit card data is stored on our servers.</p>
+          <div style="margin-top: 70px"></div>
+          <p class="question">How do the filters work?</p>
+          <p class="answer">If two filters are underlined once, it will show all recipes that have at least one of the filters attached. If a filter is underlined twice, it will only show that have that filter attached.</p>
         </div>
       </div>
       <div class="content" v-if="informationFilters[2].isActive">
