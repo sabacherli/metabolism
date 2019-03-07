@@ -2,7 +2,7 @@
   <div class="container">
 
     <!-- Remove meal from calendar if one has been chosen. -->
-    <div class="day" v-if="pointer.meal">
+    <div class="day" v-if="pointer.meal && pointer.recipe">
       <div class="box" @click="removeRecipe(); goCalendar()">
         <p class="sign_remove" style="transform: rotate(45deg)">+</p>
       </div>

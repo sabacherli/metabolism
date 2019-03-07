@@ -33,7 +33,8 @@ export default new Vuex.Store({
       meal: '',
       address: '',
       location: '',
-      index: ''
+      index: '',
+      recipe: false
     },
     editor: {
       index: null,
@@ -161,7 +162,7 @@ export default new Vuex.Store({
       router.push('/edit')
     },
     resetPointer (state) {
-      state.pointer.meal = ''
+      state.pointer.meal = null
       state.pointer.doc = ''
     },
     setEditFilters (state) {
@@ -1553,6 +1554,7 @@ export default new Vuex.Store({
       }
     },
     selectRecipe (state, recipe) {
+      state.pointer.recipe = true
       var mealIngredients = 'meal' + state.pointer.meal + 'Ingredients'
       if (state.pointer.meal === '0') {
         for (let address in state.userAddresses) {
@@ -1713,6 +1715,7 @@ export default new Vuex.Store({
         })
     },
     removeRecipe (state) {
+      state.pointer.recipe = false
       var mealIngredients = 'meal' + state.pointer.meal + 'Ingredients'
       if (state.pointer.meal === '0') {
         for (let address in state.userAddresses) {
@@ -1851,7 +1854,6 @@ export default new Vuex.Store({
           meal9CaloriesOwner: null
         })
       }
-      console.log(mealIngredients);
       db.collection('addresses').doc(state.pointer.address).collection('calendar').doc(state.pointer.doc.toString()).collection(mealIngredients)
         .get()
         .then(function (querySnapshot) {
