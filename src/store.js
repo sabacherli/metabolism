@@ -1974,7 +1974,7 @@ export default new Vuex.Store({
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
                         if (state.userAddresses[address].shoppingList[item].ingredient === ingredient.ingredient) {
-                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * meal0Ratio)
+                          state.userAddresses[address].shoppingList[item].amount += Math.round(ingredient.amount * meal0Ratio)
                         }
                       }
                     }
@@ -1991,7 +1991,7 @@ export default new Vuex.Store({
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
                         if (state.userAddresses[address].shoppingList[item].ingredient === ingredient.ingredient) {
-                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * meal1Ratio)
+                          state.userAddresses[address].shoppingList[item].amount += Math.round(ingredient.amount * meal1Ratio)
                         }
                       }
                     }
@@ -2008,7 +2008,7 @@ export default new Vuex.Store({
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
                         if (state.userAddresses[address].shoppingList[item].ingredient === ingredient.ingredient) {
-                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * meal2Ratio)
+                          state.userAddresses[address].shoppingList[item].amount += Math.round(ingredient.amount * meal2Ratio)
                         }
                       }
                     }
@@ -2025,7 +2025,7 @@ export default new Vuex.Store({
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
                         if (state.userAddresses[address].shoppingList[item].ingredient === ingredient.ingredient) {
-                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * meal3Ratio)
+                          state.userAddresses[address].shoppingList[item].amount += Math.round(ingredient.amount * meal3Ratio)
                         }
                       }
                     }
@@ -2042,7 +2042,7 @@ export default new Vuex.Store({
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
                         if (state.userAddresses[address].shoppingList[item].ingredient === ingredient.ingredient) {
-                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * meal4Ratio)
+                          state.userAddresses[address].shoppingList[item].amount += Math.round(ingredient.amount * meal4Ratio)
                         }
                       }
                     }
@@ -2059,7 +2059,7 @@ export default new Vuex.Store({
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
                         if (state.userAddresses[address].shoppingList[item].ingredient === ingredient.ingredient) {
-                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * meal5Ratio)
+                          state.userAddresses[address].shoppingList[item].amount += Math.round(ingredient.amount * meal5Ratio)
                         }
                       }
                     }
@@ -2076,7 +2076,7 @@ export default new Vuex.Store({
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
                         if (state.userAddresses[address].shoppingList[item].ingredient === ingredient.ingredient) {
-                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * meal6Ratio)
+                          state.userAddresses[address].shoppingList[item].amount += Math.round(ingredient.amount * meal6Ratio)
                         }
                       }
                     }
@@ -2093,7 +2093,7 @@ export default new Vuex.Store({
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
                         if (state.userAddresses[address].shoppingList[item].ingredient === ingredient.ingredient) {
-                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * meal7Ratio)
+                          state.userAddresses[address].shoppingList[item].amount += Math.round(ingredient.amount * meal7Ratio)
                         }
                       }
                     }
@@ -2110,7 +2110,7 @@ export default new Vuex.Store({
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
                         if (state.userAddresses[address].shoppingList[item].ingredient === ingredient.ingredient) {
-                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * meal8Ratio)
+                          state.userAddresses[address].shoppingList[item].amount += Math.round(ingredient.amount * meal8Ratio)
                         }
                       }
                     }
@@ -2127,7 +2127,7 @@ export default new Vuex.Store({
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
                         if (state.userAddresses[address].shoppingList[item].ingredient === ingredient.ingredient) {
-                          state.userAddresses[address].shoppingList[item].amount += (ingredient.amount * meal9Ratio)
+                          state.userAddresses[address].shoppingList[item].amount += Math.round(ingredient.amount * meal9Ratio)
                         }
                       }
                     }
