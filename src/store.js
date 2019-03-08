@@ -1969,7 +1969,7 @@ export default new Vuex.Store({
                   querySnapshot.forEach(function (doc) {
                     let ingredient = doc.data()
                     if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
-                      ingredient.amount = ingredient.amount * meal0Ratio
+                      ingredient.amount = Math.round(ingredient.amount * meal0Ratio)
                       state.userAddresses[address].shoppingList.push(ingredient)
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
@@ -1986,7 +1986,7 @@ export default new Vuex.Store({
                   querySnapshot.forEach(function (doc) {
                     let ingredient = doc.data()
                     if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
-                      ingredient.amount = ingredient.amount * meal1Ratio
+                      ingredient.amount = Math.round(ingredient.amount * meal1Ratio)
                       state.userAddresses[address].shoppingList.push(ingredient)
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
@@ -2003,7 +2003,7 @@ export default new Vuex.Store({
                   querySnapshot.forEach(function (doc) {
                     let ingredient = doc.data()
                     if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
-                      ingredient.amount = ingredient.amount * meal2Ratio
+                      ingredient.amount = Math.round(ingredient.amount * meal2Ratio)
                       state.userAddresses[address].shoppingList.push(ingredient)
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
@@ -2020,7 +2020,7 @@ export default new Vuex.Store({
                   querySnapshot.forEach(function (doc) {
                     let ingredient = doc.data()
                     if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
-                      ingredient.amount = ingredient.amount * meal3Ratio
+                      ingredient.amount = Math.round(ingredient.amount * meal3Ratio)
                       state.userAddresses[address].shoppingList.push(ingredient)
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
@@ -2037,7 +2037,7 @@ export default new Vuex.Store({
                   querySnapshot.forEach(function (doc) {
                     let ingredient = doc.data()
                     if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
-                      ingredient.amount = ingredient.amount * meal4Ratio
+                      ingredient.amount = Math.round(ingredient.amount * meal4Ratio)
                       state.userAddresses[address].shoppingList.push(ingredient)
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
@@ -2054,7 +2054,7 @@ export default new Vuex.Store({
                   querySnapshot.forEach(function (doc) {
                     let ingredient = doc.data()
                     if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
-                      ingredient.amount = ingredient.amount * meal5Ratio
+                      ingredient.amount = Math.round(ingredient.amount * meal5Ratio)
                       state.userAddresses[address].shoppingList.push(ingredient)
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
@@ -2071,7 +2071,7 @@ export default new Vuex.Store({
                   querySnapshot.forEach(function (doc) {
                     let ingredient = doc.data()
                     if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
-                      ingredient.amount = ingredient.amount * meal6Ratio
+                      ingredient.amount = Math.round(ingredient.amount * meal6Ratio)
                       state.userAddresses[address].shoppingList.push(ingredient)
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
@@ -2088,7 +2088,7 @@ export default new Vuex.Store({
                   querySnapshot.forEach(function (doc) {
                     let ingredient = doc.data()
                     if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
-                      ingredient.amount = ingredient.amount * meal7Ratio
+                      ingredient.amount = Math.round(ingredient.amount * meal7Ratio)
                       state.userAddresses[address].shoppingList.push(ingredient)
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
@@ -2105,7 +2105,7 @@ export default new Vuex.Store({
                   querySnapshot.forEach(function (doc) {
                     let ingredient = doc.data()
                     if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
-                      ingredient.amount = ingredient.amount * meal8Ratio
+                      ingredient.amount = Math.round(ingredient.amount * meal8Ratio)
                       state.userAddresses[address].shoppingList.push(ingredient)
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
@@ -2122,7 +2122,7 @@ export default new Vuex.Store({
                   querySnapshot.forEach(function (doc) {
                     let ingredient = doc.data()
                     if (!state.userAddresses[address].shoppingList.some(e => e.ingredient === ingredient.ingredient)) {
-                      ingredient.amount = ingredient.amount * meal9Ratio
+                      ingredient.amount = Math.round(ingredient.amount * meal9Ratio)
                       state.userAddresses[address].shoppingList.push(ingredient)
                     } else {
                       for (let item in state.userAddresses[address].shoppingList) {
